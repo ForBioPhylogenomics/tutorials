@@ -74,5 +74,5 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 
 #### Friday
 
-* [Analysis of demography with simulations](XXX)<br>A tutorial on coalescent simulations of genomic data and the use of simulations in demography inference.
+* [Inference from simulated data](inference_from_simulated_data/README.md)<br>A tutorial on coalescent simulations of genomic data and inferences from simulated data
 <!-- This will need to be written from scratch -->
