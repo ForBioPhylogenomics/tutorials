@@ -190,7 +190,7 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 		
 	This should produce a new file named `ts.svg`.
 	
-* Download the file `ts.svg`, using e.g. `scp`, and then open the file in a program that is able to display SVG format (e.g. Safari, Firefox, Chrome, Illustrator, or Inkscape). This figure should look as shown in this screenshot:<p align="center"><img src="img/msprime1.png" alt="BEAUti" width="700"></p>
+* Download the file `ts.svg`, using e.g. `scp`, and then open the file in a program that is able to display SVG format (e.g. Safari, Firefox, Chrome, Illustrator, or Inkscape). This figure should look as shown in this screenshot:<p align="center"><img src="img/msprime1.png" alt="BEAUti"></p>
 
 <a name="cgenie"></a>
 ## Simulating recombination with c-genie
