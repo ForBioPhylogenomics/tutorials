@@ -77,7 +77,7 @@ parser = argparse.ArgumentParser(
       format for regions sampled evenly across the chromosome.
 
       Run e.g. with
-      python3 input.vcf output_prefix -n 1000 -l 1000
+      python3 input.vcf output_prefix -n 1000 -l 1000 -c 5000000
     '''))
 parser.add_argument(
     '-v', '--version',
