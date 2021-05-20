@@ -776,12 +776,73 @@ There are a number of options to simulate changes in population sizes with Mspri
 
 <!-- Run time: 30-40 min -->
 
+As some of the inference methods require sequence alignments rather than variant data in VCF format as input, we still need to prepare sequence alignments from the simulated genomic data. This can be done with the Python3 script `make_alignments_from_vcf.py`, which extracts all variants from a VCF file for a set of regions evenly sampled across the chromosome and adds randomly selected nucleotides for all invariant sites. The script assumes that all variants are phased and thus writes two sequences per sample to each alignment.
+
+* Download the script `make_alignments_from_vcf.py`:
+
+		https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/inference_from_simulated_data/src/make_alignments_from_vcf.py
+
+* Have a look at the help text of the script:
+
+		python3 make_alignments_from_vcf.py -h
+		
+	You'll see that you can specify the number of alignments to extract from the VCF with option `-n` and the length of these alignments with option `-l`. Additionally, you can specify a path to which all alignments should be written with `-p`. The first and second arguments need to be the input file in VCF format and a prefix for all output files, respectively. The length of the chromosome should also be specified with option `-c`, because this information can not always be read from the VCF file. Note that in its current version, this script assumes that the VCF file contains data only for a single chromosome, which is the case in the VCF files generated with Msprime.
+
+* Extract sequence alignments from each of the VCF files generated with Msprime. Extracting a total number of 1,000 alignments that are each 2,500 bp long should produce a set of alignments that is suitable for all alignment-based inference methods, but you could vary these parameters to test the effects of having more or less and longer or shorter alignments:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation.vcf simulation -n 1000 -c 5000000 -l 2500 -p simulation_alignments
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation_introgression1.vcf simulation_introgression1 -n 1000 -c 5000000 -l 2500 -p simulation_introgression1_alignments
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation_introgression2.vcf simulation_introgression2 -n 1000 -c 5000000 -l 2500 -p simulation_introgression2_alignments
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation_bottleneck.vcf simulation_bottleneck -n 1000 -c 5000000 -l 2500 -p simulation_bottleneck_alignments
+
+	Perhaps more elegantly, the above commands could alternatively be written as a loop:
+	
+		for vcf in *.vcf
+		do
+			vcf_id=${vcf%.vcf}
+			srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py ${vcf} ${vcf_id} -n 1000 -c 5000000 -l 2500 -p ${vcf_id}_alignments
+		done
+
+	You may notice that the file names of the alignments include the start and end position of each alignment on the chromosome, after the specified prefix.
+
+* Make sure the the specified number of alignments has been written to the four new directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`, for example using `ls simulation_alignments/*.phy | wc -l`.
+
+As you may have noticed, the sample IDs in the VCF files are not those that we used for the six cichlid species ("metzeb", "neomar", "neogra", "neobri", "neooli", and "neopul"), but instead "tsk_0", "tsk_1", "tsk_2", "tsk_3", "tsk_4", and "tsk_5". These IDs correspond to the species in the order in which the species were listed in the Newick string that was supplied to Msprime:
+		
+| Sample ID | Species ID | Species name                  |
+|-----------|------------|-------------------------------|
+| tsk_0     | neomar     | *Neolamprologus marunguensis* |
+| tsk_1     | neogra     | *Neolamprologus gracilis*     |
+| tsk_2     | neobri     | *Neolamprologus brichardi*    |
+| tsk_3     | neooli     | *Neolamprologus olivaceous*   |
+| tsk_4     | neopul     | *Neolamprologus pulcher*      |
+| tsk_5     | metzeb     | *Metriaclima zebra*           |
+
+The IDs used in the alignment files are similar to those used in the VCF files, but end in "\_1" and "\_2", which indicates the first and second of the two phased sequences per individual.
+
+
 <a name="inference"></a>
 ## Inference from simulated data
 
+You should now have simulated genomic data in the form of four files in VCF format (`simulation.vcf`, `simulation_introgression1.vcf`, `simulation_introgression2.vcf`, and `simulation_bottleneck.vcf`) as well as four sets of alignments in Phylip format (in directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`).
 
-# VCF:
-tsk_0 etc: depending on the order in the species tree.
+These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials:
+
+ASTRAL: [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md)
+
+StarBEAST2: [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md)
+
+SVDQuartets: [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md)
+
+SNAPP: [Divergence-Time Estimation with SNP Data](divergence_time_estimation_with_snp_data/README.md)
+
+SpeciesNetwork: [Bayesian Inference of Species Networks](bayesian_analysis_of_species_networks/README.md)
+
+Dsuite: [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md)
+
+If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite.
+
+Besides the instructions in these other tutorials, the details given for analysis with these inference methods given below may be helpful:
 
 
 # Inference with SNAPP
