@@ -12,7 +12,8 @@ All methods used for phylogenomic inference have assumptions, and these are ofte
 * [Dataset](#dataset)
 * [Requirements](#requirements)
 * [Coalescent simulations with Msprime](#msprime)
-* [Realistic simulations of genomic data](#real_simulations)
+	* [The basics of simulations with Msprime](#basics)
+	* [Realistic simulations of genomic data](#real_simulations)
 * [Inference from simulated data](#inference)
 
 
@@ -840,7 +841,7 @@ SpeciesNetwork: [Bayesian Inference of Species Networks](bayesian_analysis_of_sp
 
 Dsuite: [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md)
 
-If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite.
+If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets).
 
 Besides the instructions in these other tutorials, the details given for analysis with these inference methods given below may be helpful:
 
