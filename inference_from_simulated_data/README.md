@@ -1,6 +1,7 @@
 # Inference from simulated data
 
-A tutorial on coalescent simulations of genomic data and inferences from simulated data
+A tutorial on coalescent simulations of genomic data and inferences from simulated data<br>
+By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner)
 
 ## Summary
 
