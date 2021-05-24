@@ -12,9 +12,10 @@ All methods used for phylogenomic inference have assumptions, and these are ofte
 * [Dataset](#dataset)
 * [Requirements](#requirements)
 * [Coalescent simulations with Msprime](#msprime)
-	* [The basics of simulations with Msprime](#basics)
+	* [Getting started with Msprime](#start)
 	* [Realistic simulations of genomic data](#real_simulations)
 * [Inference from simulated data](#inference)
+	* [Inference with SNAPP](#snapp)
 
 
 <a name="outline"></a>
@@ -134,6 +135,9 @@ To test how the reliability of the inference methods can be affected by model vi
 
 The most commonly used tool for such simulations of genomic data is currently Msprime, which can be installed and accessed through Python3. Msprime has seen a lot of active development over the last few years by Jerome Kelleher and a large international community, leading to the release of version 1.0 in April 2021 with many new functions that greatly facilitate simulations above the population level; some of which will be used in this tutorial.
 
+<a name="start"></a>
+### Getting started with Msprime
+	 
 To perform simulations with Msprime, we are going to write a script in Python3, and we will execute this script on the command line. The script can be written with a text editor available on Saga such as Emacs, Vim, or Nano, or it can be written with a GUI text editor on a local computer; but then it will always need to be uploaded to Saga before it can be executed. Commands given here assume that Emacs is used as a text editor on Saga; for other text editors, simply replace "emacs" with "vim" or "nano" in the commands given below.
 
 * Start editing a new script named `simulate_data.py` by typing
@@ -373,7 +377,7 @@ This should specify a demographic model in which two species named "A" and "B" h
 
 
 <a name="real_simulations"></a>
-## Realistic simulations of genomic data
+### Realistic simulations of genomic data
 
 Finally, it is time to run a more realistic simulation that mimicks the diversification of the five *Neolamprologus* species and their outgroup, *Metriaclima zebra*. For this, we need a phylogeny in Newick format, an estimate of the population size, as well as a sequence length, and recombination and mutation rates.
 
@@ -827,11 +831,35 @@ The IDs used in the alignment files are similar to those used in the VCF files, 
 
 You should now have simulated genomic data in the form of four files in VCF format (`simulation.vcf`, `simulation_introgression1.vcf`, `simulation_introgression2.vcf`, and `simulation_bottleneck.vcf`) as well as four sets of alignments in Phylip format (in directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`).
 
-These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials:
+These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials.
 
-ASTRAL: [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md)
+If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets). For each inference method, you could focus on one or two of the simulated datasets (either with or without introgression, and with or without bottleneck) –as long as different course participants select different datasets to analyze, a comparison of the results will allow us to assess the impact of the model violations on each inference method.
 
-StarBEAST2: [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md)
+<a name="astral"></a>
+### Inference with ASTRAL
+
+* Follow the instructions given in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md) to first infer trees for all alignments with IQ-TREE, followed by a an analysis with ASTRAL.
+
+	For the inference of trees with IQ-TREE, it might be worth writing a Slurm script. With a loop inferring trees for a set of 1,000 alignments, the computational requirements should be below 20 minutes (`--time=0:20:00`) and 1 GB of memory (`--mem-per-cpu=1G`), and a single thread (`--ntasks=1`) should be sufficient. The HKY substitution model could be used in the inference with IQ-TREE (`-m HKY`), given that this model was also used to generate the data. Bootstrapping is not required.
+
+	Because unlike in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md), all trees now contain two tips for the same species, a file with a table connecting species names and individual IDs needs to be prepared and provided to ASTRAL with option `-a`. This file should have the following format and content, and could be named `astral_table.txt`:
+	
+		neomar:tsk_0_1,tsk_0_2
+		neogra:tsk_1_1,tsk_1_2
+		neobri:tsk_2_1,tsk_2_2
+		neooli:tsk_3_1,tsk_3_2
+		neopul:tsk_4_1,tsk_4_2
+		metzeb:tsk_5_1,tsk_5_2
+
+	The inference of the species tree with ASTRAL, based on the set of trees inferred with IQ-TREE, should be fast enough that no Slurm script is required. Instead, ASTRAL could be run with `srun`:
+	
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty java -jar Astral/astral.5.7.7.jar -i tmp.trees -a astral_table.txt -o simulation_astral.tre
+
+
+<a name="starbeast2"></a>
+### Inference with StarBEAST2
+
+Follow the instructions given in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md) XXX
 
 SVDQuartets: [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md)
 
@@ -841,12 +869,13 @@ SpeciesNetwork: [Bayesian Inference of Species Networks](bayesian_analysis_of_sp
 
 Dsuite: [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md)
 
-If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets).
-
-Besides the instructions in these other tutorials, the details given for analysis with these inference methods given below may be helpful:
 
 
-# Inference with SNAPP
+
+
+<a name="snapp"></a>
+### Inference with SNAPP
+
 - specimens.txt:
 
 		species specimen
