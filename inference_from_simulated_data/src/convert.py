@@ -152,7 +152,7 @@ if input_format == "nexus":
         elif line.strip() == ';':
             in_matrix = False
             in_tree = False
-        elif in_matrix and line.strip() is not '':
+        elif in_matrix and line.strip() != '':
             record_ary = line.split()
             record_ids.append(record_ary[0])
             record_seqs.append(record_ary[1].upper())
