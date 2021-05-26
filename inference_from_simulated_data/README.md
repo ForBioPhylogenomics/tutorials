@@ -839,11 +839,15 @@ If you should not have enough time to test all of these inference methods, I sug
 <a name="astral"></a>
 ### Inference with ASTRAL
 
-* Follow the instructions given in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md) to first infer trees for all alignments with IQ-TREE, followed by a an analysis with ASTRAL.
+* Follow the instructions given in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md) to first infer trees for all alignments with IQ-TREE and then use these trees as input for ASTRAL, with the following exceptions:
 
-	For the inference of trees with IQ-TREE, it might be worth writing a Slurm script. With a loop inferring trees for a set of 1,000 alignments, the computational requirements should be below 20 minutes (`--time=0:20:00`) and 1 GB of memory (`--mem-per-cpu=1G`), and a single thread (`--ntasks=1`) should be sufficient. The HKY substitution model could be used in the inference with IQ-TREE (`-m HKY`), given that this model was also used to generate the data. Bootstrapping is not required.
+	* In the Slurm script to run IQ-TREE, specify a maximum run time of 20 minutes (`--time=0:20:00`), a maximum of 1 GB of memory (`--mem-per-cpu=1G`), and ask for a single thread (`--ntasks=1`).
 
-	Because unlike in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md), all trees now contain two tips for the same species, a file with a table connecting species names and individual IDs needs to be prepared and provided to ASTRAL with option `-a`. This file should have the following format and content, and could be named `astral_table.txt`:
+	* Instead of testing for the best substitution model with IQ-TREE, use the HKY model (`-m HKY`), given that this model was also used to generate the data.
+
+	* Bootstrapping is not required.
+
+	* Because unlike in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md), all trees now contain two tips for the same species, a file with a table connecting species names and individual IDs needs to be prepared and provided to ASTRAL with option `-a`. This file should have the following format and content, and could be named `astral_table.txt`:
 	
 		neomar:tsk_0_1,tsk_0_2
 		neogra:tsk_1_1,tsk_1_2
@@ -852,7 +856,7 @@ If you should not have enough time to test all of these inference methods, I sug
 		neopul:tsk_4_1,tsk_4_2
 		metzeb:tsk_5_1,tsk_5_2
 
-	The inference of the species tree with ASTRAL, based on the set of trees inferred with IQ-TREE, should be fast enough that no Slurm script is required. Instead, ASTRAL could be run with `srun`:
+	* ASTRAL could be run with `srun`, using a command such as this one:
 	
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty java -jar Astral/astral.5.7.7.jar -i tmp.trees -a astral_table.txt -o simulation_astral.tre
 
@@ -860,7 +864,83 @@ If you should not have enough time to test all of these inference methods, I sug
 <a name="starbeast2"></a>
 ### Inference with StarBEAST2
 
-Follow the instructions given in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md) XXX
+As an analysis of a complete set of 1,000 alignments would be too computationally demanding, I suggest that you only use a subset of around 50 alignments. These will need to be converted from Phylip to Nexus format because the StarBEAST2 input file will be written with BEAUti, and BEAUti only accepts alignments in Nexus format.
+
+* To convert a set of alignments into Nexus format, you could write a script named `convert_to_nexus.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`):
+
+		# Load the python3 module.
+		module load Python/3.8.2-GCCcore-9.3.0
+				
+		for phy in `ls simulation_alignments/*.phy | head -n 50`
+		do
+			nex=${phy%.phy}.nex
+			python3 convert.py ${phy} ${nex} -f nexus
+		done
+
+* Before executing this script, you will need to download the conversion script `convert.py`:
+	
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/inference_from_simulated_data/src/convert.py
+	
+* Then you can use this command to execute the script:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty bash convert_to_nexus.sh
+
+	This should have produced 50 files in Nexus format in directory `simulation_alignments`, which you can verify with `ls simulation_alignments/*.nex | wc -l`.
+
+* Download these alignment files in Nexus format to your local computer, e.g. using `scp`.
+
+* Follow the instructions given in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md) to set up an XML file for StarBEAST2, with the following modifications:
+
+	* Ignore the step in which the script `filter_genes_by_missing_data.rb` is used.
+
+	* Assign the sequences with IDs "tsk_0_1", "tsk_0_2", "tsk_1_1", etc. to the species IDs "neomar", "neogra", etc. according to the table given above (BEAUti panel "Taxon sets").
+
+	* Use 0.279 as the population size, because this value will correspond to the true population size used in the simulations (9.3E4) when scaled by the number of generations per time unit (333,333). But since we now have two sequences per species, we can attempt to estimate the population size, rather than fixing it; thus you could keep the tick in the checkbox to estimate the population size (BEAUti panel "Population Model").
+
+	* As the substitution model, specify the HKY model without among-site rate heterogeneity (simply leave the Gamma category count at "0") to match the model used for the simulations (BEAUti panel "Site Model").
+
+	* To simplify the StarBEAST2 analysis, you could also specify equal site frequencies (select "All Equal" from the drop-down menu next to "Frequencies"; BEAUti panel "Site Model").
+
+	* Instead of the birth-death model, you could select the Yule model, given that extinction was not included in the simulations (BEAUti panel "Priors").
+
+	* To time-calibrate the species tree, use a lognormal age constraint with a mean age of 9.5 Ma (the true age used in the simulations) and a standard deviation of 0.1 (make sure to set the tick for "Mean in Real Space"; BEAUti panel "Priors").
+
+	* Use a chain length of 50 million and all log frequencies to 25,000 (BEAUti panel "MCMC").
+
+	* Save the XML file as `simulation_starbeast.xml`, `simulation_introgression1_starbeast.xml`, `simulation_introgression2_starbeast.xml`, or `simulation_bottleneck_starbeast.xml`, depending on the set of alignments that was used.
+
+	* To run StarBEAST2, the following Slurm script could be used:
+
+			#!/bin/bash
+
+			# Job name:
+			#SBATCH --job-name=starb
+			#
+			# Wall clock limit:
+			#SBATCH --time=2:00:00
+			#
+			# Processor and memory usage:
+			#SBATCH --ntasks=1
+			#SBATCH --mem-per-cpu=1G
+			#
+			# Accounting:
+			#SBATCH --account=nn9458k
+			#
+			# Output:
+			#SBATCH --output=run_starbeast.out
+
+			# Set up job environment.
+			set -o errexit  # Exit the script on any error
+			set -o nounset  # Treat any unset variables as an error
+			module --quiet purge  # Reset the modules to the system default
+
+			# Load the python3 module.
+			module load Beast/2.6.4-GCC-9.3.0 
+
+			# Run starbeast2.
+			beast simulation_starbeast.xml
+
+	<!-- Run time: 50 minutes -->
 
 SVDQuartets: [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md)
 
