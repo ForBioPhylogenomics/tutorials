@@ -1,4 +1,4 @@
-# Inference from simulated data
+# Inference from Simulated Data
 
 A tutorial on coalescent simulations of genomic data and inferences from simulated data<br>
 By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner)
@@ -174,6 +174,7 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 	To find out which arguments can be passed to Msprime commands, and in which order or with which keywords, one can always look up the command in the [Msprime API reference](https://tskit.dev/msprime/docs/stable/api.html#), in this case the [msprime.sim_ancestry command reference](https://tskit.dev/msprime/docs/stable/api.html#msprime.sim_ancestry).
 	
 	Finally, the second table of the output provides some more details, including the total number of edges and nodes in the TreeSequence object. In this case there are six edges and 7 nodes (three internal nodes and the four sampled ones) because there is just a single tree in the TreeSequence.
+
 	**Question 1:** How do the numbers of trees, sampled nodes, total nodes, and edges in the TreeSequence change when you simulate a longer sequence length and recombination? To find out, look up the keywords with which to specify both in the [msprime.sim_ancestry command reference](https://tskit.dev/msprime/docs/stable/api.html#msprime.sim_ancestry). You could try a sequence length of 10,000 bp (specify as "10000") and a recombination rate of 10<sup>-4</sup> (specify as "1E-4"). [(see answer)](#q1)
 
 * Msprime also has a function to produce more visual output in the form of a figure in SVG format, which can be helpful to illustrate the tree sequence. The function is called `ts.draw_svg`, but we will need a few more commands to write the figure to a file. To produce such a figure, rewrite the script with this content:
@@ -200,7 +201,9 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 	This should produce a new file named `ts.svg`.
 	
 * Download the file `ts.svg`, using e.g. `scp`, and then open the file in a program that is able to display SVG format (e.g. Safari, Firefox, Chrome, Illustrator, or Inkscape). This figure should look as shown in this screenshot:<p align="center"><img src="img/msprime1.png" alt="Msprime" width="700"></p>
-	As you can see, the tree sequence shown in this figure contains five trees, of which the first one covers positions 0-1406 of the simulated chromosome, the second covers positions 1407-8430, and so on. **Question 2:** Can you identify how recombination has changed the topology between each pair of adjacent trees? [(see answer)](#q2)
+	As you can see, the tree sequence shown in this figure contains five trees, of which the first one covers positions 0-1406 of the simulated chromosome, the second covers positions 1407-8430, and so on.
+
+	**Question 2:** Can you identify how recombination has changed the topology between each pair of adjacent trees? [(see answer)](#q2)
 
 	The y-axis of the figure indicates the age of coalescent events, in numbers of generations. In the first tree, all four sequences coalesce 2.76 generations ago; which tells us two things: First, Msprime apparently does not use discrete generations in its simulations (otherwise the ages of coalescence events should have integer numbers like 1, 2, 3...) and second, all coalescence events are very recent. The reason for the latter is that because we also did not specify a population size, msprime used the default population size, which is one single (diploid) individual. Simulating such a tiny population size of course does not make much sense, particularly because we sample two diploid individuals from the population.
 	
@@ -254,7 +257,9 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 		# Write the figure to this new file.
 		f.write(svg)
 
-* Execute the script again with Python3, and download and open the file `ts.svg` again. **Question 3:** Do the coalescence times match the expectation of being around 200 generations on average? [(see answer)](#q3)
+* Execute the script again with Python3, and download and open the file `ts.svg` again.
+
+	**Question 3:** Do the coalescence times match the expectation of being around 200 generations on average? [(see answer)](#q3)
 
 * Next, let's add mutations to the simulations. This can be done with the `msprime.sim_mutations` command, as in the following script:
 
@@ -309,7 +314,9 @@ In order to use the simulated genomic data for inference, we will need to export
 	
 * Run this script again with Python3, and then have a look at the output file named "simulation.vcf", for example with the `less` command: `less simulation.vcf`. This should show that the VCF file in fact has information for 26 variable sites, which are located between positions 144 and 9002 of the simulated chromosome. However, because we specified a sample size of 1 (diploid individual) in our simulations, the VCF file contains only a single column with genotype information.
 
-* Explore how the VCF file changes when you use a sample size of 4 instead of 1. **Question 4:** What do you notice?  [(see answer)](#q4)
+* Explore how the VCF file changes when you use a sample size of 4 instead of 1.
+
+	**Question 4:** What do you notice?  [(see answer)](#q4)
 
 The default model for the simulation of mutations is the Jukes-Cantor model, according to which all substitutions occur with the same frequency. As alternatives, a number of other nucleotide subsitution models of are available, including the HKY and GTR models, which can be defined with the `msprime.HKY` and `msprime.GTR` functions, respectively. Each type of model requires the specification of additional parameters, such as the kappa parameter for the HKY model that specifies the relative rate of transitions over transversions. For the GTR model, relative rates are specified by providing a list of values with the `relative_rates` keyword. Thus, the HKY model could for example be defined as `msprime.HKY(kappa=2)` and the GTR model could be defined with `msprime.GTR(relative_rates=[0.3, 0.2, 1.6, 2.4, 0.6, 0.4])` (the order of these rates is described in the [Msprime API reference](https://tskit.dev/msprime/docs/stable/api.html#msprime.GTR)). Additionally, the equilibrium frequencies of the four nucleotides can be specified for both models with the `equilibrium_frequencies` keyword; if these are not specified, equal frequencies will be used by default.A list of the available models can be found in the [Msprime manual](https://tskit.dev/msprime/docs/stable/mutations.html).
 
@@ -608,7 +615,9 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 
 <!-- Run time: 30-40 min -->
 
-* Besides the simulations without introgression and those with introgression from *Neolamprologus marunguensis* (neomar) into *Neolamprologus olivaceous* (neooli), we'll also simulate genomic data with additional introgression from *Neolamprologus gracilis* (neogra) into the common ancestor of *Neolamprologus brichardi* (neobri), *Neolamprologus olivaceous* (neooli), and *Neolamprologus pulcher* (neopul), as also inferred by [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650). For this, we will need to know the population ID of the common ancestor of the three species. **Question 6:** Can you figure out the population ID of the common ancestor from the last output of the `DemographyDebugger`? [(see answer)](#q6)
+* Besides the simulations without introgression and those with introgression from *Neolamprologus marunguensis* (neomar) into *Neolamprologus olivaceous* (neooli), we'll also simulate genomic data with additional introgression from *Neolamprologus gracilis* (neogra) into the common ancestor of *Neolamprologus brichardi* (neobri), *Neolamprologus olivaceous* (neooli), and *Neolamprologus pulcher* (neopul), as also inferred by [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650). For this, we will need to know the population ID of the common ancestor of the three species.
+	
+	**Question 6:** Can you figure out the population ID of the common ancestor from the last output of the `DemographyDebugger`? [(see answer)](#q6)
 
 * Write a new script named `simulate_data_introgression2.py` with the additional introgression event. The easiest way to do this is to copy file `simulate_data_introgression1.py` to a new file named `simulate_data_introgression2.py`, open that new file in Emacs or another text editor, and add the following line after the first `set_migration_rate` command:
 
