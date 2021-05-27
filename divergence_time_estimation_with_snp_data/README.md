@@ -16,7 +16,9 @@ Another limitation of SNAPP has long been that the reported branch lengths were 
 * [Dataset](#dataset)
 * [Requirements](#requirements)
 * [Divergence-time estimation with SNAPP](#snapp)
-
+* [Divergence-time estimation with SNAPPER](#snapper)
+* [Interpretation of SNAPP results](#interpretation)
+* [Comparison of results obtained with SNAPP and SNAPPER](#comparison)
 
 <a name="outline"></a>
 ## Outline
@@ -312,8 +314,9 @@ While the SNAPPER analysis (and probably also still the SNAPP analysis) are runn
 		sbatch run_snapper2.slurm
 
 
-<a name="compare"></a>
-## Comparing results obtained with SNAPP and SNAPPER
+
+<a name="interpretation"></a>
+## Interpretation of SNAPP results
 
 * Once the SNAPP analysis has completed, download the file `snapp.log` to your local computer with `scp` and open it in Tracer. The Tracer window should then display run statistics similar to those shown in the next screenshot.<p align="center"><img src="img/tracer1.png" alt="Tracer" width="700"></p>You'll see that some low ESS values indicate that the MCMC chain has not yet reached stationarity and that the analysis should ideally have been performed with more MCMC iterations. For our interpretation here, however, we'll assume that the degree of stationarity is sufficient. What you also should notice is that the list of parameters on the left-hand side of the window is now much shorter than it usually is with results of BEAST2 analyses. In fact, only three parameters are shown: The speciation rate ("lambda"), the age of the root of the species tree ("treeHeightLogger"), and the substitution rate ("clockRate"). Note that the substitution rate is not comparable to a genome-wide rate due to ascertainment bias in the SNP dataset, even though SNAPP by default applies an ascertainment-bias correction (see [Bryant et al. 2012](https://academic.oup.com/mbe/article/29/8/1917/1045283) for details). However, one model parameter is not included in the log output yet, namely the population size. Recall that by using script `snapp_prep.rb` to generate the XML file, we implemented a model in which the population sizes of all branches are set to be identical to each other. Thus, if the population sizes had been included in the log file, this file would contain a large number of columns with identical information. To avoid this, the output of the population sizes to the log file has been disabled by `snapp_prep.rb`. However, the population size estimates are still available because they were instead written to the tree file `snapp.trees`, and we can now add them to the log file `snapp.log` using the Ruby script `add_theta_to_log.rb`. Thus, download the script [`add_theta_to_log.rb`](https://raw.githubusercontent.com/mmatschiner/snapp_prep/master/add_theta_to_log.rb) from the github repository for `snapp_prep.rb`, by executing the following command on Saga:
 
@@ -353,6 +356,13 @@ While the SNAPPER analysis (and probably also still the SNAPP analysis) are runn
 	**Question 8 (if you already did tutorial Bayesian Species-Tree Inference):** How does the divergence-time estimate for *Neolamprologus marunguensis* ("neomar"), *Neolamprologus gracilis* ("neogra"), *Neolamprologus brichardi* ("neobri"), and *Neolamprologus olivaceous* ("neooli") compare to that obtained with StarBEAST2 in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md)? [(see answer)](#q8)
 
 Despite the remaining uncertainty in the relationships among the *Neolamprologus* species, the SNAPP analysis has been valuable as it allowed us to estimate an average population size for species of the tribe Lamprologini, and improved the estimates of divergence times within the group.
+
+
+<a name="comparison"></a>
+## Comparison of results obtained with SNAPP and SNAPPER
+
+XXX
+
 
 <br><hr>
 
