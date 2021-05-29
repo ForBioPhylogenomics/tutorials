@@ -269,7 +269,7 @@ In this part of the tutorial, we will run a basic Bayesian phylogenetic analysis
 
 * Upload the XML input file form BEAST2 to Saga using `scp`.
 
-	If anything should have gone wrong during the preparation of the XML input file `beast2.xml` with BEAUti, you can alternatively find a prepared version of the file in directory `/cluster/projects/nn9458k/phylogenomics/week2/res` on Saga, or download it from GitHub with `wget XXX.xml`.
+	If anything should have gone wrong during the preparation of the XML input file `beast2.xml` with BEAUti, you can alternatively find a prepared version of the file in directory `/cluster/projects/nn9458k/phylogenomics/week2/res` on Saga, or download it from GitHub with `wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_res/beast2.xml`.
 
 * To run BEAST2 on Saga, we will still need to write a Slurm script so that we can submit the analysis for execution on the cluster. Thus, open a new file named `run_beast2.slurm` with a text editor available on Saga, such as Emacs:
 
@@ -280,7 +280,7 @@ In this part of the tutorial, we will run a basic Bayesian phylogenetic analysis
 		#!/bin/bash
 
 		# Job name:
-		#SBATCH --job-name=snapp
+		#SBATCH --job-name=beast2
 		#
 		# Wall clock limit:
 		#SBATCH --time=2:00:00
@@ -343,44 +343,101 @@ While the two BEAST2 analyses are running, you may continue with the next part o
 <a name="bmodeltest"></a>
 ## Automatic substitution model selection with BEAST2
 
-In the above phylogenetic inference, we assumed that the GTR substitution model with gamma-distributed rate variation would be an appropriate model of evolution for the sequence data. While this substitution model in fact may fit well to all partitions, it would be more convenient if we would not have to specify a substitution model at all *a priori*, and if during the Bayesian analysis, one could average over multiple substitution models according to their relative fit to the data. This is made possible by the [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package for BEAST2, which we will use in this part of the tutorial. For further information, note that an excellent tutorial on the use of bModelTest is available at the [Taming the BEAST](https://taming-the-beast.org/tutorials/Substitution-model-averaging/) website.
+In the above phylogenetic inference, we assumed that the GTR substitution model with gamma-distributed rate variation would be an appropriate model of evolution for each partition. Instead of making this assumption, it would be more convenient if we would not have to specify a substitution model at all *a priori*, and if during the Bayesian analysis, one could average over multiple substitution models according to their relative fit to the data. This is made possible by the [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package for BEAST2, which we will use in this part of the tutorial. For further information, note that an excellent tutorial on the use of bModelTest is available at the [Taming the BEAST](https://taming-the-beast.org/tutorials/Substitution-model-averaging/) website.
 
-* Then, click "Load" in BEAUti's "File" menu to reload the file `beast2.xml` that you generated in the first part of this tutorial.<p align="center"><img src="img/beauti17.png" alt="BEAUti" width="700"></p> <!--XXX update screenshot XXX-->
+* If you closed the BEAUti window after saving the XML input file, reopen BEAUti click "Load" in the "File" menu to reload the file `beast2.xml`. If the BEAUti window is still open, this is not required.
 
-* Go straight to the "Site Model" tab once the data and settings from file `beast2.xml` are loaded. There, click on the drop-down menu at the top of the window, where currently "Gamma Site Model" is selected. You'll see that a second option, the "BEAST Model Test" is now available in this drop-down menu, as shown in the screenshot below.<p align="center"><img src="img/beauti18.png" alt="BEAUti" width="700"></p>
+* Go to the "Site Model" tab. There, click on the drop-down menu at the top of the window, where currently "Gamma Site Model" is selected. If the bModelTest add-on package has been loaded correctly (see [Requirements](#requirements)), the drop-down menu has a second option named "BEAST Model Test", as shown in the screenshot below.<p align="center"><img src="img/beauti18.png" alt="BEAUti" width="700"></p>
 
-* Click on "BEAST Model Test" to select this model. The drop-down menu in which "transitionsTransversionsSplit" is currently selected allows to specify a set of substitution models that should be considered in the analysis. Which models are included in each set is shown in Fig. 1 of [Bouckaert and Drummond (2017)](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6). In most cases it should be more than sufficient to use a smaller set of models, such as the "namedExtended" set that includes nine different models (and their derivations with or without estimated nucleotide frequencies; see Fig. 1c of [Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)). Thus, select "namedSelected" from this drop-down menu. Leave the checkbox next to "Empirical" unticked to allow estimation of nucleotide frequencies. Then, again set the tick to the right of "Mutation Rate" to specify that this rate should be estimated. The window should then look as in the next screenshot.<p align="center"><img src="img/beauti19.png" alt="BEAUti" width="700"></p>
+* Click on "BEAST Model Test" to select this model. The window should then show a different set of options.<p align="center"><img src="img/beauti19.png" alt="BEAUti" width="700"></p>
 
-* As before, select all four partitions in the panel at the left of the window, and click "OK" to clone the settings from the first partition to all other partitions, as shown in the next screenshot.<p align="center"><img src="img/beauti20.png" alt="BEAUti" width="700"></p>
+* The drop-down menu in which "transitionsTransversionsSplit" is currently selected allows to specify a set of substitution models that should be considered in the analysis. Which models are included in each set is shown in Fig. 1 of [Bouckaert and Drummond (2017)](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6). In most cases it should be more than sufficient to use a smaller set of models, such as the "namedExtended" set that includes nine different models (and their derivations with or without estimated nucleotide frequencies; see Fig. 1c of [Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)). Thus, select "namedExtended" from this drop-down menu. Leave the checkbox next to "Empirical" unticked to allow estimation of nucleotide frequencies. Then, again set the tick to the right of "Mutation Rate" to specify that this rate should be estimated. The window should then look as in the next screenshot.<p align="center"><img src="img/beauti20.png" alt="BEAUti" width="700"></p>
 
-* Leave all settings in the "Clock Model" and "Priors" tabs unchanged, and go to the "MCMC" tab, where the output file names should be changed to avoid overwriting the output of the previous BEAST2 analysis. Click on the black triangle to the left of "tracelog" and specify "combined\_bmodeltest.log" as the name of the log output file. Then, click on the triangle next to "treelog" and specify "combined\_bmodeltest.trees" as the name of the tree file. Finally, click "Save As" in BEAUti's "File" menu and save the analysis settings to a new file named `combined_bmodeltest.xml`.
+* As before, select all partitions in the panel at the left of the window, and click "OK" to clone the settings from the first partition to all other partitions, as shown in the next screenshot.<p align="center"><img src="img/beauti21.png" alt="BEAUti" width="700"></p>
 
-* To run BEAST2 with the file [`combined_bmodeltest.xml`](res/combined_bmodeltest.xml), we may now not be able to do so with the GUI version of BEAST2 because the analysis of file `beast2.xml` may still be running. If this is the case, we can run BEAST2 on the command-line instead, because the BEAST2 package that you downloaded also includes scripts to do so. Find out the path to your BEAST2 program package (on Mac OS X, this is usually `/Applications/BEAST\ 2.6.3/bin/` but you may have placed the package elsewhere). To familiarize yourself with the command-line options of BEAST2, type
+* Leave all settings in the "Clock Model" and "Priors" tabs unchanged, and go to the "MCMC" tab, where the output file names should be changed to avoid overwriting the output of the previous BEAST2 analysis. Click on the black triangle to the left of "tracelog" and specify "bmodeltest.log" as the name of the log output file. Then, click on the triangle next to "treelog" and specify "bmodeltest.trees" as the name of the tree file.<p align="center"><img src="img/beauti22.png" alt="BEAUti" width="700"></p>
 
-		/Applications/BEAST\ 2.6.3/bin/beast -help
+* Finally, click "Save As" in BEAUti's "File" menu and save the analysis settings to a new file named `bmodeltest.xml`.
+
+* Upload this XML input file form BEAST2 to Saga using `scp`.
+
+* To run BEAST2 with the file `bmodeltest.xml`, we'll need a new Slurm script. On Saga, copy the existing Slurm script `run_beast2.slurm` to a new file named `run_bmodeltest.slurm`:
+
+		cp run_beast2.slurm run_bmodeltest.slurm
 		
-	or an equivalent command if BEAST2 is not located in `/Applications/BEAST\ 2.6.3/bin/`.
-	
-	If this works, then run BEAST2 on the command line with file `combined_bmodeltest.xml`:
-	
-		/Applications/BEAST\ 2.6.3/bin/beast combined_bmodeltest.xml
-				
-* While the two versions of BEAST2 are running with the files `beast2.xml` (the GUI version) and `combined_bmodeltest.xml` (the command-line version), have a look at the screen output produced by both analyses. **Question 1:** How long does each analysis require per one million MCMC iterations? Is one of them faster? [(see answer)](#q1)
+* Open file `run_bmodeltest.slurm` with a text editor available on Saga, such as Emacs:
 
-If you don't want to wait for the analyses to finish, you may continue this tutorial with the output files of my analysis: The files `beast2.log` and `beast2.trees` are the log and tree files resulting from the analysis of file `beast.xml`, and the files [`combined_bmodeltest.log`](res/combined_bmodeltest.log) and [`combined_bmodeltest.trees`](res/combined_bmodeltest.trees) are the output of the analysis with file [`combined_bmodeltest.xml`](res/`combined_bmodeltest.xml`).
+		emacs run_bmodeltest.slurm
+		
+* Replace "beast2" with "bmodeltest" on lines 4, 17, and 28, so that file `run_bmodeltest.slurm` has the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=bmodeltest
+		# 
+		# Wall clock limit:
+		#SBATCH --time=2:00:00
+		# 
+		# Processor and memory usage:
+		#SBATCH --ntasks=1
+		#SBATCH --mem-per-cpu=1G
+		# 
+		# Accounting:
+		#SBATCH --account=nn9458k
+		# 
+		# Output:
+		#SBATCH --output=run_bmodeltest.out
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load the beast2 module.
+		module load Beast/2.6.4-GCC-9.3.0
+
+		# Run beast2.
+		beast bmodeltest.xml
+
+* Then, close and save the text editor, and submit the Slurm script with `sbatch`:
+
+		sbatch run_bmodeltest.slurm
+
+	(we'll run just a single replicate analysis this time).
+				
+* While the BEAST2 are running for the files `beast2.xml` and `bmodeltest.xml`, have a look at the output that these analyses write to files `r01/run_beast.out`, `r02/run_beast.out`, and `run_bmodeltest.out`:
+
+		less r01/run_beast.out
+		less r02/run_beast.out
+		less run_bmodeltest.out
+
+	When you scroll to the end any of these output files, you'll find a table written by BEAST2, with information for "Sample", "posterior", "likelihood", "prior", and an estimate of the run time per million samples. Here "sample" refers to the iteration of the MCMC, and the "posterior", "likelihood", and "prior" are the log values of the posterior probability, the likelihood, and the prior probability, respectively, for the corresponding MCMC iteration. These values should initially change rapidly but become stationary after a while. Note that to track the progress of BEAST2, you may have to repeatedly close and open these files, so that you can see the lines that have been added to the end of it since you last opened the file.
+	
+	 **Question 1:** How long does each analysis require per one million MCMC iterations? Is one of them faster? [(see answer)](#q1)
+
+As soon as the BEAST2 analyses of file `beast2.xml` have finished or at least progressed to a few million MCMC iterations, you can continue with the next section of the tutorial.
+
+
+<a name="completeness"></a>
+## Assessing MCMC completeness
+
+In Bayesian analyses with the software BEAST2, it is rarely possible to tell *a priori* how many MCMC iterations will be required before the analysis can be considered complete. This is because to be considered "complete", any analyses using MCMC should have two properties: They should be "stationary" and "converged". While stationarity can be assessed with a single replicate analysis, convergence can only be assessed when the same analysis has been repeated multiple times; that's why we ran two replicates analyses of file `beast2.xml` (and if this would not just be for a tutorial, we should have done the same for `bmodeltest.xml`).
 
 
 <a name="tracer"></a>
-## Assessing MCMC stationarity with Tracer
+### Assessing MCMC stationarity with Tracer
 
-In Bayesian analyses with the software BEAST2, it is rarely possible to tell *a priori* how many MCMC iterations will be required before the analysis can be considered complete. Instead, whether or not an analysis is complete is usually decided based on the inspection of the log file once BEAST2 has performed the specified number of MCMC iterations. There are various ways in which MCMC output can be used to assess whether or not an analysis can be considered complete, and in the context of phylogenetic analyses with BEAST2, the most commonly used diagnostic tools are those implemented in [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy032/4989127)) or the R package [coda](https://cran.r-project.org/web/packages/coda/index.html) ([Plummer et al. 2006](https://cran.r-project.org/doc/Rnews/Rnews_2006-1.pdf#page=7)). Here, we are going to investigate run completeness with Tracer. Ideally, we should have conducted the same BEAST2 analysis multiple times; then, we could assess whether the replicate MCMC chains "converge" to the same posterior distribution, which would be a requirement for a complete MCMC analysis. However, given that we only conducted a single replicate of each of the two MCMC analyses (one with file `beast2.xml` and one with file `combined_bmodeltest.xml`), we are limited to assessing the "stationarity" of the two chains. The easiest ways to do this in Tracer are:
+There are various ways to assess whether or not an MCMC analysis is "stationary", and in the context of phylogenetic analyses with BEAST2, the most commonly used diagnostic tools are those implemented in [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy032/4989127)) or the R package [coda](https://cran.r-project.org/web/packages/coda/index.html) ([Plummer et al. 2006](https://cran.r-project.org/doc/Rnews/Rnews_2006-1.pdf#page=7)). Here, we are going to investigate MCMC stationary with Tracer. The easiest ways to do this in Tracer are:
 
-1. Calculation of "effective sample sizes" (ESS). Because consecutive MCMC iterations are always highly correlated, the number of effectively independent samples obtained for each parameter is generally much lower than the total number of sampled states. Calculating ESS values for each parameter is a way to assess the number of independent samples that would be equivalent to the much larger number of auto-correlated samples drawn for these parameters. These ESS values are automatically calculated for each parameter by Tracer. As a rule of thumb, the ESS values of all model parameters, or at least of all parameters of interest, should be above 200.
-2. Visual investigation of trace plots. The traces of all parameter estimates, or at least of those parameters with low ESS values should be visually inspected to assess MCMC stationarity. A good indicator of stationarity is when the trace plot has similarities to a "hairy caterpillar". While this comparison might sound odd, you'll understand its meaning when you see such a trace plot in Tracer.
+1. Calculation of "effective sample sizes" (ESS). Because consecutive MCMC iterations are always highly correlated, the number of effectively independent samples obtained for each parameter is generally much lower than the total number of sampled iterations. Calculating ESS values for each parameter is a way to assess the number of independent samples that would be equivalent to the much larger number of auto-correlated samples drawn for these parameters. These ESS values are automatically calculated for each parameter by Tracer. As a rule of thumb, the ESS values of all model parameters, or at least of all parameters of interest, should be above 200.
+2. Visual investigation of trace plots. The traces of all parameter estimates, or at least of those parameters with low ESS values should be visually inspected to assess MCMC stationarity. A good indicator of stationarity is when the trace plot has similarities to a "hairy caterpillar". While this comparison might sound odd, you'll clearly understand its meaning when you see such a trace plot in Tracer.
 
-Thus, both the calculation of ESS values as well as the visual inspection of trace plots should indicate stationarity of the MCMC chain; if this is not the case, the run should be resumed. For BEAST2 analyses, resuming a chain is possible with the "-resume" option when using BEAST2 on the command-line, or by selecting option "resume: appends log to existing files" in the drop-down menu at the top of the BEAST2 window when using the GUI version.
+Thus, both the calculation of ESS values as well as the visual inspection of trace plots should indicate stationarity of the MCMC chain; if this is not the case, the run should be resumed. For BEAST2 analyses, resuming a chain is possible with the `-resume` option of BEAST2.
 
-* After the two BEAST2 analyses have completed (or if you decided not to wait and use the output of my analysis instead), open file `beast2.log` in the program Tracer. The Tracer window should then look more or less as shown in the next screenshot<p align="center"><img src="img/tracer1.png" alt="Tracer" width="700"></p>In the top left part of the Tracer window, you'll see a list of the loaded log files, which currently is just the single file `beast2.log`. This part of the window also specifies the number of states found in this file, and the burn-in to be cut from the beginning of the MCMC chain. Cutting away a burn-in removes the initial period of the MCMC chain during which it may not have sampled from the true posterior distribution yet.
+* Download file `beast2.log` from the `r01` directory on Saga to your local computer, using `scp`.
+
+* Open this file in the program Tracer. The Tracer window should then look more or less as shown in the next screenshot<p align="center"><img src="img/tracer1.png" alt="Tracer" width="700"></p>In the top left part of the Tracer window, you'll see a list of the loaded log files, which currently is just the single file `beast2.log`. This part of the window also specifies the number of states found in this file, and the burn-in to be cut from the beginning of the MCMC chain. Cutting away a burn-in removes the initial period of the MCMC chain during which it may not have sampled from the true posterior distribution yet.
 
 	In the bottom left part of the Tracer window, you'll see statistics for the estimate of the posterior probability (just named "posterior"), the likelihood, and the prior probability (just named "prior"), as well as for the parameters estimated during the analysis (except the phylogeny, which also represents a set of parameters). The second column in this part shows the mean estimates for each parameter and their ESS values. **Question 2:** Do the ESS values of all parameters indicate stationarity? [(see answer)](#q2)
 
@@ -388,9 +445,11 @@ Thus, both the calculation of ESS values as well as the visual inspection of tra
 
 * With the posterior probability still being selected in the list at the bottom left, click on the tab for "Trace" (at the very top right). You will see how the posterior probability changed over the course of the MCMC. This trace plot should ideally have the form of a "hairy caterpillar", but as you can see from the next screenshot, this is not the case for the posterior probability.<p align="center"><img src="img/tracer2.png" alt="Tracer" width="700"></p>
 
-* Now, click on the prior probability in the list at the bottom left of the window. You'll note that the trace looks very similar to that of the posterior, which may not be surprising given that the posterior probability is a (normalized) product of the prior probability and the likelihood. Thus, the auto-correlation in the prior probability seems to drive the auto-correlation in the posterior probability. Another way to visualize this is to select both the posterior and the prior probability at the same time (you may have to shift-click to do so) and then click on the "Joint-Marginal" tab next to the "Trace" tab. You'll see once again that the two measures are strongly correlated as in the next screenshot.<p align="center"><img src="img/tracer3.png" alt="Tracer" width="700"></p>
+* Now, click on the prior probability in the list at the bottom left of the window. You'll note that the trace looks very similar to that of the posterior, which may not be surprising given that the posterior probability is a (normalized) product of the prior probability and the likelihood. Thus, the auto-correlation in the prior probability seems to drive the auto-correlation in the posterior probability. Another way to visualize this is to select both the posterior and the prior probability at the same time (you may have to shift-click to do so) and then click on the "Joint-Marginal" tab next to the "Trace" tab. Also remove the tick from the checkbox for "Sample only" at the bottom of the window. The plot should then clearly show that the two measures are strongly correlated.<p align="center"><img src="img/tracer3.png" alt="Tracer" width="700"></p>
 
-* Have a look at the list of ESS values in the bottom left again. **Question 3:** Besides the prior and posterior probabilities, which parameter has the lowest ESS value? [(see answer)](#q3) **Question 4:** Could this parameter be responsible for the auto-correlation in the prior and posterior probabilities? [(see answer)](#q4)
+* Have a look at the list of ESS values in the bottom left again. **Question 3:** Besides the prior and posterior probabilities, which parameter has the lowest ESS value? [(see answer)](#q3) **Question 4:** Could this parameter be responsible for the low ESS value of the prior probability? [(see answer)](#q4)
+
+* Download 
 
 * Calculate the number of sites in the 16S alignment at which each pair of nucleotides co-occur, using the Ruby script [`count_substitutions.rb`](src/count_substitutions.rb):
 
@@ -442,28 +501,29 @@ The timeline resulting from the BEAST2 analysis based on the 16S and *RAG1* alig
 
 <a name="q1"></a>
 
-* **Question 1:** The times required per one million iterations should be very comparable between the two analyses. On my machine, about 6 minutes are required in both cases, with the analysis of file `beast2.xml` being slightly faster. Thus, to complete the 25 million iterations specified in both files, run times of about 2.5 hours are required.
+* **Question 1:** As you should be able to see from the fifth column of the output, the times required per one million iterations should be very comparable between the three analyses. About 5 minutes should be required in all cases, with the analysis of file `bmodeltest.xml` perhaps being slightly faster. Thus, to complete the 10 million iterations specified in both XML files, run times of about 50 minutes will be required.
 
 <a name="q2"></a>
 
-* **Question 2:** The low ESS values for the posterior and the prior probabilities clearly show that the chain can not be considered stationary yet. Even though the posterior and the prior probabilities are not themselves parameters of the model, their ESS values should also be above 200 (or ideally much higher) before the analysis can be considered complete.
+* **Question 2:** The low ESS values for the posterior and the prior probabilities clearly show that the chain can not be considered stationary yet. Even though the posterior and the prior probabilities are not themselves parameters of the model, their ESS values should also be above 200 (or ideally much higher) before the analysis can be considered stationary.
 
 <a name="q3"></a>
 
-* **Question 3:** <!--XXX update answer XXX--> If you used the results of my analysis (file `beast2.log`) for plotting in Tracer, the parameter with the lowest ESS value is the rate of C &rarr; G substitutions (named "rateCG.16S\_filtered"), with an ESS of 113.
+* **Question 3:** This may differ a bit each time that the analysis is run, but the parameter with the lowest ESS value is probably one of the substitution rates. In my analysis, the parameter with the lowest ESS value was the rate of A &rarr; T substitutions for the second partition (named "rateAT.02"), with an ESS of 16.<p align="center"><img src="img/tracer4.png" alt="Tracer" width="700"></p>
 
 <a name="q4"></a>
 
-* **Question 4:** In my analysis <!--XXX update answer XXX--> (file `beast2.log`), the parameter for the rate of C &rarr; G substitutions in fact seems to influence the prior probability. This is suggested by the apparently coinciding shifts in both traces, as shown in the next two screenshots.<p align="center"><img src="img/tracer4.png" alt="Tracer" width="700"></p><p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>The correlation between the C &rarr; G rate parameter and the prior probability is also apparent when the two values are plotted against each other, as shown below. The prior probability is particularly high when the substitution rate is extremely close to zero.<p align="center"><img src="img/r1.png" alt="Tracer" width="600"></p>This strong effect of the C &rarr; G substitution rate parameter on the overall prior probability can be explained when we look at the prior-probability density that we had placed on this parameter (just like on other substitution rates; this is a default prior-probability density for all rates when using the GTR model in BEAST2): This prior-probability density is specified in file [`beast2.xml`](res/combined.xm) as follows:
+* **Question 4:** In my analysis (file `beast2.log`), the parameter for the rate of A &rarr; T substitutions in the second partition in fact seems to influence the prior probability. This is suggested by the apparently coinciding shifts in both traces, as shown in the next two screenshots.<p align="center"><img src="img/tracer4.png" alt="Tracer" width="700"></p><p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>The correlation between the A &rarr; T rate parameter for the second partition and the prior probability is also apparent when the two values are plotted against each other, by again selecting both of them and clicking the "Joint-Marginal" tab. The prior probability is particularly high when the substitution rate is extremely close to zero.<p align="center"><img src="img/tracer6.png" alt="Tracer" width="700"></p>This strong effect of the A &rarr; T substitution rate parameter on the overall prior probability can be explained when we look at the prior-probability density that we had placed on this parameter (just like on other substitution rates; this is a default prior-probability density for all rates when using the GTR model in BEAST2): This prior-probability density is specified in file `beast2.xml` as follows:
 
-		<prior id="RateCGPrior.s:16s_filtered" name="distribution" x="@rateCG.s:16s_filtered">
-			<Gamma id="Gamma.3" name="distr">
-				<parameter id="RealParameter.11" estimate="false" name="alpha">0.05</parameter>
-				<parameter id="RealParameter.12" estimate="false" name="beta">10.0</parameter>
+		<prior id="RateATPrior.s:locus_0002" name="distribution" x="@rateAT.s:locus_0002">
+			<Gamma id="Gamma.2.locus_0002" name="distr">
+				<parameter id="RealParameter.14.locus_0002" spec="parameter.RealParameter" estimate="false" name="alpha">0.05</parameter>
+				<parameter id="RealParameter.15.locus_0002" spec="parameter.RealParameter" estimate="false" name="beta">10.0</parameter>
 			</Gamma>
 		</prior>
 
-	The above code specifies a gamma-distributed prior-probability density for the C &rarr; G substitution rate parameter, and the distribution parameters are alpha=0.05 and beta=10.0. The prior probability is therefore distributed as shown below:<p align="center"><img src="img/r2.png" alt="Tracer" width="600"></p>As shown in the above plot, the prior-probability density for the rate parameter grows towards infinity when the rate is very close to zero. This is fine as long as the sequence data supports a non-zero substitution rate strongly enough to pull the estimate away from zero. If one particular alignment partition, however, has very few substitutions of a particular type, the parameter estimate may be pulled towards zero by the increasing prior probability for this parameter, which then may have a strong influence on the overall prior probability.
+
+	The above code specifies a gamma-distributed prior-probability density for the C &rarr; G substitution rate parameter, and the distribution parameters are alpha=0.05 and beta=10.0. The prior probability is therefore distributed as shown below:<p align="center"><img src="img/r1.png" alt="Tracer" width="600"></p>As shown in the above plot, the prior-probability density for the rate parameter grows towards infinity when the rate is very close to zero. This is fine as long as the sequence data supports a non-zero substitution rate strongly enough to pull the estimate away from zero. If one particular alignment partition, however, has very few substitutions of a particular type, the parameter estimate may be pulled towards zero by the increasing prior probability for this parameter, which then may have a strong influence on the overall prior probability.
 	
 <a name="q5"></a>
 
