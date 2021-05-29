@@ -36,7 +36,7 @@ To also test the effect of population-size variation on the inference methods, a
 <a name="requirements"></a>
 ## Requirements
 
-* **Msprime:** The Python library [msprime](https://tskit.dev/msprime/docs/stable/intro.html) ([Kelleher et al. 2016](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842)) will be required for all simulations. The library can be installed with pip for Python 3, using the following commands:
+* **Msprime:** The Python library [msprime](https://tskit.dev/msprime/docs/stable/intro.html) ([Kelleher et al. 2016](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842)) will be required for all simulations. The library can be installed with pip for Python, using the following commands:
 
 		module purge
 		module load Python/3.8.2-GCCcore-9.3.0
@@ -44,7 +44,7 @@ To also test the effect of population-size variation on the inference methods, a
 		
 	The installation can be tested with this command:
 	
-		python3 -c 'import msprime'
+		python -c 'import msprime'
 		
 	If this does not produce an error message, the installation has worked.
 
@@ -134,12 +134,12 @@ All of the inference methods used in other tutorials of this course (e.g. [Maxim
 
 To test how the reliability of the inference methods can be affected by model violations, we can deliberately simulate data with such violations and compare results inferred from these data to results inferred from data simulated without model violations.
 
-The most commonly used tool for such simulations of genomic data is currently Msprime, which can be installed and accessed through Python3. Msprime has seen a lot of active development over the last few years by Jerome Kelleher and a large international community, leading to the release of version 1.0 in April 2021 with many new functions that greatly facilitate simulations above the population level; some of which will be used in this tutorial.
+The most commonly used tool for such simulations of genomic data is currently Msprime, which can be installed and accessed through Python. Msprime has seen a lot of active development over the last few years by Jerome Kelleher and a large international community, leading to the release of version 1.0 in April 2021 with many new functions that greatly facilitate simulations above the population level; some of which will be used in this tutorial.
 
 <a name="start"></a>
 ### Getting started with Msprime
 	 
-To perform simulations with Msprime, we are going to write a script in Python3, and we will execute this script on the command line. The script can be written with a text editor available on Saga such as Emacs, Vim, or Nano, or it can be written with a GUI text editor on a local computer; but then it will always need to be uploaded to Saga before it can be executed. Commands given here assume that Emacs is used as a text editor on Saga; for other text editors, simply replace "emacs" with "vim" or "nano" in the commands given below.
+To perform simulations with Msprime, we are going to write a script in Python, and we will execute this script on the command line. The script can be written with a text editor available on Saga such as Emacs, Vim, or Nano, or it can be written with a GUI text editor on a local computer; but then it will always need to be uploaded to Saga before it can be executed. Commands given here assume that Emacs is used as a text editor on Saga; for other text editors, simply replace "emacs" with "vim" or "nano" in the commands given below.
 
 * Start editing a new script named `simulate_data.py` by typing
 
@@ -152,14 +152,14 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 		
 * Save and close the script (if using Emacs, the rather complicated key combination to do so is Ctrl-X Ctrl-S Ctrl-X Ctrl-C).
 
-* Load a module for Python3:
+* Load a module for Python:
 
 		module purge
 		module load Python/3.8.2-GCCcore-9.3.0
 		
-* Use Python3 to execute the script. Normally, the command to do so would be `python3 simulate_data.py`, but to execute scripts on Saga, we either need to place them inside of Slurm scripts that are submitted with `sbatch`, or we need to use the command `srun` and specify computational requirements and an account number as arguments to that command. To execute the script `simulate_data.py`, use this command:
+* Use Python to execute the script. Normally, the command to do so would be `python simulate_data.py`, but to execute scripts on Saga, we either need to place them inside of Slurm scripts that are submitted with `sbatch`, or we need to use the command `srun` and specify computational requirements and an account number as arguments to that command. To execute the script `simulate_data.py`, use this command:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python3 simulate_data.py
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data.py
 		
 	While this command should not produce an error message, it also doesn't produce any other type of output.
 	
@@ -167,7 +167,7 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 
 		print(ts)
 		
-	Close the script again, and then execute it again with Python3. This should produce two output tables that jointly provide information about a "TreeSequence" object. These TreeSequence objects are the primary products of Msprime simulations, and as the name indicates, they represent a sequence of trees along a simulated chromosome. Each of these trees applies to a certain region of the chromosome, and is separated from the trees on adjacent regions by a recombination event. These recombination events always cause slight changes in the topologies or branch lengths between two adjacent trees; therefore any two adjacent trees are never completely independent of each other but instead highly similar. This property is cleverly exploited by Msprime to store TreeSequence objects in a highly compressed format.
+	Close the script again, and then execute it again with Python. This should produce two output tables that jointly provide information about a "TreeSequence" object. These TreeSequence objects are the primary products of Msprime simulations, and as the name indicates, they represent a sequence of trees along a simulated chromosome. Each of these trees applies to a certain region of the chromosome, and is separated from the trees on adjacent regions by a recombination event. These recombination events always cause slight changes in the topologies or branch lengths between two adjacent trees; therefore any two adjacent trees are never completely independent of each other but instead highly similar. This property is cleverly exploited by Msprime to store TreeSequence objects in a highly compressed format.
 	
 	In the current case, the first output table informs us that there is a single tree stored in the simulated TreeSequence object, that the sequence (=chromosome) length is 1 bp, and that there are four sampled nodes. The first two of these characteristics are owed to implemented default values for parameters that we did not change yet. There is so far only a single tree in the tree sequence, because the default value for the recombination rate is 0 and we did not change it (and because the sequence length is 1 bp); and the length of the simulated sequence is 1 bp because this is the default, and we did not specify one. The third characteristic, the presence of four sampled nodes, however, is due to our specification of "2" in the parentheses that followed the `msprime.sim_ancestry` command. This number specified the number of diploid samples that should be drawn from the simulated population; which is the first parameter used by the `msprime.sim_ancestry` command. The two diploid individuals have a total of four chromosomes which are represented by what Msprime calls "sampled nodes".
 	
@@ -196,7 +196,7 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 
 * Execute the script again:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python3 simulate_data.py
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data.py
 		
 	This should produce a new file named `ts.svg`.
 	
@@ -234,7 +234,7 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 			population_size=100,
 			random_seed=1234)
 
-* Execute the script again with Python3 and download and open once again the file `ts.svg`. The figure showing the tree sequence should now look like this, with much older ages of coalescent events up to hundreds of generations ago:<p align="center"><img src="img/msprime2.png" alt="Msprime" width="700"></p>
+* Execute the script again with Python and download and open once again the file `ts.svg`. The figure showing the tree sequence should now look like this, with much older ages of coalescent events up to hundreds of generations ago:<p align="center"><img src="img/msprime2.png" alt="Msprime" width="700"></p>
 	
 * The expected time to coalescence between a pair of sequences is 2 times the diploid population size; thus, we would expect an average coalescence time of 200 generations with our population of a size of 100 diploid individuals. Test if this expectation matches the results when the number of samples is set to 1 (thus, one diploid individual that has two sequence) and the recombination rate is doubled to produce some more trees in the tree sequence:
 
@@ -257,7 +257,7 @@ To perform simulations with Msprime, we are going to write a script in Python3, 
 		# Write the figure to this new file.
 		f.write(svg)
 
-* Execute the script again with Python3, and download and open the file `ts.svg` again.
+* Execute the script again with Python, and download and open the file `ts.svg` again.
 
 	**Question 3:** Do the coalescence times match the expectation of being around 200 generations on average? [(see answer)](#q3)
 
@@ -312,7 +312,7 @@ In order to use the simulated genomic data for inference, we will need to export
 	
 	<!-- Run time: 4 s -->
 	
-* Run this script again with Python3, and then have a look at the output file named "simulation.vcf", for example with the `less` command: `less simulation.vcf`. This should show that the VCF file in fact has information for 26 variable sites, which are located between positions 144 and 9002 of the simulated chromosome. However, because we specified a sample size of 1 (diploid individual) in our simulations, the VCF file contains only a single column with genotype information.
+* Run this script again with Python, and then have a look at the output file named "simulation.vcf", for example with the `less` command: `less simulation.vcf`. This should show that the VCF file in fact has information for 26 variable sites, which are located between positions 144 and 9002 of the simulated chromosome. However, because we specified a sample size of 1 (diploid individual) in our simulations, the VCF file contains only a single column with genotype information.
 
 * Explore how the VCF file changes when you use a sample size of 4 instead of 1.
 
@@ -455,7 +455,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		with open("simulation.vcf", "w") as vcf:
 			mts.write_vcf(vcf)
 
-	Executing this script should take about 20 to 30 minutes, which means that instead of executing it with `srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python3 simulate_data.py`, we now have to write a Slurm script for it, and to submit the Slurm script with `sbatch` (see next point).
+	Executing this script should take about 20 to 30 minutes, which means that instead of executing it with `srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data.py`, we now have to write a Slurm script for it, and to submit the Slurm script with `sbatch` (see next point).
 
 * Write a Slurm script with the following content, and name it `simulate_data.slurm`:
 
@@ -482,11 +482,11 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		set -o nounset  # Treat any unset variables as an error                                                                                                                                 
 		module --quiet purge  # Reset the modules to the system default                                                                                                                         
 
-		# Load the python3 module.                                                                                                                                                              
+		# Load the python module.                                                                                                                                                              
 		module load Python/3.8.2-GCCcore-9.3.0
 
 		# Execute the script.                                                                                                                                                                   
-		python3 simulate_data.py
+		python simulate_data.py
 
 * Submit the Slurm script using `sbatch`:
 
@@ -532,7 +532,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 
 * Then, execute this script (don't forget to replace "XXX" with an introgression rate):
 	
-		 srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python3 simulate_data_introgression1.py
+		 srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data_introgression1.py
 
 	The first table of the output of the `DemographyDebugger` should indicate that there is now a non-zero introgression rate between "neooli" and "neomar".
 	
@@ -603,11 +603,11 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		set -o nounset  # Treat any unset variables as an error
 		module --quiet purge  # Reset the modules to the system default
 
-		# Load the python3 module.
+		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0
 
 		# Execute the script.
-		python3 simulate_data_introgression1.py
+		python simulate_data_introgression1.py
 
 * When the this is done, submit `simulate_data_introgression1.slurm` with `sbatch`:
 
@@ -652,11 +652,11 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		set -o nounset  # Treat any unset variables as an error
 		module --quiet purge  # Reset the modules to the system default                                                                                                                         
 
-		# Load the python3 module.
+		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0
 
 		# Execute the script.
-		python3 simulate_data_introgression2.py
+		python simulate_data_introgression2.py
 
 * Also submit the Slurm script `simulate_data_introgression2.slurm` with `sbatch`:
 
@@ -711,7 +711,7 @@ There are a number of options to simulate changes in population sizes with Mspri
 
 * Execute the new script `simulate_data_bottleneck.py`:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python3 simulate_data_bottleneck.py
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data_bottleneck.py
 
 	The `DemographyDebugger` output should now include the bottleck as an event at generation 5e+05.
 	
@@ -779,11 +779,11 @@ There are a number of options to simulate changes in population sizes with Mspri
 		set -o nounset  # Treat any unset variables as an error
 		module --quiet purge  # Reset the modules to the system default                                                                                                                         
 
-		# Load the python3 module.
+		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0
 
 		# Execute the script.
-		python3 simulate_data_bottleneck.py
+		python simulate_data_bottleneck.py
 
 * Then, submit the Slurm script `simulate_data_bottleneck.slurm` with `sbatch`:
 
@@ -791,7 +791,7 @@ There are a number of options to simulate changes in population sizes with Mspri
 
 <!-- Run time: 30-40 min -->
 
-As some of the inference methods require sequence alignments rather than variant data in VCF format as input, we still need to prepare sequence alignments from the simulated genomic data. This can be done with the Python3 script `make_alignments_from_vcf.py`, which extracts all variants from a VCF file for a set of regions evenly sampled across the chromosome and adds randomly selected nucleotides for all invariant sites. The script assumes that all variants are phased and thus writes two sequences per sample to each alignment.
+As some of the inference methods require sequence alignments rather than variant data in VCF format as input, we still need to prepare sequence alignments from the simulated genomic data. This can be done with the Python script `make_alignments_from_vcf.py`, which extracts all variants from a VCF file for a set of regions evenly sampled across the chromosome and adds randomly selected nucleotides for all invariant sites. The script assumes that all variants are phased and thus writes two sequences per sample to each alignment.
 
 * Download the script `make_alignments_from_vcf.py`:
 
@@ -799,23 +799,23 @@ As some of the inference methods require sequence alignments rather than variant
 
 * Have a look at the help text of the script:
 
-		python3 make_alignments_from_vcf.py -h
+		python make_alignments_from_vcf.py -h
 		
 	You'll see that you can specify the number of alignments to extract from the VCF with option `-n` and the length of these alignments with option `-l`. Additionally, you can specify a path to which all alignments should be written with `-p`. The first and second arguments need to be the input file in VCF format and a prefix for all output files, respectively. The length of the chromosome should also be specified with option `-c`, because this information can not always be read from the VCF file. Note that in its current version, this script assumes that the VCF file contains data only for a single chromosome, which is the case in the VCF files generated with Msprime.
 
 * Extract sequence alignments from each of the VCF files generated with Msprime. Extracting a total number of 1,000 alignments that are each 2,500 bp long should produce a set of alignments that is suitable for all alignment-based inference methods, but you could vary these parameters to test the effects of having more or less and longer or shorter alignments:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation.vcf simulation -n 1000 -c 5000000 -l 2500 -p simulation_alignments
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation_introgression1.vcf simulation_introgression1 -n 1000 -c 5000000 -l 2500 -p simulation_introgression1_alignments
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation_introgression2.vcf simulation_introgression2 -n 1000 -c 5000000 -l 2500 -p simulation_introgression2_alignments
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py simulation_bottleneck.vcf simulation_bottleneck -n 1000 -c 5000000 -l 2500 -p simulation_bottleneck_alignments
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python make_alignments_from_vcf.py simulation.vcf simulation -n 1000 -c 5000000 -l 2500 -p simulation_alignments
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python make_alignments_from_vcf.py simulation_introgression1.vcf simulation_introgression1 -n 1000 -c 5000000 -l 2500 -p simulation_introgression1_alignments
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python make_alignments_from_vcf.py simulation_introgression2.vcf simulation_introgression2 -n 1000 -c 5000000 -l 2500 -p simulation_introgression2_alignments
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python make_alignments_from_vcf.py simulation_bottleneck.vcf simulation_bottleneck -n 1000 -c 5000000 -l 2500 -p simulation_bottleneck_alignments
 
 	Perhaps more elegantly, the above commands could alternatively be written as a loop:
 	
 		for vcf in *.vcf
 		do
 			vcf_id=${vcf%.vcf}
-			srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python3 make_alignments_from_vcf.py ${vcf} ${vcf_id} -n 1000 -c 5000000 -l 2500 -p ${vcf_id}_alignments
+			srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python make_alignments_from_vcf.py ${vcf} ${vcf_id} -n 1000 -c 5000000 -l 2500 -p ${vcf_id}_alignments
 		done
 
 	You may notice that the file names of the alignments include the start and end position of each alignment on the chromosome, after the specified prefix.
@@ -877,13 +877,13 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 * To convert a set of alignments into Nexus format, you could write a script named `convert_to_nexus.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`):
 
-		# Load the python3 module.
+		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0
 				
 		for phy in `ls simulation_alignments/*.phy | head -n 50`
 		do
 			nex=${phy%.phy}.nex
-			python3 convert.py ${phy} ${nex} -f nexus
+			python convert.py ${phy} ${nex} -f nexus
 		done
 
 * Before executing this script, you will need to download the conversion script `convert.py`:
@@ -943,7 +943,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 			set -o nounset  # Treat any unset variables as an error
 			module --quiet purge  # Reset the modules to the system default
 
-			# Load the python3 module.
+			# Load the python module.
 			module load Beast/2.6.4-GCC-9.3.0 
 
 			# Run starbeast2.
@@ -1030,7 +1030,7 @@ As the probability of recombination depends on many factors, including the recom
 
 		chmod +x c-genie
 
-* Then, have a look at the help text of c-genie with this command (this is only going to work if your `python3` is installed in `/usr/local/bin` - if `python3` is in another location, use `python3 c-genie -h`*):
+* Then, have a look at the help text of c-genie with this command (this is only going to work if your `python` is installed in `/usr/local/bin` - if `python` is in another location, use `python c-genie -h`*):
 
 		./c-genie -h
 		

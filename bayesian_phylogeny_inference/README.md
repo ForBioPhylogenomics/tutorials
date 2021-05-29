@@ -22,96 +22,332 @@ In contrast to maximum-likelihood inference, Bayesian inference can take into ac
 <a name="outline"></a>
 ## Outline
 
-In this tutorial, I will demonstrate how time-calibrated phylogenies can be inferred with programs of the Bayesian software package [BEAST2](https://www.beast2.org) ([Bouckaert et al. 2014](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003537)). The settings for the analysis will be specified with the program BEAUti, the Bayesian analysis itself is going to be conducted with BEAST2, and a summary tree will be generated with the program TreeAnnotator. These three programs are part of the BEAST2 package. In addition, I will present the use of the program [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy032/4989127)) to assess stationarity of the Bayesian analysis. Finally, I am going to demonstrate the use of the very convenient [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package for BEAST2, which removes the requirement of specifying a particular substitution model as it automatically infers the substitution model as part of the phylogenetic analysis and averages over several models if more than one is found to fit the data well.
+In this tutorial, I will demonstrate how time-calibrated phylogenies can be inferred with programs of the Bayesian software package [BEAST2](https://www.beast2.org) ([Bouckaert et al. 2014](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003537)). The settings for the analysis will be specified with the program BEAUti, the Bayesian analysis itself is going to be conducted with BEAST2, and a summary tree will be generated with the program TreeAnnotator. These three programs are part of the BEAST2 package. In addition, I will present the use of the program [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy032/4989127)) to assess stationarity of the Bayesian analysis. Finally, I am going to demonstrate the use of the very convenient [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package for BEAST2, which removes the requirement of specifying a particular substitution model as it automatically infers the substitution model as part of the phylogenetic analysis and averages over several models if more than one is found to fit the data well. The preparation of input files for BEAST2 and the interpretation of the results will be done with GUI programs on local computers, but the BEAST2 analysis itself will be executed on Saga.
 
 
 <a name="dataset"></a>
 ## Dataset
 
-The data used in this tutorial are the filtered versions of the alignments generated for 16S and *RAG1* sequences in tutorial [Multiple Sequence Alignment](../multiple_sequence_alignment/README.md). These alignments contain sequence data for 41 teleost fish species and are 486 and 1,368 bp long, respectively. More information on the origin of the dataset can be found in the [Multiple Sequence Alignment](../multiple_sequence_alignment/README.md) tutorial. The software BEAST2 requires input in Nexus format, therefore we will use the files [`16s_filtered.nex`](data/16s_filtered.nex) and [`rag1_filtered.nex`](data/rag1_filtered.nex).
+The data used in this tutorial are the sequence alignments for 100 orthologous genes of 41 teleost fishes from the study of [Hughes et al. (2018)](https://doi.org/10.1073/pnas.1719358115) that were already used in the first week of the course. This dataset will be further reduced to 10 genes for the 20 species listed below, to limit the run times of the Bayesian analyses with BEAST2.
+
+<center>
+
+| ID      | Species                       | Common name               | Group                 |
+|---------|-------------------------------|---------------------------|-----------------------|
+| danrer  | *Danio rerio*                 | Zebrafish                 | Otomorpha             |
+| salsal  | *Salmo salar*                 | Atlantic salmon           | Protacanthopterygii   |
+| borant  | *Borostomias antarcticus*     | Snaggletooth              | Stomiati              |
+| bengla  | *Benthosema glaciale*         | Glacier lantern fish      | Myctophata            |
+| poljap  | *Polymixia japonica*          | Silver eye                | Polymixiipterygii     |
+| zeufab  | *Zeus faber*                  | John dory                 | Zeiariae              |
+| gadmor  | *Gadus morhua*                | Atlantic cod              | Gadariae              |
+| lamgut  | *Lampris guttatus*            | Opah                      | Lampripterygii        |
+| monjap  | *Monocentris japonica*        | Japanese pineapplefish    | Trachichthyiformes    |
+| myrjac  | *Myripristis jacobus*         | Blackbar soldierfish      | Holocentrimorphaceae  |
+| berspl  | *Beryx splendens*             | Splendid alfonsino        | Beryciformes          |
+| brobar  | *Brotula barbata*             | Bearded brotula           | Ophidiaria            |
+| chamel  | *Chatrabus melanurus*         | Pony toadfish             | Batrachoidaria        |
+| thualb  | *Thunnus albacares*           | Yellowfin tuna            | Pelagiaria            |
+| takrub  | *Takifugu rubripes*           | Japanese puffer           | Tetraodontiformes     |
+| gasacu  | *Gasterosteus aculeatus*      | Three-spined stickleback  | Perciformes           |
+| cynlae  | *Cynoglossus semilaevis*      | Tongue sole               | Pleuronectiformes     |
+| ampcit  | *Amphilophus citrinellus*     | Midas cichlid             | Cichlinae             |
+| orenil  | *Oreochromis niloticus*       | Nile tilapia              | Pseudocrenilabrinae   |
+| astbur  | *Astatotilapia burtoni*       | Burton's mouthbrooder     | Pseudocrenilabrinae   |
+
+</center>
+
+Note that *Astatotilapia burtoni* is named *Haplochromis burtoni* in the set of alignments from [Hughes et al. (2018)](https://doi.org/10.1073/pnas.1719358115).
 
 <a name="requirements"></a>
 ## Requirements
 
-* **BEAST2:** The BEAST2 package, including BEAUti, BEAST2 itself, TreeAnnotator, and other tools can be downloaded from the BEAST2 website [https://www.beast2.org](https://www.beast2.org). As all these programs are written in Java, compilation is not required, and all programs should work on Mac OS X, Linux, and Windows. I recommend downloading the program versions that include the Java Runtime Environment, which may prevent conflicts with Java versions that may already be installed on your machine.
+* **BEAST2:** The BEAST2 package, including BEAUti, BEAST2 itself, TreeAnnotator, and other tools can be downloaded from the BEAST2 website [https://www.beast2.org](https://www.beast2.org). As all these programs are written in Java, compilation is not required, and all programs should work on Mac OS X, Linux, and Windows. I recommend downloading, where possible, the program versions that include the Java Runtime Environment, which may prevent conflicts with Java versions that may already be installed on your machine.<br>
 
-* **Tracer:** Just like BEAST2, Tracer is written in Java and should work on your system without problems. The program can be downloaded for Mac OS X, Linux, or Windows from [https://github.com/beast-dev/tracer/releases](https://github.com/beast-dev/tracer/releases). The file with the extension `.dmg` is for Mac OS X, the one with the extension `.tgz` is for Linux, and the Windows version is the file ending in `.zip`.
 
-* **FigTree:** If you followed tutorial [Maximum-Likelihood Phylogenetic Inference](../ml_phylogeny_inference/README.md), you should already have [FigTree](http://tree.bio.ed.ac.uk/software/figtree/) installed. If not, you will find executables for Mac OS X, Linux, and Windows on [https://github.com/rambaut/figtree/releases](https://github.com/rambaut/figtree/releases).
+* **bModelTest:** The [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package enables automated substitution model selection as part of BEAST2 analyses. This package needs to be installed both on Saga and on your local computer, because it will be required during the BEAST2 analysis (which will be executed on Saga) and for the interpretation of BEAST2 results (which will be done on the local computer). In both cases, BEAST2's PackageManager tool is used for the installation, but the PackageManager is called differently; from the command line on Saga, and through BEAUti on the local computer.
+
+	To install bModelTest with BEAST2's PackageManager on Saga, use the following commands:
+
+		module purge
+		module load Beast/2.6.4-GCC-9.3.0
+		packagemanager -add bModelTest
+
+	On your local computer, BEAST2's PackageManager is accessible through BEAUti. To find it, open BEAUti, and click on "Manage Packages" in BEAUti's "File" menu, as shown in the next screenshot.<p align="center"><img src="img/beauti1.png" alt="BEAUti" width="700"></p>
+	This will open the BEAST2 Package Manager as shown in the next screenshot. Select "bModelTest" and click on "Install/Upgrade".<p align="center"><img src="img/beauti2.png" alt="BEAUti" width="700"></p>You will see a notice that any changes will only take effect after you restart BEAUti; thus, do so.
+
+* **Tracer:** The program [Tracer](http://beast.community/tracer) greatly facilitates the inspection of output from Bayesian analyses such as those done with BEAST2. It is a GUI program that therefore can not be used on Saga, but it is easy to install on your local computer. Input files for Tracer will thus need to be downloaded from Saga. Executables of Tracer for MacOS, Linux, and Window can be found on [https://github.com/beast-dev/tracer/releases](https://github.com/beast-dev/tracer/releases). Download the file [Tracer.v1.7.2.dmg](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer.v1.7.2.dmg) if your local computer is running MacOS, [Tracer_v1.7.2.tgz](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer_v1.7.2.tgz) if it is running Linux, and [Tracer_v1.7.2.tgz](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer_v1.7.2.tgz) if it is running Windows.
+
+* **FigTree:** The program [FigTree](http://tree.bio.ed.ac.uk/software/figtree/) is a very intuitive and useful tool for the visualization and (to a limited extent) manipulation of phylogenies encoded in [Newick](http://evolution.genetics.washington.edu/phylip/newicktree.html) format. Being a GUI program, FigTree can not be run on Saga, but needs to be installed and used on your local computer. Input files for FigTree will thus need to be downloaded from Saga. Executables of FigTree for Mac OS X, Linux, and Windows are provided on [https://github.com/rambaut/figtree/releases](https://github.com/rambaut/figtree/releases). Download the file [FigTree.v1.4.4.dmg](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree.v1.4.4.dmg) if your local computer is running MacOS, [FigTree_v1.4.4.tgz](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree_v1.4.4.tgz) if it is running Linux, and [FigTree.v1.4.4.zip](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree.v1.4.4.zip) if it is running Windows.
+
+<a name="preparation"></a>
+## Dataset preparation
+
+As a first step, we will need to reduce the dataset consisting of 100 alignments with gene sequences from 41 teleost species to a set comprising 10 alignments with sequences from 20 species. In principle it would be feasible to analyse all 100 alignments and all 41 species with BEAST2; however, this analysis could take many days to complete. Of course, if we would run an analysis for a publication, we should show enough patience to perform such a more extensive analysis, but to keep the run time short for this tutorial, the dataset reduction will be necessary.
+
+This part of the tutorial is easiest done on Saga. The dataset of 100 alignments can be found in directory `/cluster/projects/nn9458k/phylogenomics/week2/data` on Saga as well as online in the [GitHub repository](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week2_data/hughes_etal_100_orthologs.tgz).
+
+* Either copy the dataset from the data directory on Saga or download it from GitHub. To copy, use this command:
+
+		cp /cluster/projects/nn9458k/phylogenomics/week2/data/hughes_etal_100_orthologs.tgz .
+		
+	To download, use `wget`:
+	
+		wget https://github.com/ForBioPhylogenomics/tutorials/raw/main/week2_data/hughes_etal_100_orthologs.tgz	
+* Uncompress the dataset:
+
+		tar -xzf hughes_etal_100_orthologs.tgz
+
+* Make a new directory for the reduced dataset.
+
+		mkdir hughes_etal_10_orthologs
+		
+* Copy the first ten alignments into this new directory.
+
+		cp hughes_etal_100_orthologs/locus_000?.nexus hughes_etal_10_orthologs
+		cp hughes_etal_100_orthologs/locus_0010.nexus hughes_etal_10_orthologs
+
+* Make yet another new directory named `hughes_etal_10_orthologs_20_species` for reduced alignments with only 20 species:
+
+		mkdir hughes_etal_10_orthologs_20_species
+
+* Download the Python script `convert.py`:
+
+		wget https://raw.githubusercontent.com/mmatschiner/anguilla/master/radseq/src/convert.py
+
+* Have a look at the help text of the Python script, after loading the Python module:
+
+		module load Python/3.8.2-GCCcore-9.3.0
+		python convert.py -h
+		
+	You'll see that this script is primarily for conversion between alignment formats. However, option `-p` allows the specification of certain IDs that should be included in the output. We are going to use this option to specify that only sequences from the 20 target species should be written to new output files.
+
+* Open a new file named `convert_alignments.sh` on Saga, using a text editor available on Saga, such as Emacs, Vim, or Nano. You could also write the file with a GUI text editor on a local computer, but then the file would need to be copied to Saga afterwards, e.g. with `scp`. When using Emacs to open the new file, type the following command (for other text editors, simply replace "emacs" with "vim" or "nano"):
+
+		emacs reduce_alignments.sh
+		
+* Write the following content to the new file:
+
+		id_string="Danio_rerio \
+		Salmo_salar \
+		Borostomias_antarcticus \
+		Benthosema_glaciale \
+		Polymixia_japonica \
+		Zeus_faber \
+		Gadus_morhua \
+		Lampris_guttatus \
+		Monocentris_japonica \
+		Myripristis_jacobus \
+		Beryx_splendens \
+		Brotula_barbata \
+		Chatrabus_melanurus \
+		Thunnus_albacares \
+		Takifugu_rubripes \
+		Gasterosteus_aculeatus \
+		Cynoglossus_semilaevis \
+		Amphilophus_citrinellus \
+		Oreochromis_niloticus \
+		Haplochromis_burtoni"
+		for in_nex in hughes_etal_10_orthologs/*.nexus
+		do
+			in_nex_base=`basename ${in_nex}`
+			echo -n "Reducing file ${in_nex_base}..."
+			out_nex=hughes_etal_10_orthologs_20_species/${in_nex_base%.nexus}.nex
+			python convert.py -p ${id_string} -f nexus ${in_nex} ${out_nex}
+			echo " done."
+		done
+
+* Save and close the script (if using Emacs, the rather complicated key combination to do so is Ctrl-X Ctrl-S Ctrl-X Ctrl-C).
+
+* Execute the script `reduce_alignments.sh`. Usually, this would be done with `bash reduce_alignments.sh`. However; when using Saga, any script executions should be done either inside Slurm scripts or through the `srun` command. Some more information about the latter can be found in the [Saga documentation](https://documentation.sigma2.no/jobs/interactive_jobs.html). Specifying that we need a single thread (`--ntasks=1`), a maximum memory requirement of 1 GB (`--mem-per-cpu=1G`), a maximum run time of 1 minute (`--time=00:01:00`), and the account number for the ForBio course is "nn9458k" (`--account=nn9458k`), we can execute the script with the following command:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty bash reduce_alignments.sh
+
+* The directory `hughes_etal_10_orthologs_20_species` should then contain 10 alignment files that each contain 20 sequencing. Make sure that this is the case, using `ls` and `less`:
+
+		ls -l hughes_etal_10_orthologs_20_species
+		less -S hughes_etal_10_orthologs_20_species/locus_0001.nex
+		
+
 
 
 <a name="beast2"></a>
 ## Bayesian phylogenetic inference with BEAST2
 
-In this part of the tutorial, we will run a basic Bayesian phylogenetic analysis for the 16S and *RAG1* alignments, using the programs of the BEAST2 software package. In this analysis, we are going to assume that the 16S and *RAG1* genes share the same evolutionary history and that this history is also identical to the evolutionary history of the 41 teleost fish species from which the sequences were obtained. In other words, we are going to assume that the two "gene trees" are identical and that they also are identical to the "species tree".
+In this part of the tutorial, we will run a basic Bayesian phylogenetic analysis with a dataset of 10 gene alignments, using the programs of the BEAST2 software package. In this analysis, we are going to assume that all genes share the same evolutionary history and that this history is also identical to the evolutionary history of the 20 teleost fish species from which the sequences were obtained. In other words, we are going to assume that all "gene trees" are identical and that they also are identical to the "species tree".
 
 * If you're not familiar yet with Bayesian analyses and Markov-Chain Monte Carlo methods in general, you might be overwhelmed at first by the complexities of this type of analyses. Thus, it might be worth noting the many resources made available by BEAST2 authors that provide a wealth of information, that, even if you don't need them right now, could prove to be useful at a later stage. You might want to take a moment to explore the [BEAST2 website](https://www.beast2.org) and quickly browse through the [glossary of terms related to BEAST2 analyses](https://www.beast2.org/glossary/index.html). Note that the BEAST2 website also provides a [wide range of tutorials and manuals](https://www.beast2.org/tutorials/index.html). In addition, you can find many further tutorials on the [Taming the BEAST](https://taming-the-beast.org) website, where you will also find information about the excellent [Taming-the-BEAST workshops](https://taming-the-beast.org/workshops/). Finally, if you have further questions regarding BEAST2, you could have a look if somebody else already asked those questions on the very active [user forum](https://groups.google.com/forum/#!forum/beast-users), or you could ask these questions there yourself.
 
-* Open the program BEAUti from the BEAST2 package, and import both the filtered 16S and *RAG1* alignments. To do so, click "Import Alignment" from the "File" menu and select the two files [`16s_filtered.nex`](data/16s_filtered.nex) and [`rag1_filtered.nex`](data/rag1_filtered.nex). The BEAUti window should then look as shown in the screenshot below.<p align="center"><img src="img/beauti1.png" alt="BEAUti" width="700"></p>
+* Download the 10 alignments from Saga to your local computer, for example with `scp`. If the alignments should be located on Saga in the directory `/cluster/projects/nn9458k/phylogenomics/USERNAME/hughes_etal_10_orthologs_20_species`, you could use this `scp` command (you will have to replace "USERNAME"):
 
-* Note that the BEAUti interface has six different tabs, of which (at the top of the window), the first one named "Partitions" is currently selected. We will browse through the other tabs later, but first need to specify settings regarding the partitioning in the currently open tab. Click on the row for the *RAG1* alignment to select it. Then, click the "Split" button at the bottom of the BEAUti window. As suggested, split the alignment into partitions "1 + 2 + 3", which will divide the alignment by codon position, and thus implement the partitioning scheme suggest by PAUP\* in tutorial [Substitution Model Selection](../substitution_model_selection/README.md). Click "OK". You should now see four rows in the "Partitions" tab of BEAUti, one for 16S and three for *RAG1*, and each of the *RAG1* alignments should have a length of 456 sites:<p align="center"><img src="img/beauti2.png" alt="BEAUti" width="700"></p>
+		scp -r USERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/USERNAME/hughes_etal_10_orthologs_20_species
 
-* Select all four rows at the same time and click on "Link Trees" near the top of the BEAUti window. This will force BEAST2 to use the same phylogeny for all partitions, which is equivalent to concatenating the sequences as we did for maximum-likelihood analyses with RAxML in tutorial [Maximum-Likelihood Phylogenetic Inference](../ml_phylogeny_inference/README.md). As explained in that tutorial, the practice of concatenation may lead to bias in the phylogenetic inference, particularly if young and rapidly-diverging groups of taxa are investigated. However, in this first introduction to phylogenetic inference with BEAST2, we will ignore this potential issue and assume that the true gene trees for 16S and *RAG1* are in fact identical to each other and to the species tree of the 41 teleost fish species.
+* Open the program BEAUti from the BEAST2 package, and import all ten alignments. To do so, click "Import Alignment" from the "File" menu and select the ten Nexus files `locus_0001.nex` to `locus_0010.nex`. The BEAUti window should then look as shown in the screenshot below.<p align="center"><img src="img/beauti3.png" alt="BEAUti" width="700"></p>
 
-	After clicking on "Link Trees", you should notice that all cells in the column to the right, under the heading "Tree" show the same value, "16s_filtered...", as in the screenshot below. This indicates that they will now all share the same tree in the analysis.<p align="center"><img src="img/beauti3.png" alt="BEAUti" width="700"></p>
+	Note that the BEAUti interface has six different tabs, of which (at the top of the window), the first one named "Partitions" is currently selected. We will browse through the other tabs later, but first need to specify settings regarding the partitioning in the currently open tab. Currently, a separate partition has been assigned to each of the 10 genes, meaning that for example separate substitution models could be used for each of them. It could make sense to further split each gene into three partitions for each codon position, given that these are known to evolve at different rates. If we wanted to do that, we would select all partitions and then click on the "Split" button at the bottom of the BEAUti window. However, to keep the run time of the BEAST2 analysis in this tutorial manageable, don't use this option and use just one partition for each of the genes.
+	
+* To estimate a single tree for all species, we have to select all partitions and click on "Link Trees" near the top of the BEAUti window. This should lead to the same label (e.g. "locus\_0001") being used for all partitions in the "Tree" column at the right of the BEAUti window. However, as the next screenshot shows, this is not the case.<p align="center"><img src="img/beauti4.png" alt="BEAUti" width="700"></p>
 
-* With all four rows still selected, also click on "Link Clock Models". This means that the clock model that we will select for 16S will also apply to all partitions of the *RAG1* gene. With the relaxed clock model that we will select, it means that some branches are allowed to evolve faster than other branches (= to have higher substitution rates than others), but that this variation in rates is not inferred separately for each gene. Thus, branches that are inferred to have a high rate in the 16S sequences will also receive a high rate for each of the *RAG1* partitions. Vice versa, a branch that is inferred to evolve comparatively slowly is assumed to evolve slowly both in 16S and in *RAG1*. However, this branch will still be allowed to have a higher absolute rate in one partition compared to another partition because the branch rates specified by the clock model (one rate per branch) will still be multiplied by a partition-specific rate multiplier (so that in total we then have four rates per branch: one for each partition). A good justification for this linking of clock models is that in nature, the speed of the molecular clock often depends on factors that are species-specific, such as metabolism and generation time ([Moorjani et al. 2016](http://www.pnas.org/content/113/38/10607.long)). This means that a species with a short generation time will be expected to have a comparatively slow rate not only in one gene but in all its genes.
+	Apparently, only the trees of partitions "locus\_0001", "locus\_0003", "locus\_0004", "locus\_0006", and "locus\_0009" are linked (they have the same label, "locus\_0001", in the "Tree" column), while all other partitions still have individual labels in the "Tree" column". The problem lies in missing sequences in half of the partitions. As the number of taxa listed in the "Taxa" column indicates, the partition "locus\_0002" is missing three sequences, "locus\_0005" and "locus\_0008" are missing two sequences, and "locus\_0007" and "locus\_0010" are missing one sequence.
+	
+* Have a look at the alignment in file `locus_0002.nex` to verify that the alignment only contains 17 and not 20 sequences, for example with `less -S` (on Saga):
 
-	After clicking on "Link Clock Models", the BEAUti window should look as shown in the screenshot below. Note that all cells in the column with heading "Clock Model" now have the value "16s_filtered...".<p align="center"><img src="img/beauti4.png" alt="BEAUti" width="700"></p>
-
-* The settings in the "Partitions" tab are now complete. Skip the next tab called "Tip Dates". This tab could be used to specify the times at which samples were taken, which allows time-calibration of viral phylogenies. But compared to the time scales over which the 41 fish sequences have diverged, the small difference in sampling times (a few years) is completely negligible, thus we can safely ignore these. Thus, click on the "Site Model" tab next. In this tab we can specify the substitution models for all four partitions. Select the 16S partition in the panel at the left and click on the drop-down menu that currently says "JC69". Instead of the Jukes-Cantor model, use the GTR model as suggested by the model selection that we did with PAUP\* in tutorial [Substitution Model Selection](../substitution_model_selection/README.md). Also specify "4" in the field for the "Gamma Category Count" two lines above, to use a gamma model of rate variation with four rate categories. This was also supported by the selection of substitution models in PAUP\*. Finally, set a tick in the checkbox to the right of "Substitution Rate" so that this rate will be estimated. The BEAUti window should then look as shown in the screenshot below.<p align="center"><img src="img/beauti5.png" alt="BEAUti" width="700"></p>
-
-* Still in the "Site Model" tab, select all four partitions in the panel at the left of the window. The main part of the window should then show the option "Clone from 16s_filtered" as in the screenshot below. Click "OK" to use the same site model as for 16S for all *RAG1* partitions.<p align="center"><img src="img/beauti6.png" alt="BEAUti" width="700"></p>
-
-* Next, click on the "Clock Model" tab. From the drop-down menu that currently says "Strict Clock", choose "Relaxed Clock Log Normal" instead. This is the most commonly used relaxed clock model in which substitution rates of individual branches are drawn from a lognormal distribution. Also set a tick in the checkbox on the right side of the window. If this checkbox appears gray and you are unable to set it, you'll need to click on "Automatic set clock rate" in BEAUti's "Mode" menu. The mean and standard deviation of this lognormal distribution will be estimated as part of the MCMC search. The model is described in [Drummond et al. (2006)](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.0040088), there it is named the "UCLN" model. Ignore the additional options ("Number of Discrete Rates" etc.) that appear after selecting the model.<p align="center"><img src="img/beauti7.png" alt="BEAUti" width="700"></p>
-
-* Click on the "Priors" tab. From the drop-down menu at the very top of the window, select "Birth Death Model" instead of "Yule Model". By doing so we add a parameter to the model for the extinction rate. If we would choose the alternative Yule model ([Yule 1925](http://rstb.royalsocietypublishing.org/content/213/402-410/21?intcmp=trendmd)), we would assume that no extinction ever occurred in the history of teleost fishes. As this seems rather unrealistic, the birth-death model ([Gernhard 2008](https://www.sciencedirect.com/science/article/pii/S0022519308001811)) is in most cases the more appropriate choice. Nevertheless, results are in practice rather little affected by the choice of this prior.<p align="center"><img src="img/beauti8.png" alt="BEAUti" width="700"></p>
-
-* Most of the other items shown in the "Prior" panel correspond to prior densities placed on the parameters of the substitution models for the four partitions. You may keep the default priors for each of these parameters. However, to allow time calibration of the phylogeny, a prior density still needs to be specified for at least one divergence time, otherwise BEAST2 would have very little information (only from the priors on speciation and mutation rates) to estimate branch lengths according to an absolute time scale. But before prior densities can be placed on the divergence of certain clades, these clades must first be defined. This can be done at the bottom of the "Priors" tab. Thus, scroll down to the end of the list until you see the "+ Add Prior" button, as shown in the below screenshot.<p align="center"><img src="img/beauti9.png" alt="BEAUti" width="700"></p>
-
-* Click on the "+ Add Prior" button to open the "Taxon set editor" pop-up window. Select all taxa from the list on the left of that window, and click the double-right-arrow symbol (`>>`) to shift them to the right side of the window. Then, click on the ID for zebrafish ("Danioxxrerioxx") to shift it back to the left with the double-left-arrow symbol (`<<`). This way, the ingroup, including all taxa except zebrafish is defined as a clade, so that the divergence of this clade can later be used for time calibration. The clade currently selected corresponds to the taxonomic group of "Euteleosteomorpha" ([Betancur-R. et al. 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0958-3)); thus, enter this name at the top of the pop-up window as the "Taxon set label", as shown in the below screenshot. Then, click "OK".<p align="center"><img src="img/beauti10.png" alt="BEAUti" width="700"></p>
-
-* For now, we will simply constrain this divergence between "Euteleosteomorpha" and zebrafish according to the results of a previous publication rather than placing several constraints according to the fossil record of teleost fishes. In [Betancur-R. et al. (2013)](http://currents.plos.org/treeoflife/article/the-tree-of-life-and-a-new-classification-of-bony-fishes/), the divergence of Euteleosteomorpha and Otomorpha was estimated to have occurred around 250 million years ago (Ma), thus, we will here place a prior density centered on that time on the same divergence. To time calibrate this divergence, click on the drop-down menu to the right of the button for "Euteleosteomorpha.prior" that currently says "[none]", and select "Log Normal" as shown in the next screenshot.<p align="center"><img src="img/beauti11.png" alt="BEAUti" width="700"></p>
-
-* Then, click on the black triangle to the left of the button for "Euteleosteomorpha.prior". Specify "10.0" as the value for "M" (that is the mean of the prior density) and "0.5" as the value for "S" (that is the standard deviation). Importantly, set a tick in the checkbox for "Mean in Real Space"; otherwise, the specified value for the mean will be considered to be in log space (meaning that its exponent would be used). Next, specify "240" as the offset”. In the plot to the right, you should then see that the density is centered around 250, with a hard minimum boundary at 240 and a "soft" maximum boundary (a tail of decreasing probability). Make sure to activate the checkbox for "Use Originate" a bit further below to specify that the divergence time of this clade from this sister clade should be constrained, not the time when the lineages within this clade began to diverge. Finally, also set a tick in the checkbox for "monophyletic" to the right of the drop-down menu in which "Log Normal" is now selected. By doing so, we constrain the specified ingroup clade of "Euteleosteomorpha" to be monophyletic. The BEAUti window should then look as shown in the below screenshot.<p align="center"><img src="img/beauti12.png" alt="BEAUti" width="700"></p>
-
-* Also constrain the monophyly of other clades that were found to be well-supported in the maximum-likelihood phylogenetic inference of the concatenated alignment (see tutorial [Maximum-Likelihood Phylogenetic Inference](../ml_phylogeny_inference/README.md)). This will limit the parameter space that BEAST2 will have to search, and thus it will speed up the Bayesian analysis. In addition to Euteleosteomorpha, constrain the following clades:
-
-	* "Neoteleostei": Select all taxa, then exclude "Danioxxrerioxx" and "Oncorhyketaxxx" again.
-	* "Acanthopterygii": Select all taxa, then exclude "Ateleopjaponic", "Chloropagassiz", "Danioxxrerioxx", "Muraenomarmora", "Oncorhyketaxxx", "Percopstransmo", "Polymixjaponic", and "Zeusxxxfaberxx".
-	* "Eupercaria": Include "Acanthapomotis", "Acropomjaponic", "Gasteroaculeat", "Niphonxspinosu", "Percalanovemac", "Percichtruchax", "Tautogoadspers", "Triacananomalu", and "Zancluscornutu".
-	* "Perciformes": Include "Gasteroaculeat" and "Niphonxspinosu".
-	* "Ovalentaria": Include "Ambassispcxxxx", "Aplochepanchax", "Cichlaxtemensi", "Ectodusdescamp", "Etroplumaculat", "Geophagbrasili", "Herichtcyanogu", "Maylandzebraxx", "Monocirpolyaca", "Mugilxxcephalu", "Neolampbrichar", "Opistogaurifro", "Oreochrnilotic", "Oryziaslatipes", "Paratilpolleni", "Paretromaculat", "Ptychocgrandid", "Pundaminyerere", and "Tylochrpolylep".
-	* "Cichlidae": Include "Cichlaxtemensi", "Ectodusdescamp", "Etroplumaculat", "Geophagbrasili", "Herichtcyanogu", "Maylandzebraxx", "Neolampbrichar", "Oreochrnilotic", "Paratilpolleni", "Paretromaculat", "Ptychocgrandid", "Pundaminyerere", and "Tylochrpolylep".
-	* "Etroplinae": Include "Etroplumaculat" and "Paretromaculat".
-	* "Ptychochrominae": Include "Paratilpolleni" and "Ptychocgrandid".
-	* "Cichlinae" (Neotropical cichlids): Include "Cichlaxtemensi", "Geophagbrasili", and "Herichtcyanogu".
-	* "Pseudocrenilabrinae" (African cichlids): Include "Ectodusdescamp", "Maylandzebraxx", "Neolampbrichar", "Oreochrnilotic", "Pundaminyerere", and "Tylochrpolylep".
-	* "Pseudocrenilabrinae+Cichlinae": Include "Cichlaxtemensi", "Ectodusdescamp", "Geophagbrasili", "Herichtcyanogu", "Maylandzebraxx", "Neolampbrichar", "Oreochrnilotic", "Pundaminyerere", and "Tylochrpolylep".
+		less -S hughes_etal_10_orthologs_20_species/locus_0002.nex
 		
-	Specify that all of these clades should be monophyletic, using the checkbox at the right of the row corresponding to each clade. The bottom part of the list in the "Prior" tab should then look as in the below screenshot.<p align="center"><img src="img/beauti13.png" alt="BEAUti" width="700"></p>
+	You'll see that this is the case. So apparently, each of the 20 species needs to be included in each alignment to allow the estimation of a single tree for all species with BEAST2. To achieve this, we could manually add sequences that contain only missing data to all those alignments that have less than 20 sequences, but there are also other and easier ways to do this.
+
+* On Saga, download a Ruby script to concatenate alignments:
+
+		wget https://raw.githubusercontent.com/mmatschiner/anguilla/master/radseq/src/concatenate.rb
 		
-* Continue to the "MCMC" tab, where you can specify the run length. This analysis will require a few hundred million iterations before the MCMC chain reaches full stationarity, which would take several days of run time. As you may not want to wait that long before you continue the tutorial, I recommend that you use a chain length of 100 million states and either run the analysis overnight or that you cancel the run after following it for some time, and then use output files from my analysis (you'll find the links below) for the rest of the tutorial. Either way, type "100000000" in the field to the right of "Chain Length".
+* Have a look at the help text of this script:
 
-	Also change the names of the output files: Click on the triangle to the left of "tracelog" and specify "combined.log" as the name of the log file. In the next field for "Log Every", set the number to "10000" (instead of the default 1,000) so that only every 10,000th MCMC state is written to the log file. Click on the triangle again, then click on the black triangle to the left of "treelog". Specify "combined.trees" as the name of the tree file and again use "10000" as the number in the field for "Log Every". When the window looks as in the below screenshot, click on "Save" in BEAUti's "File" menu, and name the resulting file in XML format `combined.xml`.<p align="center"><img src="img/beauti14.png" alt="BEAUti" width="700"></p>
+		module load Ruby/2.7.2-GCCcore-9.3.0
+		ruby concatenate.rb -h
 
-* Now, open the program BEAST2 and select the file [`combined.xml`](res/combined.xml) as input file, as shown in the screenshot below. When you click the "Run" button, BEAST2 will start the analysis.<p align="center"><img src="img/beast1.png" alt="BEAUti" width="500"></p>While BEAST2 is running, you may continue with the next part of this tutorial. The results of this analysis and of the analysis described below will be investigated and compared after both analyses have completed.
+	You'll see that besides options `-i`, `-o`, and `-f` for the input and output file names and the output format, the script also has an option (`-p`) to write a partitions block for output files in Nexus and Phylip format.
+	
+* Use this script to concatenate all alignment files into a single file named `hughes_etal_10_orthologs_20_species.nex`, and specify that this output file should also be in Nexus format (`-f nexus`) and have a partitions block (`-p`):
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby concatenate.rb -i hughes_etal_10_orthologs_20_species/*.nex -o hughes_etal_10_orthologs_20_species.nex -f nexus -p
+
+* Then, have a look at file `hughes_etal_10_orthologs_20_species.nex` with `less -S`:
+
+		less -S hughes_etal_10_orthologs_20_species.nex
+
+	As you'll see, there is now just a single concateated alignment in this file, with a total length of 2,667 sites (this is specified on the fourth line with `nchar=`). However, the information about the boundaries of each original alignment is not lost, but instead stored in the partitions block at the bottom of the file: The first 195 sites came from "locus\_0001", the sites 196 to 399 came from "locus\_0002", and so on.
+	
+* Download file `hughes_etal_10_orthologs_20_species.nex` again to your local computer.
+
+* In BEAUti, remove all partitions by selecting them and clicking the small button with a "-" symbol at the bottom left of the window.
+
+* Then, import the alignment file `hughes_etal_10_orthologs_20_species.nex` into BEAUti. The partitions panel should then look as shown in the next screenshot.<p align="center"><img src="img/beauti5.png" alt="BEAUti" width="700"></p>
+
+	You should notice that even though we imported only a single alignment, BEAUti has recognized 20 partitions, namely because it was able to read the partitions block at the end of the Nexus file. You should also notice that each partition now has 20 sequences, indicated by the number "20" in the "Taxa" column for each partition. We have thus found a work-around for the issue of missing sequences.
+	
+* Now, try again to link the trees of all partitions by selecting them all and clicking on "Link Trees" near the top of the BEAUti window. This time, the label "locus\_0001" should appear in the "Tree" colum for all partitions, meaning that all their trees are now linked.<p align="center"><img src="img/beauti6.png" alt="BEAUti" width="700"></p>
+
+	The linking of the trees of all partitions means that we will assume that all gene trees are identical to each other and that they are also identical to the species tree. As other tutorials will demonstrate, this assumption can lead to bias in the phylogenetic inference, particularly if young and rapidly-diverging groups of taxa are investigated. However, in this first introduction to phylogenetic inference with BEAST2, we will ignore this potential issue.
+
+* With all partitions still selected, also click on "Link Clock Models". This means that the clock model that we will select will apply to all partitions equally.
+
+	With the relaxed clock model that we will select, this means that some branches are allowed to evolve faster than other branches (= to have higher substitution rates than others), but that this variation in rates is not inferred separately for each gene. Thus, branches that are inferred to have a comparatively high rate in partition will also receive a comparatively high rate for each of the other partitions. Vice versa, a branch that is inferred to evolve comparatively slowly is assumed to evolve slowly for all partitions. However, this branch will still be allowed to have a higher absolute rate in one partition compared to another partition because the branch rates specified by the clock model (one rate per branch) will still be multiplied by a partition-specific rate multiplier (so that in total we then have ten rates per branch: one for each partition). A good justification for this linking of clock models is that in nature, the speed of the molecular clock often depends on factors that are species-specific, such as metabolism and generation time ([Moorjani et al. 2016](http://www.pnas.org/content/113/38/10607.long)). This means that a species with a short generation time will be expected to have a comparatively slow rate not only in one gene but in all its genes. A more practical justification for the linking is that it reduces the run time substantially.
+
+	After clicking on "Link Clock Models", the BEAUti window should look as shown in the screenshot below. Note that all cells in the "Clock Model" column now have the label "locus\_0001".<p align="center"><img src="img/beauti7.png" alt="BEAUti" width="700"></p>
+
+* The settings in the "Partitions" tab are now complete. Skip the next tab called "Tip Dates". This tab could be used to specify the times at which samples were taken, which allows time-calibration of viral phylogenies. But compared to the time scales over which the 20 fish species have diverged, the small difference in sampling times (a few years) is completely negligible, so we can safely ignore these. Thus, click on the "Site Model" tab next. In this tab we can specify the substitution models for all four partitions. Select the "locus\_0001" partition in the panel at the left and click on the drop-down menu that currently says "JC69". Instead of the Jukes-Cantor model, use the GTR model, which allows different substitution rates for all transitions and transversions. Also specify "4" in the field for the "Gamma Category Count" two lines above, to use a gamma model of rate variation with four rate categories. Finally, set a tick in the checkbox to the right of "Substitution Rate" so that this rate will be estimated. The BEAUti window should then look as shown in the screenshot below.<p align="center"><img src="img/beauti8.png" alt="BEAUti" width="700"></p>
+
+* Still in the "Site Model" tab, select all ten partitions in the panel at the left of the window. The main part of the window should then show the option "Clone from locus\_0001" as in the screenshot below. Click "OK" to use the same site model as for "locus\_0001" for all partitions.<p align="center"><img src="img/beauti9.png" alt="BEAUti" width="700"></p>
+
+* Next, click on the "Clock Model" tab. From the drop-down menu that currently says "Strict Clock", choose "Relaxed Clock Log Normal" instead. This is the most commonly used relaxed clock model in which substitution rates of individual branches are drawn from a lognormal distribution. Also set a tick in the checkbox on the right side of the window. If this checkbox appears gray and you are unable to set it, you'll need to click on "Automatic set clock rate" in BEAUti's "Mode" menu. The mean and standard deviation of this lognormal distribution will be estimated as part of the MCMC search. The model is described in [Drummond et al. (2006)](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.0040088); there it is named the "UCLN" model. Ignore the additional options ("Number of Discrete Rates" etc.) that appear after selecting the model.<p align="center"><img src="img/beauti10.png" alt="BEAUti" width="700"></p>
+
+* Click on the "Priors" tab. From the drop-down menu at the very top of the window, select "Birth Death Model" instead of "Yule Model". By doing so we add a parameter to the model for the extinction rate. If we would choose the alternative Yule model ([Yule 1925](http://rstb.royalsocietypublishing.org/content/213/402-410/21?intcmp=trendmd)), we would assume that no extinction ever occurred in the history of teleost fishes. As this seems rather unrealistic, the birth-death model ([Gernhard 2008](https://www.sciencedirect.com/science/article/pii/S0022519308001811)) is in most cases the more appropriate choice. Nevertheless, results are in practice rather rarely affected by the choice of this prior.<p align="center"><img src="img/beauti11.png" alt="BEAUti" width="700"></p>
+
+* Most of the other items shown in the "Prior" panel correspond to prior densities placed on the parameters of the substitution models for the ten partitions. You may keep the default priors for each of these parameters. However, to allow time calibration of the phylogeny, a prior density still needs to be specified for at least one divergence time, otherwise BEAST2 would have very little information (only from the priors on speciation and mutation rates) to estimate branch lengths according to an absolute time scale. But before prior densities can be placed on the divergence of certain clades, these clades must first be defined. This can be done at the bottom of the "Priors" tab. Thus, scroll down to the end of the list until you see the "+ Add Prior" button, as shown in the below screenshot.<p align="center"><img src="img/beauti12.png" alt="BEAUti" width="700"></p>
+
+* Click on the "+ Add Prior" button. When prompted "Which prior do you want to add", click "OK" to select the default option "MRCA prior" (a prior on the most recent common ancestor of a clade). This should open the "Taxon set editor" pop-up window. Select all taxa from the list on the left of that window, and click the double-right-arrow symbol (`>>`) to shift them to the right side of the window. Then, click on the ID for <!--XXX Update number species--> zebrafish ("Teleost_Otophysa_Cypriniformes_Danionidae_Danio_rerio") to shift it back to the left with the double-left-arrow symbol (`<<`). This way, the ingroup, including all taxa except zebrafish is defined as a clade, so that the divergence of this clade can later be used for time calibration. The clade currently selected corresponds to the taxonomic group of "Euteleosteomorpha" ([Betancur-R. et al. 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0958-3)); thus, enter this name at the top of the pop-up window as the "Taxon set label", as shown in the below screenshot. Then, click "OK".<p align="center"><img src="img/beauti13.png" alt="BEAUti" width="740"></p>
+
+* For now, we will simply constrain this divergence between "Euteleosteomorpha" and zebrafish according to the results of a previous publication rather than placing several constraints according to the fossil record of teleost fishes. In [Betancur-R. et al. (2013)](http://currents.plos.org/treeoflife/article/the-tree-of-life-and-a-new-classification-of-bony-fishes/), the divergence of Euteleosteomorpha and Otomorpha (a clade that includes zebrafish) was estimated to have occurred around 250 million years ago (Ma), thus, we will here place a prior density centered on that time on the same divergence. To time calibrate this divergence, click on the drop-down menu to the right of the button for "Euteleosteomorpha.prior" that currently says "[none]", and select "Log Normal" as shown in the next screenshot.<p align="center"><img src="img/beauti14.png" alt="BEAUti" width="700"></p>
+
+* Then, click on the black triangle to the left of the button for "Euteleosteomorpha.prior". Specify "10.0" as the value for "M" (that is the mean of the prior density) and "0.5" as the value for "S" (that is the standard deviation). Importantly, set a tick in the checkbox for "Mean in Real Space"; otherwise, the specified value for the mean will be considered to be in log space (meaning that its exponent would be used). Next, specify "240" as the offset”. In the plot to the right, you should then see that the density is centered around 250, with a hard minimum boundary at 240 and a "soft" maximum boundary (a tail of decreasing probability). Make sure to activate the checkbox for "Use Originate" a bit further below to specify that the divergence time of this clade from this sister clade should be constrained, not the time when the lineages within this clade began to diverge. Finally, also set a tick in the checkbox for "monophyletic" to the right of the drop-down menu in which "Log Normal" is now selected. By doing so, we constrain the specified ingroup clade of "Euteleosteomorpha" to be monophyletic. The BEAUti window should then look as shown in the below screenshot.<p align="center"><img src="img/beauti15.png" alt="BEAUti" width="700"></p>
+
+* Also constrain the monophyly of some other clades that were found to be well-supported in the phylogenetic analyses of the first week of the course. This will limit the parameter space that BEAST2 will have to search, and thus it will speed up the Bayesian analysis. In addition to Euteleosteomorpha, constrain the following clades:
+
+	* "Neoteleostei": Select all taxa, then exclude zebrafish (*Danio rerio*) and Atlantic salmon (*Salmo salar*) again.
+	* "Ctenosquamata": Select all taxa, then exclude zebrafish (*Danio rerio*), Atlantic salmon (*Salmo salar*), and snaggletooth (*Borostomias antarcticus*) again.
+	* "Acanthomorphata": Select all taxa, then exclude zebrafish (*Danio rerio*), Atlantic salmon (*Salmo salar*), snaggletooth (*Borostomias antarcticus*), and Glacier lantern fish (*Benthosema glaciale*) again.
+	* "Percomorpha": Include bearded brotula (*Brotula barbata*), pony toadfish (*Chatrabus melanurus*), yellowfin tuna (*Thunnus albacares*), Japanese puffer (*Takifugu rubripes*), three-spined stickleback (*Gasterosteus aculeatus*), tongue sole (*Cynoglossus semilaevis*), Midas cichlid (*Amphilophus citrinellus*), Nile tilapia (*Oreochromis niloticus*), and Burton's mouthbrooder (*Astatotilapia burtoni*; named *Haplochromis burtoni* in the alignments from Hughes et al. (2018)).
+	* "Cichlidae": Include the three cichlids Midas cichlid (*Amphilophus citrinellus*), Nile tilapia (*Oreochromis niloticus*), and Burton's mouthbrooder (*Astatotilapia burtoni*; named *Haplochromis burtoni* in the alignments from Hughes et al. (2018)).
+		
+	Specify that all of these clades should be monophyletic, using the checkbox at the right of the row corresponding to each clade. The bottom part of the list in the "Prior" tab should then look as in the below screenshot.<p align="center"><img src="img/beauti16.png" alt="BEAUti" width="700"></p>
+		
+* Continue to the "MCMC" tab, where you can specify the run length. This analysis will require around <!--XXX Check if true XXX--> 50 million iterations before the analysis is fully complete, which would take several hours of run time. For the purpose of this tutorial, however, it will be sufficient to use 10 million iterations, so just keep the default value of "10000000" in the field to the right of "Chain Length".
+
+* Change the names of the output files: Click on the triangle to the left of "tracelog" and specify "beast2.log" as the name of the log file. In the next field for "Log Every", set the number to "5000" (instead of the default 1,000) so that only every 5,000th MCMC state is written to the log file. Click on the triangle again, then click on the black triangle to the left of "treelog". Specify "beast2.trees" as the name of the tree file and again use "5000" as the number in the field for "Log Every".
+
+* When the window looks as in the below screenshot, click on "Save" in BEAUti's "File" menu, and name the resulting file in XML format `beast2.xml`.<p align="center"><img src="img/beauti17.png" alt="BEAUti" width="700"></p>
+
+* Upload the XML input file form BEAST2 to Saga using `scp`.
+
+	If anything should have gone wrong during the preparation of the XML input file `beast2.xml` with BEAUti, you can alternatively find a prepared version of the file in directory `/cluster/projects/nn9458k/phylogenomics/week2/res` on Saga, or download it from GitHub with `wget XXX.xml`.
+
+* To run BEAST2 on Saga, we will still need to write a Slurm script so that we can submit the analysis for execution on the cluster. Thus, open a new file named `run_beast2.slurm` with a text editor available on Saga, such as Emacs:
+
+		emacs run_beast2.slurm
+		
+* Write the following commands to the new file:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=snapp
+		#
+		# Wall clock limit:
+		#SBATCH --time=2:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --ntasks=1
+		#SBATCH --mem-per-cpu=1G
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=run_beast2.out
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load the beast2 module.
+		module load Beast/2.6.4-GCC-9.3.0
+
+		# Run beast2.
+		beast beast2.xml
+
+To assess completeness of BEAST2 (or generally Bayesian) analyses, it is important to run multiple replicate analyses with the same input file. Only when these show the same result can the analysis be considered "converged". An easy way to set up multiple replicate analyses with the same input file is to copy the input file and the corresponding Slurm script into two or more subdirectories, and then submit the Slurm scripts individually in each of them.
+
+* Set up a directory structure for replicate BEAST2 analyses with the same input file:
+
+		mkdir r01
+		mkdir r02
+		
+* Copy the XML input file and the Slurm script to both directories for replicate analyses:
+
+		cp beast2.xml r01
+		cp run_beast2.slurm r01
+		cp beast2.xml r02
+		cp run_beast2.slurm r02
+		
+
+* Submit the Slurm script in both directories with `sbatch`:
+
+		cd r01
+		sbatch beast2.slurm
+		cd ..
+		cd r02
+		sbatch beast2.slurm
+		cd ..
+		
+
+* Monitor how the submitted analyses are added to the queue and executed by repeatedly calling `squeue` with option `-u` followed by your username. If you're unsure about your username, you can always find it with `whoami`. You can also combine both commands by placing the latter one inside of backticks:
+
+		squeue -u `whoami`
+
+	You can tell from the fifth and sixth columns of the output of the above command whether your analysis is running: The fifth column shows an "R" as soon as the analysis started, and the sixth column shows the elapsed run time.
+
+While the two BEAST2 analyses are running, you may continue with the next part of this tutorial. The results of these analyses and of the analysis described below will be investigated and compared after all analyses have completed.
 
 
 <a name="bmodeltest"></a>
 ## Automatic substitution model selection with BEAST2
 
-In the above phylogenetic inference, we assumed that the GTR substitution model with gamma-distributed rate variation would provide the best fit to the sequence data, as suggested by the model selection done with PAUP\* in tutorial [Substitution Model Selection](../substitution_model_selection/README.md). While this substitution model in fact seemed to fit well to all partitions, it would be more convenient if we would not have to specify a substitution model at all *a priori*, and if during the Bayesian analysis, one could average over multiple substitution models according to their relative fit to the data. This is made possible by the [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package for BEAST2, which we will use in this part of the tutorial. For further information, note that an excellent tutorial on the use of bModelTest is available at the [Taming the BEAST](https://taming-the-beast.org/tutorials/Substitution-model-averaging/) website.
+In the above phylogenetic inference, we assumed that the GTR substitution model with gamma-distributed rate variation would be an appropriate model of evolution for the sequence data. While this substitution model in fact may fit well to all partitions, it would be more convenient if we would not have to specify a substitution model at all *a priori*, and if during the Bayesian analysis, one could average over multiple substitution models according to their relative fit to the data. This is made possible by the [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package for BEAST2, which we will use in this part of the tutorial. For further information, note that an excellent tutorial on the use of bModelTest is available at the [Taming the BEAST](https://taming-the-beast.org/tutorials/Substitution-model-averaging/) website.
 
-* To install the bModelTest add-on package, open BEAUti once again and click on "Manage Packages" in BEAUti's "File" menu, as shown in the next screenshot.<p align="center"><img src="img/beauti15.png" alt="BEAUti" width="700"></p>
+* Then, click "Load" in BEAUti's "File" menu to reload the file `beast2.xml` that you generated in the first part of this tutorial.<p align="center"><img src="img/beauti17.png" alt="BEAUti" width="700"></p> <!--XXX update screenshot XXX-->
 
-* This will open the BEAST2 Package Manager as shown in the next screenshot. Select "bModelTest" and click on "Install/Upgrade".<p align="center"><img src="img/beauti16.png" alt="BEAUti" width="700"></p>
-
-* You will see a notice that any changes will only take effect after you restart BEAUti; thus, do so.
-
-* Then, click "Load" in BEAUti's "File" menu to reload the file [`combined.xml`](res/combined.xml) that you generated in the first part of this tutorial.<p align="center"><img src="img/beauti17.png" alt="BEAUti" width="700"></p>
-
-* Go straight to the "Site Model" tab once the data and settings from file `combined.xml` are loaded. There, click on the drop-down menu at the top of the window, where currently "Gamma Site Model" is selected. You'll see that a second option, the "BEAST Model Test" is now available in this drop-down menu, as shown in the screenshot below.<p align="center"><img src="img/beauti18.png" alt="BEAUti" width="700"></p>
+* Go straight to the "Site Model" tab once the data and settings from file `beast2.xml` are loaded. There, click on the drop-down menu at the top of the window, where currently "Gamma Site Model" is selected. You'll see that a second option, the "BEAST Model Test" is now available in this drop-down menu, as shown in the screenshot below.<p align="center"><img src="img/beauti18.png" alt="BEAUti" width="700"></p>
 
 * Click on "BEAST Model Test" to select this model. The drop-down menu in which "transitionsTransversionsSplit" is currently selected allows to specify a set of substitution models that should be considered in the analysis. Which models are included in each set is shown in Fig. 1 of [Bouckaert and Drummond (2017)](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6). In most cases it should be more than sufficient to use a smaller set of models, such as the "namedExtended" set that includes nine different models (and their derivations with or without estimated nucleotide frequencies; see Fig. 1c of [Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)). Thus, select "namedSelected" from this drop-down menu. Leave the checkbox next to "Empirical" unticked to allow estimation of nucleotide frequencies. Then, again set the tick to the right of "Mutation Rate" to specify that this rate should be estimated. The window should then look as in the next screenshot.<p align="center"><img src="img/beauti19.png" alt="BEAUti" width="700"></p>
 
@@ -119,32 +355,32 @@ In the above phylogenetic inference, we assumed that the GTR substitution model 
 
 * Leave all settings in the "Clock Model" and "Priors" tabs unchanged, and go to the "MCMC" tab, where the output file names should be changed to avoid overwriting the output of the previous BEAST2 analysis. Click on the black triangle to the left of "tracelog" and specify "combined\_bmodeltest.log" as the name of the log output file. Then, click on the triangle next to "treelog" and specify "combined\_bmodeltest.trees" as the name of the tree file. Finally, click "Save As" in BEAUti's "File" menu and save the analysis settings to a new file named `combined_bmodeltest.xml`.
 
-* To run BEAST2 with the file [`combined_bmodeltest.xml`](res/combined_bmodeltest.xml), we may now not be able to do so with the GUI version of BEAST2 because the analysis of file `combined.xml` may still be running. If this is the case, we can run BEAST2 on the command-line instead, because the BEAST2 package that you downloaded also includes scripts to do so. Find out the path to your BEAST2 program package (on Mac OS X, this is usually `/Applications/BEAST\ 2.6.3/bin/` but you may have placed the package elsewhere). To familiarize yourself with the command-line options of BEAST2, type
+* To run BEAST2 with the file [`combined_bmodeltest.xml`](res/combined_bmodeltest.xml), we may now not be able to do so with the GUI version of BEAST2 because the analysis of file `beast2.xml` may still be running. If this is the case, we can run BEAST2 on the command-line instead, because the BEAST2 package that you downloaded also includes scripts to do so. Find out the path to your BEAST2 program package (on Mac OS X, this is usually `/Applications/BEAST\ 2.6.3/bin/` but you may have placed the package elsewhere). To familiarize yourself with the command-line options of BEAST2, type
 
 		/Applications/BEAST\ 2.6.3/bin/beast -help
 		
 	or an equivalent command if BEAST2 is not located in `/Applications/BEAST\ 2.6.3/bin/`.
 	
-	If this works, then run BEAST2 on the command line with file [`combined_bmodeltest.xml`](res/combined_bmodeltest.xml):
+	If this works, then run BEAST2 on the command line with file `combined_bmodeltest.xml`:
 	
 		/Applications/BEAST\ 2.6.3/bin/beast combined_bmodeltest.xml
 				
-* While the two versions of BEAST2 are running with the files `combined.xml` (the GUI version) and `combined_bmodeltest.xml` (the command-line version), have a look at the screen output produced by both analyses. **Question 1:** How long does each analysis require per one million MCMC iterations? Is one of them faster? [(see answer)](#q1)
+* While the two versions of BEAST2 are running with the files `beast2.xml` (the GUI version) and `combined_bmodeltest.xml` (the command-line version), have a look at the screen output produced by both analyses. **Question 1:** How long does each analysis require per one million MCMC iterations? Is one of them faster? [(see answer)](#q1)
 
-If you don't want to wait for the analyses to finish, you may continue this tutorial with the output files of my analysis: The files [`combined.log`](res/combined.log) and [`combined.trees`](res/combined.trees) are the log and tree files resulting from the analysis of file `combined.xml`, and the files [`combined_bmodeltest.log`](res/combined_bmodeltest.log) and [`combined_bmodeltest.trees`](res/combined_bmodeltest.trees) are the output of the analysis with file [`combined_bmodeltest.xml`](res/`combined_bmodeltest.xml`).
+If you don't want to wait for the analyses to finish, you may continue this tutorial with the output files of my analysis: The files `beast2.log` and `beast2.trees` are the log and tree files resulting from the analysis of file `beast.xml`, and the files [`combined_bmodeltest.log`](res/combined_bmodeltest.log) and [`combined_bmodeltest.trees`](res/combined_bmodeltest.trees) are the output of the analysis with file [`combined_bmodeltest.xml`](res/`combined_bmodeltest.xml`).
 
 
 <a name="tracer"></a>
 ## Assessing MCMC stationarity with Tracer
 
-In Bayesian analyses with the software BEAST2, it is rarely possible to tell *a priori* how many MCMC iterations will be required before the analysis can be considered complete. Instead, whether or not an analysis is complete is usually decided based on the inspection of the log file once BEAST2 has performed the specified number of MCMC iterations. There are various ways in which MCMC output can be used to assess whether or not an analysis can be considered complete, and in the context of phylogenetic analyses with BEAST2, the most commonly used diagnostic tools are those implemented in [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy032/4989127)) or the R package [coda](https://cran.r-project.org/web/packages/coda/index.html) ([Plummer et al. 2006](https://cran.r-project.org/doc/Rnews/Rnews_2006-1.pdf#page=7)). Here, we are going to investigate run completeness with Tracer. Ideally, we should have conducted the same BEAST2 analysis multiple times; then, we could assess whether the replicate MCMC chains "converge" to the same posterior distribution, which would be a requirement for a complete MCMC analysis. However, given that we only conducted a single replicate of each of the two MCMC analyses (one with file `combined.xml` and one with file `combined_bmodeltest.xml`), we are limited to assessing the "stationarity" of the two chains. The easiest ways to do this in Tracer are:
+In Bayesian analyses with the software BEAST2, it is rarely possible to tell *a priori* how many MCMC iterations will be required before the analysis can be considered complete. Instead, whether or not an analysis is complete is usually decided based on the inspection of the log file once BEAST2 has performed the specified number of MCMC iterations. There are various ways in which MCMC output can be used to assess whether or not an analysis can be considered complete, and in the context of phylogenetic analyses with BEAST2, the most commonly used diagnostic tools are those implemented in [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy032/4989127)) or the R package [coda](https://cran.r-project.org/web/packages/coda/index.html) ([Plummer et al. 2006](https://cran.r-project.org/doc/Rnews/Rnews_2006-1.pdf#page=7)). Here, we are going to investigate run completeness with Tracer. Ideally, we should have conducted the same BEAST2 analysis multiple times; then, we could assess whether the replicate MCMC chains "converge" to the same posterior distribution, which would be a requirement for a complete MCMC analysis. However, given that we only conducted a single replicate of each of the two MCMC analyses (one with file `beast2.xml` and one with file `combined_bmodeltest.xml`), we are limited to assessing the "stationarity" of the two chains. The easiest ways to do this in Tracer are:
 
 1. Calculation of "effective sample sizes" (ESS). Because consecutive MCMC iterations are always highly correlated, the number of effectively independent samples obtained for each parameter is generally much lower than the total number of sampled states. Calculating ESS values for each parameter is a way to assess the number of independent samples that would be equivalent to the much larger number of auto-correlated samples drawn for these parameters. These ESS values are automatically calculated for each parameter by Tracer. As a rule of thumb, the ESS values of all model parameters, or at least of all parameters of interest, should be above 200.
 2. Visual investigation of trace plots. The traces of all parameter estimates, or at least of those parameters with low ESS values should be visually inspected to assess MCMC stationarity. A good indicator of stationarity is when the trace plot has similarities to a "hairy caterpillar". While this comparison might sound odd, you'll understand its meaning when you see such a trace plot in Tracer.
 
 Thus, both the calculation of ESS values as well as the visual inspection of trace plots should indicate stationarity of the MCMC chain; if this is not the case, the run should be resumed. For BEAST2 analyses, resuming a chain is possible with the "-resume" option when using BEAST2 on the command-line, or by selecting option "resume: appends log to existing files" in the drop-down menu at the top of the BEAST2 window when using the GUI version.
 
-* After the two BEAST2 analyses have completed (or if you decided not to wait and use the output of my analysis instead), open file [`combined.log`](res/combined.log) in the program Tracer. The Tracer window should then look more or less as shown in the next screenshot<p align="center"><img src="img/tracer1.png" alt="Tracer" width="700"></p>In the top left part of the Tracer window, you'll see a list of the loaded log files, which currently is just the single file [`combined.log`](res/combined.log). This part of the window also specifies the number of states found in this file, and the burn-in to be cut from the beginning of the MCMC chain. Cutting away a burn-in removes the initial period of the MCMC chain during which it may not have sampled from the true posterior distribution yet.
+* After the two BEAST2 analyses have completed (or if you decided not to wait and use the output of my analysis instead), open file `beast2.log` in the program Tracer. The Tracer window should then look more or less as shown in the next screenshot<p align="center"><img src="img/tracer1.png" alt="Tracer" width="700"></p>In the top left part of the Tracer window, you'll see a list of the loaded log files, which currently is just the single file `beast2.log`. This part of the window also specifies the number of states found in this file, and the burn-in to be cut from the beginning of the MCMC chain. Cutting away a burn-in removes the initial period of the MCMC chain during which it may not have sampled from the true posterior distribution yet.
 
 	In the bottom left part of the Tracer window, you'll see statistics for the estimate of the posterior probability (just named "posterior"), the likelihood, and the prior probability (just named "prior"), as well as for the parameters estimated during the analysis (except the phylogeny, which also represents a set of parameters). The second column in this part shows the mean estimates for each parameter and their ESS values. **Question 2:** Do the ESS values of all parameters indicate stationarity? [(see answer)](#q2)
 
@@ -206,7 +442,7 @@ The timeline resulting from the BEAST2 analysis based on the 16S and *RAG1* alig
 
 <a name="q1"></a>
 
-* **Question 1:** The times required per one million iterations should be very comparable between the two analyses. On my machine, about 6 minutes are required in both cases, with the analysis of file `combined.xml` being slightly faster. Thus, to complete the 25 million iterations specified in both files, run times of about 2.5 hours are required.
+* **Question 1:** The times required per one million iterations should be very comparable between the two analyses. On my machine, about 6 minutes are required in both cases, with the analysis of file `beast2.xml` being slightly faster. Thus, to complete the 25 million iterations specified in both files, run times of about 2.5 hours are required.
 
 <a name="q2"></a>
 
@@ -214,11 +450,11 @@ The timeline resulting from the BEAST2 analysis based on the 16S and *RAG1* alig
 
 <a name="q3"></a>
 
-* **Question 3:** If you used the results of my analysis (file [`combined.log`](res/combined.log)) for plotting in Tracer, the parameter with the lowest ESS value is the rate of C &rarr; G substitutions (named "rateCG.16S\_filtered"), with an ESS of 113.
+* **Question 3:** <!--XXX update answer XXX--> If you used the results of my analysis (file `beast2.log`) for plotting in Tracer, the parameter with the lowest ESS value is the rate of C &rarr; G substitutions (named "rateCG.16S\_filtered"), with an ESS of 113.
 
 <a name="q4"></a>
 
-* **Question 4:** In my analysis (file [`combined.log`](res/combined.log)), the parameter for the rate of C &rarr; G substitutions in fact seems to influence the prior probability. This is suggested by the apparently coinciding shifts in both traces, as shown in the next two screenshots.<p align="center"><img src="img/tracer4.png" alt="Tracer" width="700"></p><p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>The correlation between the C &rarr; G rate parameter and the prior probability is also apparent when the two values are plotted against each other, as shown below. The prior probability is particularly high when the substitution rate is extremely close to zero.<p align="center"><img src="img/r1.png" alt="Tracer" width="600"></p>This strong effect of the C &rarr; G substitution rate parameter on the overall prior probability can be explained when we look at the prior-probability density that we had placed on this parameter (just like on other substitution rates; this is a default prior-probability density for all rates when using the GTR model in BEAST2): This prior-probability density is specified in file [`combined.xml`](res/combined.xm) as follows:
+* **Question 4:** In my analysis <!--XXX update answer XXX--> (file `beast2.log`), the parameter for the rate of C &rarr; G substitutions in fact seems to influence the prior probability. This is suggested by the apparently coinciding shifts in both traces, as shown in the next two screenshots.<p align="center"><img src="img/tracer4.png" alt="Tracer" width="700"></p><p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>The correlation between the C &rarr; G rate parameter and the prior probability is also apparent when the two values are plotted against each other, as shown below. The prior probability is particularly high when the substitution rate is extremely close to zero.<p align="center"><img src="img/r1.png" alt="Tracer" width="600"></p>This strong effect of the C &rarr; G substitution rate parameter on the overall prior probability can be explained when we look at the prior-probability density that we had placed on this parameter (just like on other substitution rates; this is a default prior-probability density for all rates when using the GTR model in BEAST2): This prior-probability density is specified in file [`beast2.xml`](res/combined.xm) as follows:
 
 		<prior id="RateCGPrior.s:16s_filtered" name="distribution" x="@rateCG.s:16s_filtered">
 			<Gamma id="Gamma.3" name="distr">
@@ -231,7 +467,7 @@ The timeline resulting from the BEAST2 analysis based on the 16S and *RAG1* alig
 	
 <a name="q5"></a>
 
-* **Question 5:** The nucleotides C and G co-occur at only 41 sites in the 16S alignment and G and T co-occur at only 40 sites; thus, the subsitution rates C &rarr; G and G &rarr; T are likely harder to estimate than those for other types of substitutions. This is the reason why the rate parameters for these two substitutions are estimated very close to zero, which in turn has a strong influence on the overall prior probability and causes the absence of stationarity in the MCMC analysis for file [`combined.xml`](res/combined.xml).
+* **Question 5:** The nucleotides C and G co-occur at only 41 sites in the 16S alignment and G and T co-occur at only 40 sites; thus, the subsitution rates C &rarr; G and G &rarr; T are likely harder to estimate than those for other types of substitutions. This is the reason why the rate parameters for these two substitutions are estimated very close to zero, which in turn has a strong influence on the overall prior probability and causes the absence of stationarity in the MCMC analysis for file `beast2.xml`.
 
 <a name="q6"></a>
 

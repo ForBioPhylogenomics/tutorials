@@ -84,7 +84,12 @@ The SNP data used in this tutorial is the filtered dataset used for species-tree
 		packagemanager -add snapper
 
 
-* **Tracer:** The program [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://doi.org/10.1093/sysbio/syy032)) greatly facilitates the inspection of output from Bayesian analyses such as those done with BEAST2. It is a GUI program that therefore can not be used on Saga, but it is easy to install on your local computer. Input files for Tracer will thus need to be downloaded from Saga. Executables of Tracer for MacOS, Linux, and Window can be found on [https://github.com/beast-dev/tracer/releases](https://github.com/beast-dev/tracer/releases). Download the file [Tracer.v1.7.2.dmg](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer.v1.7.2.dmg) if your local computer is running MacOS, [Tracer_v1.7.2.tgz](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer_v1.7.2.tgz) if it is running Linux, and [Tracer_v1.7.2.tgz](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer_v1.7.2.tgz) if it is running Windows.
+* **SNAPPER:** The [SNAPPER method](https://github.com/rbouckaert/snapper) ([Stoltz et al. 2021](https://doi.org/10.1093/sysbio/syaa051)) is similar to SNAPP in the sense that it uses biallelic loci as input and applies Bayesian MCMC to infer the species tree; however, the model used to calculate the tree likelihood is not the multi-species coalescent model but a Wright-Fisher diffusion model instead. Both of these models are approximations of one another and should produce similar results, particularly with larger population sizes. The difference between the two models is important when larger numbers of individuals are used per population, because the computational demand of SNAPP analyses increases rapidly with increasing numbers of individuals while that of SNAPPER remains roughly unchanged. Like SNAPP, SNAPPER is an add-on package for BEAST2 that can be installed through the BEAST2 Package Manager. The installation will also be required only on Saga and can be done with these commands:
+
+		module purge
+		module load Beast/2.6.4-GCC-9.3.0
+		packagemanager -add snapper
+
 
 * **FigTree:** The program [FigTree](http://tree.bio.ed.ac.uk/software/figtree/) is a very intuitive and useful tool for the visualization and (to a limited extent) manipulation of phylogenies encoded in [Newick](http://evolution.genetics.washington.edu/phylip/newicktree.html) format. Being a GUI program, FigTree can not be run on Saga, but needs to be installed and used on your local computer. Input files for FigTree will thus need to be downloaded from Saga. Executables of FigTree for MacOS, Linux, and Windows are provided on [https://github.com/rambaut/figtree/releases](https://github.com/rambaut/figtree/releases). Download the file [FigTree.v1.4.4.dmg](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree.v1.4.4.dmg) if your local computer is running MacOS, [FigTree_v1.4.4.tgz](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree_v1.4.4.tgz) if it is running Linux, and [FigTree.v1.4.4.zip](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree.v1.4.4.zip) if it is running Windows.
 
@@ -361,7 +366,19 @@ Despite the remaining uncertainty in the relationships among the *Neolamprologus
 <a name="comparison"></a>
 ## Comparison of results obtained with SNAPP and SNAPPER
 
-XXX
+* When the SNAPPER analyses have finished on Saga, add the population size to files `snapper.log` and `snapper2.log`, as before for `snapp.log`:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby add_theta_to_log.rb -l snapper.log -t snapper.trees -g 3 -o snapper_w_popsize.log
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby add_theta_to_log.rb -l snapper2.log -t snapper2.trees -g 3 -o snapper2_w_popsize.log
+
+* Also generate maximum-clade-credibility trees with TreeAnnotator for both analyses:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty treeannotator -burnin 10 -heights mean snapper.trees snapper.tre
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty treeannotator -burnin 10 -heights mean snapper2.trees snapper2.tre
+
+* Then download the files `snapper_w_popsize.log`, `snapper2_w_popsize.log`, `snapper.tre` and `snapper2.tre` to your local computer.
+
+* Open file `snapper_w_popsize.log` and `snapper2_w_popsize.log` together with `snapper.log` in Tracer. <!-- XXX Tracer screenshot XXX <p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>-->
 
 
 <br><hr>
