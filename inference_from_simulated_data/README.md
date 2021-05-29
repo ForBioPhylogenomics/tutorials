@@ -795,7 +795,7 @@ As some of the inference methods require sequence alignments rather than variant
 
 * Download the script `make_alignments_from_vcf.py`:
 
-		https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/inference_from_simulated_data/src/make_alignments_from_vcf.py
+		https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/make_alignments_from_vcf.py
 
 * Have a look at the help text of the script:
 
@@ -888,7 +888,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 * Before executing this script, you will need to download the conversion script `convert.py`:
 	
-		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/inference_from_simulated_data/src/convert.py
+		wget https://raw.githubusercontent.com/mmatschiner/anguilla/master/radseq/src/convert.py
 	
 * Then you can use this command to execute the script:
 
