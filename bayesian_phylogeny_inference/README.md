@@ -451,39 +451,6 @@ Thus, both the calculation of ESS values as well as the visual inspection of tra
 
 * Now, click on the prior probability in the list at the bottom left of the window. You'll note that the trace looks very similar to that of the posterior, which may not be surprising given that the posterior probability is a (normalized) product of the prior probability and the likelihood. Thus, the auto-correlation in the prior probability seems to drive the auto-correlation in the posterior probability. Another way to visualize this is to select both the posterior and the prior probability at the same time (you may have to shift-click to do so) and then click on the "Joint-Marginal" tab next to the "Trace" tab. Also remove the tick from the checkbox for "Sample only" at the bottom of the window. The plot should then clearly show that the two measures are strongly correlated.<p align="center"><img src="img/tracer3.png" alt="Tracer" width="700"></p>
 
-* Have a look at the list of ESS values in the bottom left again. **Question 3:** Besides the prior and posterior probabilities, which parameter has the lowest ESS value? [(see answer)](#q3) **Question 4:** Could this parameter be responsible for the low ESS value of the prior probability? [(see answer)](#q4)
-
-* To find out why the estimation of the A &arr; T substitution rate seems to be difficult for the second partition, we can use a Ruby script to calculate the number of sites in an alignment at which each pair of nucleotides co-occur. Download this script to Saga:
-
-		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/count_substitutions.rb
-
-* Run this script for the alignment file for the second partition, `hughes_etal_10_orthologs_20_species/loci_0002.nex`:
-
-		module load Ruby/2.7.2-GCCcore-9.3.0
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby  count_substitutions.rb hughes_etal_10_orthologs_20_species/locus_0002.nex
-		
-	**Question 5:** Which types of substitutions appear to be particularly rare in the second partition - do these correspond to the substitution rate parameters with particularly low ESS values? [(see answer)](#q5)XXX
-	
-XXX
-
-<a name="convergence"></a>
-###Assessing MCMC convergence with Tracer
-
-Bayesian analysis with MCMC are considered "converged" when multiple replicates of the same analysis all produce an essentially identical result. This means that the only differences between these analysis – the randomly selected starting points of the MCMC in parameter space, and the randomly selected sequence in which parameters are changed by operators during the MCMC – did not influence the outcome.
-
-* To allow a comparison of the results of the two replicate analyses of the input file `beast.xml`, also download the file `beast2.log` from the `r02` directory on Saga to your local computer. However, to avoid overwriting the previously downloaded file with the same name, first rename that file as `r01_beast2.log`, then download the second file with `scp`, and perhaps also rename the second file as `r02_beast2.log`.
-
-* Open both files in Tracer. The top left panel of the Tracer window should then shown that two log files are loaded.<p align="center"><img src="img/tracer7.png" alt="Tracer" width="700"></p>**Question 6:** Has the second analysis become more stationary than the first? [(see answer)](#q6)
-
-* Compare some of the estimates of both replicate analyses, including the posterior probability, the likelihood, and the prior.**Question 7:** Do these appear different between the two replicate analyses? [(see answer)](#q7)
-
-The similarity in most estimates between both replicates is a good indication of convergence. But a better quantification of convergence are the ESS values for the combined MCMC chains. To allow the calculation of these, Tracer has already combined the two MCMC chains, after removing the first million iterations from each as "burnin". This combined chain is shown in the top left panel of the Tracer window, in the list below the two loaded log files. As the default burnin is 10% of the chain, the first million iterations of each chain were considered as burnin and thus the combined chain has a length of 18 million iterations.
-
-* Click on "Combined" in the top left panel of the Tracer window and then browse through the list of parameter estimates in the bottom left panel of the window. You should see that while some ESS values are still below 200 and therefore marked in yellow or red; these are not as frequent as for the indiviual log files. Also, the absolute lowest ESS value should now be larger than in the indivual log files (this may not always be the case, however).
-
-Even though both chains are clearly not stationary yet, their comparison indicates that these are converged, meaning that they have arrived in the same region of the parameter space even though their start positions in that space were different. There is some remaining uncertainty about whether this region represents the true posterior distribution, however, because the two chains could theoretically also have arrived in this region by chance. This may be unlikely, but if we wanted to exclude this possibility with greater confidence, we could run additional replicate analyses to check if they also arrive in the same region of the parameter space. In any case, as Bayesian analyses should be both stationary and converged to be considered complete, our analyses should ideally have run much longer than they did.
-
-
 <a name="comparison"></a>
 ##Comparison of run results
 
