@@ -27,7 +27,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 4. The next step would now to find proper datasets allowing for screening against positive and negative reference datasets. For this course, we already did this for you. What could be good datasets for such a screening of the entire transcriptomic or genomic datasets?<br>
 
 	1. Please also have in mind that we will use here only the genes for screening, which are in the alignments we selected. However, you would usually do this on the entire dataset before the orthology determination.<br>
-	2. If you would set up the libraries yourself, all databases for positive references would have to have a trailing "pos_" and end with ".fasta". For the negative references, it would be "neg_" instead of "pos_". The file format has to be fasta and nucleotide sequences.<br> 
+	2. If you would set up the libraries yourself, all databases for positive references would have to have a trailing "_pos\__" and end with "_.fasta_". For the negative references, it would be "_neg\__" instead of "_pos\__". The file format has to be fasta and nucleotide sequences.<br> 
 
 5. Run the following script to generate your reference dataset:<br>
 	
