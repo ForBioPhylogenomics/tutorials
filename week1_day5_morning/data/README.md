@@ -1,0 +1,1 @@
+This folder contains the smaller data files for the morning session of day 5. However, we would advice you to use the data provided on SAGA as it will make the data transfer to your folder much faster.
