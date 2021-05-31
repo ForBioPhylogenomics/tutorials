@@ -11,7 +11,7 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 ## Week 1
 
 #### Monday
-* [Introduction into the course](bayesian_phylogeny_inference/README.md)<br>An introduction to the course and the first step of the phylogenetic analyses we will build upon (no exercises)
+* [Introduction into the course](week1_day1_morning/README.md)<br>An introduction to the course and the first step of the phylogenetic analyses we will build upon (no exercises)
 
 
 * XXX
