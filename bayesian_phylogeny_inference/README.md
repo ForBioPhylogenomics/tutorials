@@ -421,11 +421,12 @@ In the above phylogenetic inference, we assumed that the GTR substitution model 
 As soon as the BEAST2 analyses of file `beast2.xml` have finished or at least progressed to a few million MCMC iterations, you can continue with the next section of the tutorial.
 
 
-<a name="completeness"></a>
-## Assessing MCMC completeness
 
 <a name="comparison"></a>
 ##Comparison of run results
+
+<a name="completeness"></a>
+## Assessing MCMC completeness
 
 * If the BEAST2 analyses of file `bmodeltest.xml` have finished on Saga, also download file `bmodeltest.log` to your local computer and open it in Tracer. The Tracer window should then look similar to the one shown in the screenshot.<p align="center"><img src="img/tracer8.png" alt="Tracer" width="700"></p> **Question 8:** Does this analysis appear more stationary than the one of file `beast2.xml`? [(see answer)](#q8)
 
