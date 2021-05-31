@@ -421,12 +421,70 @@ In the above phylogenetic inference, we assumed that the GTR substitution model 
 As soon as the BEAST2 analyses of file `beast2.xml` have finished or at least progressed to a few million MCMC iterations, you can continue with the next section of the tutorial.
 
 
-
-<a name="comparison"></a>
-##Comparison of run results
-
 <a name="completeness"></a>
 ## Assessing MCMC completeness
+
+In Bayesian analyses with the software BEAST2, it is rarely possible to tell *a priori* how many MCMC iterations will be required before the analysis can be considered complete. This is because to be considered "complete", any analyses using MCMC should have two properties: They should be "stationary" and "converged". While stationarity can be assessed with a single replicate analysis, convergence can only be assessed when the same analysis has been repeated multiple times; that's why we ran two replicates analyses of file `beast2.xml` (and if this would not just be for a tutorial, we should have done the same for `bmodeltest.xml`).
+
+
+<a name="stationarity"></a>
+### Assessing MCMC stationarity with Tracer
+
+There are various ways to assess whether or not an MCMC analysis is "stationary", and in the context of phylogenetic analyses with BEAST2, the most commonly used diagnostic tools are those implemented in [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy032/4989127)) or the R package [coda](https://cran.r-project.org/web/packages/coda/index.html) ([Plummer et al. 2006](https://cran.r-project.org/doc/Rnews/Rnews_2006-1.pdf#page=7)). Here, we are going to investigate MCMC stationary with Tracer. The easiest ways to do this in Tracer are:
+
+1. Calculation of "effective sample sizes" (ESS). Because consecutive MCMC iterations are always highly correlated, the number of effectively independent samples obtained for each parameter is generally much lower than the total number of sampled iterations. Calculating ESS values for each parameter is a way to assess the number of independent samples that would be equivalent to the much larger number of auto-correlated samples drawn for these parameters. These ESS values are automatically calculated for each parameter by Tracer. As a rule of thumb, the ESS values of all model parameters, or at least of all parameters of interest, should be above 200.
+2. Visual investigation of trace plots. The traces of all parameter estimates, or at least of those parameters with low ESS values should be visually inspected to assess MCMC stationarity. A good indicator of stationarity is when the trace plot has similarities to a "hairy caterpillar". While this comparison might sound odd, you'll clearly understand its meaning when you see such a trace plot in Tracer.
+
+Thus, both the calculation of ESS values as well as the visual inspection of trace plots should indicate stationarity of the MCMC chain; if this is not the case, the run should be resumed. For BEAST2 analyses, resuming a chain is possible with the `-resume` option of BEAST2.
+
+* Download file `beast2.log` from the `r01` directory on Saga to your local computer, using `scp`.
+
+* Open this file in the program Tracer. The Tracer window should then look more or less as shown in the next screenshot<p align="center"><img src="img/tracer1.png" alt="Tracer" width="700"></p>In the top left panel of the Tracer window, you'll see a list of the loaded log files, which currently is just the single file `beast2.log`. This panel also specifies the number of states found in this file, and the burn-in to be cut from the beginning of the MCMC chain. Cutting away a burn-in removes the initial period of the MCMC chain during which it may not have sampled from the true posterior distribution yet.
+
+	In the bottom left panel of the Tracer window, you'll see statistics for the estimate of the posterior probability (just named "posterior"), the likelihood, and the prior probability (just named "prior"), as well as for the parameters estimated during the analysis (except the phylogeny, which also represents a set of parameters). The second column in this part shows the mean estimates for each parameter and their ESS values. **Question 2:** Do the ESS values of all parameters indicate stationarity? [(see answer)](#q2)
+
+	In the top right panel of the Tracer window, you will see more detailed statistics for the parameter currently selected in the bottom left panel of the window. Finally, in the bottom right, you will see a visualization of the samples taken during the MCMC search. By default, these are shown in the form of a histogram as in the above screenshot.
+
+* With the posterior probability still being selected in the list at the bottom left, click on the tab for "Trace" (at the very top right). You will see how the posterior probability changed over the course of the MCMC. This trace plot should ideally have the form of a "hairy caterpillar", but as you can see from the next screenshot, this is not the case for the posterior probability.<p align="center"><img src="img/tracer2.png" alt="Tracer" width="700"></p>
+
+* To see a trace plot that looks more like a "hairy caterpillar", select a parameter with a particularly high ESS value, such as "TreeHeight" (which in my analysis has an ESS value of over 1,800).
+
+* Now, click on the prior probability in the list at the bottom left of the window. You'll note that the trace looks very similar to that of the posterior, which may not be surprising given that the posterior probability is a (normalized) product of the prior probability and the likelihood. Thus, the auto-correlation in the prior probability seems to drive the auto-correlation in the posterior probability. Another way to visualize this is to select both the posterior and the prior probability at the same time (you may have to shift-click to do so) and then click on the "Joint-Marginal" tab next to the "Trace" tab. Also remove the tick from the checkbox for "Sample only" at the bottom of the window. The plot should then clearly show that the two measures are strongly correlated.<p align="center"><img src="img/tracer3.png" alt="Tracer" width="700"></p>
+
+* Have a look at the list of ESS values in the bottom left again. **Question 3:** Besides the prior and posterior probabilities, which parameter has the lowest ESS value? [(see answer)](#q3) **Question 4:** Could this parameter be responsible for the low ESS value of the prior probability? [(see answer)](#q4)
+
+* To find out why the estimation of the A &arr; T substitution rate seems to be difficult for the second partition, we can use a Ruby script to calculate the number of sites in an alignment at which each pair of nucleotides co-occur. Download this script to Saga:
+
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/count_substitutions.rb
+
+* Run this script for the alignment file for the second partition, `hughes_etal_10_orthologs_20_species/loci_0002.nex`:
+
+		module load Ruby/2.7.2-GCCcore-9.3.0
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby  count_substitutions.rb hughes_etal_10_orthologs_20_species/locus_0002.nex
+		
+	**Question 5:** Which types of substitutions appear to be particularly rare in the second partition - do these correspond to the substitution rate parameters with particularly low ESS values? [(see answer)](#q5)
+	
+
+<a name="convergence"></a>
+### Assessing MCMC convergence with Tracer
+
+Bayesian analysis with MCMC are considered "converged" when multiple replicates of the same analysis all produce an essentially identical result. This means that the only differences between these analysis – the randomly selected starting points of the MCMC in parameter space, and the randomly selected sequence in which parameters are changed by operators during the MCMC – did not influence the outcome.
+
+* To allow a comparison of the results of the two replicate analyses of the input file `beast.xml`, also download the file `beast2.log` from the `r02` directory on Saga to your local computer. However, to avoid overwriting the previously downloaded file with the same name, first rename that file as `r01_beast2.log`, then download the second file with `scp`, and perhaps also rename the second file as `r02_beast2.log`.
+
+* Open both files in Tracer. The top left panel of the Tracer window should then shown that two log files are loaded.<p align="center"><img src="img/tracer7.png" alt="Tracer" width="700"></p>**Question 6:** Has the second analysis become more stationary than the first? [(see answer)](#q6)
+
+* Compare some of the estimates of both replicate analyses, including the posterior probability, the likelihood, and the prior.**Question 7:** Do these appear different between the two replicate analyses? [(see answer)](#q7)
+
+The similarity in most estimates between both replicates is a good indication of convergence. But a better quantification of convergence are the ESS values for the combined MCMC chains. To allow the calculation of these, Tracer has already combined the two MCMC chains, after removing the first million iterations from each as "burnin". This combined chain is shown in the top left panel of the Tracer window, in the list below the two loaded log files. As the default burnin is 10% of the chain, the first million iterations of each chain were considered as burnin and thus the combined chain has a length of 18 million iterations.
+
+* Click on "Combined" in the top left panel of the Tracer window and then browse through the list of parameter estimates in the bottom left panel of the window. You should see that while some ESS values are still below 200 and therefore marked in yellow or red; these are not as frequent as for the indiviual log files. Also, the absolute lowest ESS value should now be larger than in the indivual log files (this may not always be the case, however).
+
+Even though both chains are clearly not stationary yet, their comparison indicates that these are converged, meaning that they have arrived in the same region of the parameter space even though their start positions in that space were different. There is some remaining uncertainty about whether this region represents the true posterior distribution, however, because the two chains could theoretically also have arrived in this region by chance. This may be unlikely, but if we wanted to exclude this possibility with greater confidence, we could run additional replicate analyses to check if they also arrive in the same region of the parameter space. In any case, as Bayesian analyses should be both stationary and converged to be considered complete, our analyses should ideally have run much longer than they did.
+
+
+<a name="comparison"></a>
+## Comparison of run results
 
 * If the BEAST2 analyses of file `bmodeltest.xml` have finished on Saga, also download file `bmodeltest.log` to your local computer and open it in Tracer. The Tracer window should then look similar to the one shown in the screenshot.<p align="center"><img src="img/tracer8.png" alt="Tracer" width="700"></p> **Question 8:** Does this analysis appear more stationary than the one of file `beast2.xml`? [(see answer)](#q8)
 
