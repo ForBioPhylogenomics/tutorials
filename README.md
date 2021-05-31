@@ -13,7 +13,7 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 #### Monday
 * [Introduction into the course](week1_day1_morning/README.md)<br>An introduction to the course and the first step of the phylogenetic analyses we will build upon (no exercises)
 
-* [Sources of incongruence & Contamination screening](week1_day1_afternoon/EXERCISE.md)<br>General lectures on inconrguence and a tutorial on the detection of contamination in datasets using a metabarcoding-based approach
+* [Sources of incongruence & Contamination screening](week1_day1_afternoon/README.md)<br>General lectures on inconrguence and a tutorial on the detection of contamination in datasets using a metabarcoding-based approach
 
 #### Tuesday
 
