@@ -1,3 +1,7 @@
+# [DATA](data)
+The folder "_Data_" contains the smaller data files for the afternoon session of day 1. However, we would advice you to use the data provided on SAGA as it will make the data transfer to your folder much faster. SAGA is also the only place, where the larger data files are.
+
+# EXERCISE
 1. For getting started, copy all data from the folder "_Day1Afternoon_" to your folder in the project area in SAGA<br>
 
 	```
