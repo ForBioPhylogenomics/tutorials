@@ -1,10 +1,12 @@
 1. For getting started, copy all data from the folder "Day1Afternoon" to your folder in the project area in SAGA<br>
-	1. cd /cluster/projects/nn9458k/phylogenomics/<br>
-	2. mkdir $YOURNAME<br>
-	3. cd $YOURNAME<br>
-	4. cp -r ../week1/Day1Afternoon .<br>
-	5. cd Day1Afternoon<br>
-	6. cp .ncbirc ~<br>
+
+	cd /cluster/projects/nn9458k/phylogenomics/<br>
+	mkdir $YOURNAME<br>
+	cd $YOURNAME<br>
+	cp -r ../week1/Day1Afternoon .<br>
+	cd Day1Afternoon<br>
+	cp .ncbirc ~<br>
+
 2. Run the following script to find the contaminations in your dataset<br>
 	1. sbatch --get-user-env sbatch_ContaminationDetection.sh<br>
 3. Compare "Argentina_sp_contaminated.fasta_nr_RNA_BLAST_Matches.txt" with "Argentina_sp_contaminated.fasta_Taxa_found.txt" and find out which contaminations have been found. Which datasets would be needed having in mind that we added Protodrilus symbioticus articfically as a contamination to the dataset?<br>
