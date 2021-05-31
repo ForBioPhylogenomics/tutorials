@@ -57,7 +57,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	cp ../../Day1Afternoon/SingleGenes/sbatch_Concatenation.sh .
 	```
 	
-	Modify the "_.sh_" file to fit your needs for this analysis
+	* Modify the "_.sh_" file to fit your needs for this analysis
 	
 	```
 	sbatch sbatch_Concatenation.sh
@@ -70,7 +70,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	cp ../../sbatch_Supermatrix_Cleaned_tree.sh .
 	```
 	
-	Check if the name of the supermatrix is fitting for your supermatrix. If not please change it accordingly.
+	* Check if the name of the supermatrix is fitting for your supermatrix. If not please change it accordingly.
 	
 	```
 	sbatch sbatch_Supermatrix_Cleaned_tree.sh
