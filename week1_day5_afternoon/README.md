@@ -23,7 +23,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	sbatch sbatch_TreSpEx_LBscores.sh
 	```
 
-3. Download the txt files in folder "_LBscore_Results_" to your own computer using _scp_
+3. Download the _.txt_ files in folder "_LBscore_Results_" to your own computer using _scp_
 
 **On your own computer**
 
