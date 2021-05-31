@@ -466,7 +466,7 @@ Thus, both the calculation of ESS values as well as the visual inspection of tra
 	
 XXX
 
-###Assessing MCMC convergence with Tracer
+##Assessing MCMC convergence with Tracer
 
 Bayesian analysis with MCMC are considered "converged" when multiple replicates of the same analysis all produce an essentially identical result. This means that the only differences between these analysis – the randomly selected starting points of the MCMC in parameter space, and the randomly selected sequence in which parameters are changed by operators during the MCMC – did not influence the outcome.
 
