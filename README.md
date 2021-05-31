@@ -20,7 +20,7 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 
 * [Paralogy screening after orthology determination](week1_day2_morning/README.md)<br>A tutorial on the detection of paralogy in datasets using a single trees, bootstrap support and reference databases.
 
-* [Missing data and low phylogenetic signal ](week1_day2_afternoon/README.md)<br>A tutorial on the reducing missingness and low phylogenetic signal in the data.
+* [Missing data and low phylogenetic signal](week1_day2_afternoon/README.md)<br>A tutorial on reducing missingness and detecting low phylogenetic signal in the data.
 
 #### Wednesday
 
@@ -30,9 +30,9 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 
 #### Thursday
 
-* XXX
+* [Saturation](week1_day4_morning/README.md)<br>A tutorial on the detection of saturation in phylogenomic datasets.
 
-* XXX
+* [Base composition heterogeneity](week1_day4_afternoon/README.md)<br>A tutorial on the detection of base composition heterogeneity in phylogenomic datasets.
 
 #### Friday
 
