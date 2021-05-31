@@ -74,6 +74,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	* Copy _FASconCAT-G_ to this folder as well as the "_sbatch_Concatenation.sh_" we used yesterday (see yesterday's exercise for this) 
 	* Modify the .sh-file to suite your needs now
 	
+	
 	```
 	sbatch sbatch_Concatenation.sh
 	```
