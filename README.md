@@ -36,9 +36,9 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 
 #### Friday
 
-* XXX
+* [Branch length heterogeneity 1](week1_day5_morning/README.md)<br>A tutorial on the visualization of branch length heterogeneity in phylogenomic datasets.
 
-* XXX
+* [Branch length heterogeneity 2](week1_day5_afternoon/README.md)<br>A tutorial on the detection of branch length heterogeneity in phylogenomic datasets.
 
 
 
