@@ -1,6 +1,8 @@
-# DATA
+# [DATA](data)
+The folder "_data_" contains the smaller data files for the afternoon session of day 1. However, we would advice you to use the data provided on SAGA as it will make the data transfer to your folder much faster. SAGA is also the only place, where the larger data files are.
 
-# SCRIPTS
+# [SCRIPTS](scripts)
+The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
 # EXERCISE
 1. For the TreSpEx analyses we first need to install some modules in your home directory as they are not included in the availables in SAGA<br>
