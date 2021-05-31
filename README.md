@@ -11,15 +11,16 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 ## Week 1
 
 #### Monday
+
 * [Introduction into the course](week1_day1_morning/README.md)<br>An introduction to the course and the first step of the phylogenetic analyses we will build upon (no exercises)
 
-* [Sources of incongruence & Contamination screening](week1_day1_afternoon/README.md)<br>General lectures on inconrguence and a tutorial on the detection of contamination in datasets using a metabarcoding-based approach
+* [Sources of incongruence & Contamination screening](week1_day1_afternoon/README.md)<br>General lectures on inconrguence and a tutorial on the detection of contamination in datasets using a metabarcoding-based approach.
 
 #### Tuesday
 
-* XXX
+* [Paralogy screening after orthology determination](week1_day2_morning/README.md)<br>A tutorial on the detection of paralogy in datasets using a single trees, bootstrap support and reference databases.
 
-* XXX
+* [Missing data and low phylogenetic signal ](week1_day2_afternoon/README.md)<br>A tutorial on the reducing missingness and low phylogenetic signal in the data.
 
 #### Wednesday
 
