@@ -17,7 +17,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 
 	* Copy the _.treefile_ and _.phy_ files you used in the excerise of the morning of Day 4 to this folder
 	
-	* Do the same for the .treefile and the .fas files from the exercise of this morning for the original supermatrix
+	* Do the same for the _.treefile_ and the _.fas files_ from the exercise of this morning for the original supermatrix
 	
 	```
 	sbatch sbatch_TreSpEx_LBscores.sh
