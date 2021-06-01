@@ -1,14 +1,12 @@
 #!/bin/sh
 
 #SBATCH --job-name=CleaningContamination
-#SBATCH --account=nn9408k
+#SBATCH --account=nn9458k
 #SBATCH --output=CleaningContamination_slurm-%j.txt
 #SBATCH --time=1:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=4G 
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=torsths@nhm.uio.no
 
 
 ## Set up job environment:

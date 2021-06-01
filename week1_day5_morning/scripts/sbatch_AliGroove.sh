@@ -1,14 +1,12 @@
 #!/bin/sh
 
 #SBATCH --job-name=AliGROOVE
-#SBATCH --account=nn9408k
+#SBATCH --account=nn9458k
 #SBATCH --output=AliGROOVE_slurm-%j.txt
 #SBATCH --time=16:00:00
 #SBATCH --ntasks=1
 #SBATCH --mem-per-cpu=4G
 #SBATCH --partition=normal 
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=t.h.struck@nhm.uio.no
 
 ## Set up job environment:
 set -o errexit # exit on errors

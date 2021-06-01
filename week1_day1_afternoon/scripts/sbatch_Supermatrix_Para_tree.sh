@@ -1,14 +1,12 @@
 #!/bin/sh
 
 #SBATCH --job-name=Supermatrix_Para_tree
-#SBATCH --account=nn9408k
+#SBATCH --account=nn9458k
 #SBATCH --output=Supermatrix_Para_tree_slurm-%j.txt
 #SBATCH --time=1-00:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16 
 #SBATCH --mem-per-cpu=4G 
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=t.h.struck@nhm.uio.no
 
 set -o errexit # exit on errors
 set -o nounset  # Treat any unset variables as an error
