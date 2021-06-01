@@ -1,14 +1,12 @@
 #!/bin/sh
 
 #SBATCH --job-name=TreSpEx_AveBoot
-#SBATCH --account=nn9408k
+#SBATCH --account=nn9458k
 #SBATCH --output=TreSpEx_AveBoot_slurm-%j.txt
 #SBATCH --time=1:00:00
 #SBATCH --ntasks=1
 #SBATCH --mem-per-cpu=4G
 #SBATCH --partition=normal 
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=t.h.struck@nhm.uio.no
 
 ## Set up job environment:
 set -o errexit # exit on errors
