@@ -10,7 +10,7 @@ echo "### Here change the job name and replace the species in accordance with sp
 echo "#SBATCH --job-name=FORBIO_SingleGene_${FILE}" >> iqtree_${FILE}.sh
 echo "" >> iqtree_${FILE}.sh
 echo "# Leave this unchanged" >> iqtree_${FILE}.sh
-echo "#SBATCH --account=nn9408k" >> iqtree_${FILE}.sh
+echo "#SBATCH --account=nn9458k" >> iqtree_${FILE}.sh
 echo "" >> iqtree_${FILE}.sh
 echo "### Here change the job name and replace the species in accordance with species analysed ###" >> iqtree_${FILE}.sh
 echo "#SBATCH --output=FORBIO_SingleGene_${FILE}_slurm-%j.txt" >> iqtree_${FILE}.sh
@@ -22,11 +22,9 @@ echo "### Adjust the number of tasks if needed ###" >> iqtree_${FILE}.sh
 echo "#SBATCH --ntasks=1" >> iqtree_${FILE}.sh
 echo "" >> iqtree_${FILE}.sh
 echo "### Adjust run wall time if needed ###" >> iqtree_${FILE}.sh
-echo "#SBATCH --time=2-00:00:00" >> iqtree_${FILE}.sh
+echo "#SBATCH --time=2:00:00" >> iqtree_${FILE}.sh
 echo "" >> iqtree_${FILE}.sh
 echo "# Leave this unchanged" >> iqtree_${FILE}.sh
-echo "#SBATCH --mail-type=FAIL" >> iqtree_${FILE}.sh
-echo "#SBATCH --mail-user=t.h.struck@nhm.uio.no" >> iqtree_${FILE}.sh
 echo "" >> iqtree_${FILE}.sh
 
 echo "set -o errexit # exit on errors" >> iqtree_${FILE}.sh
