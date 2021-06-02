@@ -166,7 +166,7 @@ The approach implemented in CladeAge initially assumed that the oldest fossil re
 
 		emacs run_cladeage.xml
 		
-* Add the following text to the new file:
+* Write the following text to the new file:
 
 		#!/bin/bash
 
@@ -205,7 +205,7 @@ The approach implemented in CladeAge initially assumed that the oldest fossil re
 
 		squeue -u `whoami`
 
-* As soon as the analysis is no longer listed in the output of the above command, it has stopped. Check the output file `run_cladeage.out` when that is the case, and scroll to the end.**Question 1:** Did the BEAST2 analysis finish correctly? [(see answer)](#q1)
+* As soon as the analysis is no longer listed in the output of the above command, it has stopped. Check the output file `run_cladeage.out` when that is the case, and scroll to the end. **Question 1:** Did the BEAST2 analysis finish correctly? [(see answer)](#q1)
 
 As a starting tree for the BEAST2 analysis, it would be convenient if we could use the MCC tree produced with bModelTest in tutorial [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md). However, we will have to make a few changes to the tree before we can use it as a starting tree. First, we have to change the format of the tree from Nexus to Newick, and second, we have to extend all terminal branches so that all branches are at least as old as the fossils assigned to them. In the current version of the tree, particularly the divergences of cichlids are too young to agree with the fossil record, given that Cichlinae and Pseudocrenilabrinae diverged around 25 million years ago according to the tree, but both clades have fossil records that are at least 40 million years old.
 
@@ -461,7 +461,7 @@ Note that a far more extensive tutorial on divergence-time estimation with the F
 
 		(((((Teleost_Euteleost_Batrachoidaria_Batrachoidiformes_Batrachoididae_Chatrabus_melanurus_0.00,Louckaichthys_novosadi_30.8),Teleost_Euteleost_Carangaria_Pleuronectiformes_Cynoglossidae_Cynoglossus_semilaevis_0.00,Teleost_Euteleost_Eupercaria_Perciformes_Gasterosteidae_Gasterosteus_aculeatus_0.00,(Teleost_Euteleost_Eupercaria_Tetraodontiformes_Tetraodontidae_Takifugu_rubripes_0.00,Plectocretacicus_clarae_99.25),(Teleost_Euteleost_Ophidiaria_Ophidiiformes_Ophidiidae_Brotula_barbata_0.00,Pastorius_methenyi_73.1),((Teleost_Euteleost_Ovalentaria_Cichliformes_Cichlidae_Amphilophus_citrinellus_0.00,Plesioheros_chauliodus_42.5),(Teleost_Euteleost_Ovalentaria_Cichliformes_Cichlidae_Haplochromis_burtoni_0.00,Teleost_Euteleost_Ovalentaria_Cichliformes_Cichlidae_Oreochromis_niloticus_0.00,Mahengechromis_spp_45.5)),Teleost_Euteleost_Pelagiaria_Scombriformes_Scombridae_Thunnus_albacares_0.00),Teleost_Euteleost_Beryciformes_Berycidae_Beryx_splendens_0.00,(Teleost_Euteleost_Holocentriformes_Holocentridae_Myripristis_jacobus_0.00,Caproberyx_pharsus_99.25),Teleost_Euteleost_Trachichthyformes_Monocentridae_Monocentris_japonica_0.00,Cryptoberyx_minimus_99.25),(Teleost_Euteleost_Lampriformes_Lampridae_Lampris_guttatus_0.00,Aipichthys_minor_99.25),(Teleost_Euteleost_Myctophiformes_Myctophidae_Benthosema_glaciale_0.00,Sardinioides_spp_81.0),(Teleost_Euteleost_Polymixiiformes_Polymixiidae_Polymixia_japonica_0.00,Homonotichthys_rotundus_95.55),Teleost_Euteleost_Salmoniformes_Salmonidae_Salmo_salar_0.00,Teleost_Euteleost_Stomiatiformes_Stomiidae_Borostomias_antarcticus_0.00,(Teleost_Euteleost_Zeiogadaria_Gadiformes_Gadidae_Gadus_morhua_0.00,(Teleost_Euteleost_Zeiogadaria_Zeiformes_Zeidae_Zeus_faber_0.00,Cretazeus_rinaldii_86.4)),Leptolepides_haerteisi_151.5),(Teleost_Otophysa_Cypriniformes_Danionidae_Danio_rerio_0.00,Tischlingerichthys_viohli_151.5))
 
-	If you copy this string and paste it into a new FigTree window, you'll see a cladogram visualizing all specified monophyly constraints, as shown in the screenshot below. Each resolved branch in this cladogram represents a clade for which the monophyly is constrained. Also note that each pair of sister taxa in this phylogeny groups one extant representative of a clade with the oldest fossil of that clade. The set of monophyly constraints defined by this Newick string is effectively identical to the the assignment of fossil taxa to taxonomic groups as we did it before in the analysis with the CladeAge model.<p align="center"><img src="img/figtree3.png" alt="BEAUti" width="600"></p>Thus, copy the Newick string and paste it into the "Newick" field below "MultiMonophyleticConstraint.t:locus\0001, as in the next screenshot.<p align="center"><img src="img/beauti43.png" alt="BEAUti" width="700"></p>
+	If you copy this string and paste it into a new FigTree window, you'll see a cladogram visualizing all specified monophyly constraints, as shown in the screenshot below. Each resolved branch in this cladogram represents a clade for which the monophyly is constrained. Also note that each pair of sister taxa in this phylogeny groups one extant representative of a clade with the oldest fossil of that clade. The set of monophyly constraints defined by this Newick string is effectively identical to the the assignment of fossil taxa to taxonomic groups as we did it before in the analysis with the CladeAge model.<p align="center"><img src="img/figtree3.png" alt="BEAUti" width="600"></p>Thus, copy the Newick string and paste it into the "Newick" field below "MultiMonophyleticConstraint.t:locus\_0001, as in the next screenshot.<p align="center"><img src="img/beauti43.png" alt="BEAUti" width="700"></p>
 
 * Move on to the "MCMC" tab and specify again a chain length of 10 million generations. Name the log output file `fbd.log` and the tree output file `fbd.trees`. Set the interval for logging of log and tree files each to "5000" in the fields to the right of "Log Every", as shown below.<p align="center"><img src="img/beauti44.png" alt="BEAUti" width="700"></p>
 
@@ -494,16 +494,14 @@ The second change that we might still want to make to file `fbd.xml` is to accou
 
 * With file `fbd.xml` still open in a text editor on your local computer, scroll to the line after the last operator element and before the first logger element (this should be around line number 720). You should recognize the following lines:
 
-		...
-    		<operator id="SATreeRootScalerFBD.t:locus_0001" spec="SAScaleOperator" rootOnly="true" scaleFactor="0.95" tree="@Tree.t:locus_0001" weight="1.0"/>
+			<operator id="SATreeRootScalerFBD.t:locus_0001" spec="SAScaleOperator" rootOnly="true" scaleFactor="0.95" tree="@Tree.t:locus_0001" weight="1.0"/>
 
-		    <operator id="SATreeScalerFBD.t:locus_0001" spec="SAScaleOperator" scaleFactor="0.95" tree="@Tree.t:locus_0001" weight="3.0"/>
+			<operator id="SATreeScalerFBD.t:locus_0001" spec="SAScaleOperator" scaleFactor="0.95" tree="@Tree.t:locus_0001" weight="3.0"/>
 
 			<logger id="tracelog" spec="Logger" fileName="fbd.log" logEvery="5000" model="@posterior" sanitiseHeaders="true" sort="smart">
 				<log idref="posterior"/>
 				<log idref="likelihood"/>
 				<log idref="prior"/>
-		...
 
 	Without deleting any of these lines, add the following code just above the line beginning with `<logger id...`:
 
