@@ -30,7 +30,7 @@ In this tutorial, I will demonstrate how time-calibrated phylogenies can be infe
 <a name="dataset"></a>
 ## Dataset
 
-The data used in this tutorial are the sequence alignments for 100 orthologous genes of 41 teleost fishes from the study of [Hughes et al. (2018)](https://doi.org/10.1073/pnas.1719358115) that were already used in the first week of the course. This dataset will be further reduced to 10 genes for the 20 species listed below, to limit the run times of the Bayesian analyses with BEAST2.
+The data used in this tutorial are the sequence alignments for 100 orthologous genes of 41 teleost fishes from the study of [Hughes et al. (2018)](https://doi.org/10.1073/pnas.1719358115) that were already used in the first week of the course. This dataset will be further reduced to 10 genes for the 20 species of teleost fishes listed below, to limit the run times of the Bayesian analyses with BEAST2.
 
 <center>
 

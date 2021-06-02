@@ -1,0 +1,201 @@
+<itsabeastystatewerein version='2.0' sample='10000000'>
+<statenode id='Tree.t:locus_0001'>(((((((((((0:116.44866714065023,22:86.46245991539348)33:20.621447463979905,(8:118.77932581452147,23:45.19372871301836)34:18.290788790108664)37:7.111178067084467,(((2:112.39952351035888,(3:95.5061780056776,(4:94.75371316357207,24:0.0)36:0.7524648421055247)38:16.893345504681278)43:1.7102653755676442,((9:92.87348539167196,20:48.049409971044895)39:5.810190370329053,((10:28.719442181788704,11:28.719442181788704)40:59.07666513547956,21:42.231069343548405)41:10.88756844473275)42:15.426113123925504)44:4.239222835523577,12:118.3490117214501)35:25.832280950264504)45:11.929323586236706,(5:92.8694061132058,25:0.0)46:63.24121014474551)49:5.071821538093445,1:161.18243779604475)47:10.632988350057133,(16:149.48812045990047,26:50.98305151788526)48:22.327305686201413)50:9.117598132078058,((6:112.71261448153642,28:13.00815550412679)51:42.380368669507206,(13:110.82645377384301,27:15.992701932451169)52:44.26652937720061)62:25.840041127136317)61:15.308142933379685,((7:123.14059125732291,30:42.09589325039374)58:68.195210755381,(17:142.77849227288212,(18:95.35152656230424,29:7.529636559909747)55:47.426965710577875)56:48.55730973982179)54:4.905365198855719)57:24.037224637141037,(15:150.9531462814735,31:0.0)53:69.32524556722717)59:16.772821536964415,14:237.05121338566508)60:0.9029383924006993,(19:173.50512693223806,32:22.06702942168141)63:64.44902484582772)64:0.0</statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0001'>BMT_ModelIndicator.s:locus_0001[1 1] (0,5): 7 </statenode>
+<statenode id='BMT_Rates.s:locus_0001'>BMT_Rates.s:locus_0001[6 1] (0.01,100.0): 0.7985756337128911 1.8797090173852287 0.4264900862669025 0.6645573572513472 0.3509588879983871 0.3509588879983871 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0001'>BMT_gammaShape.s:locus_0001[1 1] (0.001,1000.0): 0.6519961962795205 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0001'>BMT_ProportionInvariable.s:locus_0001[1 1] (0.0,1.0): 0.10875250544627492 </statenode>
+<statenode id='hasInvariableSites.s:locus_0001'>hasInvariableSites.s:locus_0001[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0001'>hasGammaRates.s:locus_0001[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0001'>hasEqualFreqs.s:locus_0001[1 1] (null,true): true </statenode>
+<statenode id='BMT_frequencies.s:locus_0001'>BMT_frequencies.s:locus_0001[4 1] (-Infinity,Infinity): 0.04434440302057599 0.215946351713591 0.34993794311245074 0.38977130215338174 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0001'>BMT_mutationRate.s:locus_0001[1 1] (0.0,Infinity): 0.607109609088532 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0002'>BMT_ModelIndicator.s:locus_0002[1 1] (0,5): 8 </statenode>
+<statenode id='BMT_Rates.s:locus_0002'>BMT_Rates.s:locus_0002[6 1] (0.01,100.0): 0.25374391439988 0.5219986113864868 0.1368653127848659 0.8799486397146297 3.806222639202955 0.40122088251119103 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0002'>BMT_gammaShape.s:locus_0002[1 1] (0.001,1000.0): 0.6884446187772246 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0002'>BMT_ProportionInvariable.s:locus_0002[1 1] (0.0,1.0): 0.01128971771402801 </statenode>
+<statenode id='hasInvariableSites.s:locus_0002'>hasInvariableSites.s:locus_0002[1 1] (-2147483647,2147483646): 0 </statenode>
+<statenode id='hasGammaRates.s:locus_0002'>hasGammaRates.s:locus_0002[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0002'>hasEqualFreqs.s:locus_0002[1 1] (null,true): false </statenode>
+<statenode id='BMT_frequencies.s:locus_0002'>BMT_frequencies.s:locus_0002[4 1] (-Infinity,Infinity): 0.23655898716925805 0.29736807363915196 0.35103908150981267 0.11503385768177585 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0002'>BMT_mutationRate.s:locus_0002[1 1] (0.0,Infinity): 0.38195352507104774 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0003'>BMT_ModelIndicator.s:locus_0003[1 1] (0,5): 2 </statenode>
+<statenode id='BMT_Rates.s:locus_0003'>BMT_Rates.s:locus_0003[6 1] (0.01,100.0): 0.47251745044969945 1.3809953001815398 2.728934898019661 2.8465728644820047 0.4719658885394866 0.5861720531588714 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0003'>BMT_gammaShape.s:locus_0003[1 1] (0.001,1000.0): 0.5923337373775478 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0003'>BMT_ProportionInvariable.s:locus_0003[1 1] (0.0,1.0): 0.1478337170029581 </statenode>
+<statenode id='hasInvariableSites.s:locus_0003'>hasInvariableSites.s:locus_0003[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0003'>hasGammaRates.s:locus_0003[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0003'>hasEqualFreqs.s:locus_0003[1 1] (null,true): false </statenode>
+<statenode id='BMT_frequencies.s:locus_0003'>BMT_frequencies.s:locus_0003[4 1] (-Infinity,Infinity): 0.2228930515675628 0.27075874971977915 0.32753236862419305 0.17881583008846516 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0003'>BMT_mutationRate.s:locus_0003[1 1] (0.0,Infinity): 0.753491007213476 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0004'>BMT_ModelIndicator.s:locus_0004[1 1] (0,5): 8 </statenode>
+<statenode id='BMT_Rates.s:locus_0004'>BMT_Rates.s:locus_0004[6 1] (0.01,100.0): 0.7576831859776463 1.3528394938434891 0.30266531332056734 0.8399952030014824 2.5144871040393193 0.23232969981751572 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0004'>BMT_gammaShape.s:locus_0004[1 1] (0.001,1000.0): 1.0277913142233768 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0004'>BMT_ProportionInvariable.s:locus_0004[1 1] (0.0,1.0): 0.04700497693467652 </statenode>
+<statenode id='hasInvariableSites.s:locus_0004'>hasInvariableSites.s:locus_0004[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0004'>hasGammaRates.s:locus_0004[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0004'>hasEqualFreqs.s:locus_0004[1 1] (null,true): true </statenode>
+<statenode id='BMT_frequencies.s:locus_0004'>BMT_frequencies.s:locus_0004[4 1] (-Infinity,Infinity): 0.37864992834700695 0.014920353542887052 0.049059026400179145 0.5573706917099273 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0004'>BMT_mutationRate.s:locus_0004[1 1] (0.0,Infinity): 0.741088813196254 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0005'>BMT_ModelIndicator.s:locus_0005[1 1] (0,5): 1 </statenode>
+<statenode id='BMT_Rates.s:locus_0005'>BMT_Rates.s:locus_0005[6 1] (0.01,100.0): 0.5952597272926518 1.8094805454146878 0.536853640359474 0.45635571181948714 0.45635571181948714 0.4229268074022187 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0005'>BMT_gammaShape.s:locus_0005[1 1] (0.001,1000.0): 0.5417583253664303 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0005'>BMT_ProportionInvariable.s:locus_0005[1 1] (0.0,1.0): 0.026132471239500913 </statenode>
+<statenode id='hasInvariableSites.s:locus_0005'>hasInvariableSites.s:locus_0005[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0005'>hasGammaRates.s:locus_0005[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0005'>hasEqualFreqs.s:locus_0005[1 1] (null,true): true </statenode>
+<statenode id='BMT_frequencies.s:locus_0005'>BMT_frequencies.s:locus_0005[4 1] (-Infinity,Infinity): 0.0778525571015728 0.09903280279340787 0.2515800650844134 0.5715345750206061 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0005'>BMT_mutationRate.s:locus_0005[1 1] (0.0,Infinity): 1.0244317987265092 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0006'>BMT_ModelIndicator.s:locus_0006[1 1] (0,5): 3 </statenode>
+<statenode id='BMT_Rates.s:locus_0006'>BMT_Rates.s:locus_0006[6 1] (0.01,100.0): 0.6579736490437729 1.9802236194005334 0.36180273155568465 0.5345004371883427 0.3825123623511818 0.5648214001765495 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0006'>BMT_gammaShape.s:locus_0006[1 1] (0.001,1000.0): 0.5015415033746351 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0006'>BMT_ProportionInvariable.s:locus_0006[1 1] (0.0,1.0): 0.23391769488776046 </statenode>
+<statenode id='hasInvariableSites.s:locus_0006'>hasInvariableSites.s:locus_0006[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0006'>hasGammaRates.s:locus_0006[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0006'>hasEqualFreqs.s:locus_0006[1 1] (null,true): true </statenode>
+<statenode id='BMT_frequencies.s:locus_0006'>BMT_frequencies.s:locus_0006[4 1] (-Infinity,Infinity): 0.11605266951342694 0.3753790500368337 0.46017904067138304 0.048389239778356435 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0006'>BMT_mutationRate.s:locus_0006[1 1] (0.0,Infinity): 1.1001292964750211 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0007'>BMT_ModelIndicator.s:locus_0007[1 1] (0,5): 6 </statenode>
+<statenode id='BMT_Rates.s:locus_0007'>BMT_Rates.s:locus_0007[6 1] (0.01,100.0): 0.6875165147971932 1.185530033677919 0.7686979083113876 2.0165480143553474 0.5730096205467639 0.6166376393314031 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0007'>BMT_gammaShape.s:locus_0007[1 1] (0.001,1000.0): 0.7397850460530692 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0007'>BMT_ProportionInvariable.s:locus_0007[1 1] (0.0,1.0): 0.21805111601470645 </statenode>
+<statenode id='hasInvariableSites.s:locus_0007'>hasInvariableSites.s:locus_0007[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0007'>hasGammaRates.s:locus_0007[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0007'>hasEqualFreqs.s:locus_0007[1 1] (null,true): false </statenode>
+<statenode id='BMT_frequencies.s:locus_0007'>BMT_frequencies.s:locus_0007[4 1] (-Infinity,Infinity): 0.243619660690106 0.31961654130083567 0.2341462979134699 0.20261750009558874 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0007'>BMT_mutationRate.s:locus_0007[1 1] (0.0,Infinity): 1.1626708718389378 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0008'>BMT_ModelIndicator.s:locus_0008[1 1] (0,5): 1 </statenode>
+<statenode id='BMT_Rates.s:locus_0008'>BMT_Rates.s:locus_0008[6 1] (0.01,100.0): 0.42907121041625174 2.1418575791674908 0.5351494378181454 0.5028150158143156 0.43952640428845635 0.3413540978663279 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0008'>BMT_gammaShape.s:locus_0008[1 1] (0.001,1000.0): 0.3794749687794255 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0008'>BMT_ProportionInvariable.s:locus_0008[1 1] (0.0,1.0): 0.2620362946569015 </statenode>
+<statenode id='hasInvariableSites.s:locus_0008'>hasInvariableSites.s:locus_0008[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0008'>hasGammaRates.s:locus_0008[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0008'>hasEqualFreqs.s:locus_0008[1 1] (null,true): false </statenode>
+<statenode id='BMT_frequencies.s:locus_0008'>BMT_frequencies.s:locus_0008[4 1] (-Infinity,Infinity): 0.20393488522814043 0.34984431668552224 0.2751886435149614 0.17103215457137513 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0008'>BMT_mutationRate.s:locus_0008[1 1] (0.0,Infinity): 0.9683743793518691 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0009'>BMT_ModelIndicator.s:locus_0009[1 1] (0,5): 2 </statenode>
+<statenode id='BMT_Rates.s:locus_0009'>BMT_Rates.s:locus_0009[6 1] (0.01,100.0): 0.582104169932633 1.1229115138244348 2.5486718064450344 2.7519866663966837 0.6424242898462519 0.6424242898462519 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0009'>BMT_gammaShape.s:locus_0009[1 1] (0.001,1000.0): 0.404600919536159 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0009'>BMT_ProportionInvariable.s:locus_0009[1 1] (0.0,1.0): 0.1763333307722742 </statenode>
+<statenode id='hasInvariableSites.s:locus_0009'>hasInvariableSites.s:locus_0009[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasGammaRates.s:locus_0009'>hasGammaRates.s:locus_0009[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0009'>hasEqualFreqs.s:locus_0009[1 1] (null,true): false </statenode>
+<statenode id='BMT_frequencies.s:locus_0009'>BMT_frequencies.s:locus_0009[4 1] (-Infinity,Infinity): 0.22449749050143966 0.3091964938391876 0.3498147170765121 0.1164912985828609 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0009'>BMT_mutationRate.s:locus_0009[1 1] (0.0,Infinity): 1.1862123581871813 </statenode>
+<statenode id='BMT_ModelIndicator.s:locus_0010'>BMT_ModelIndicator.s:locus_0010[1 1] (0,5): 6 </statenode>
+<statenode id='BMT_Rates.s:locus_0010'>BMT_Rates.s:locus_0010[6 1] (0.01,100.0): 0.24590607377618764 0.8429157629880135 0.5571855688994146 3.2669531794215634 0.5298538460153946 0.5160515835968136 </statenode>
+<statenode id='BMT_gammaShape.s:locus_0010'>BMT_gammaShape.s:locus_0010[1 1] (0.001,1000.0): 0.6144503966321149 </statenode>
+<statenode id='BMT_ProportionInvariable.s:locus_0010'>BMT_ProportionInvariable.s:locus_0010[1 1] (0.0,1.0): 0.03356503731623629 </statenode>
+<statenode id='hasInvariableSites.s:locus_0010'>hasInvariableSites.s:locus_0010[1 1] (-2147483647,2147483646): 0 </statenode>
+<statenode id='hasGammaRates.s:locus_0010'>hasGammaRates.s:locus_0010[1 1] (-2147483647,2147483646): 1 </statenode>
+<statenode id='hasEqualFreqs.s:locus_0010'>hasEqualFreqs.s:locus_0010[1 1] (null,true): false </statenode>
+<statenode id='BMT_frequencies.s:locus_0010'>BMT_frequencies.s:locus_0010[4 1] (-Infinity,Infinity): 0.28684736351264406 0.2854062435742199 0.3167528362583458 0.11099355665478973 </statenode>
+<statenode id='BMT_mutationRate.s:locus_0010'>BMT_mutationRate.s:locus_0010[1 1] (0.0,Infinity): 1.3041430092598534 </statenode>
+<statenode id='ucldMean.c:locus_0001'>ucldMean.c:locus_0001[1 1] (-Infinity,Infinity): 0.0010813734529488523 </statenode>
+<statenode id='ucldStdev.c:locus_0001'>ucldStdev.c:locus_0001[1 1] (0.0,Infinity): 0.5881633088180486 </statenode>
+<statenode id='rateCategories.c:locus_0001'>rateCategories.c:locus_0001[64 1] (0,63): 28 3 49 30 55 10 24 43 18 8 10 1 18 14 19 23 0 51 39 43 62 6 13 16 60 46 6 5 49 54 15 54 9 7 63 2 61 12 35 4 2 7 63 49 62 62 8 29 30 18 59 42 4 28 51 33 39 62 36 30 4 52 7 58 </statenode>
+<statenode id='diversificationRateFBD.t:locus_0001'>diversificationRateFBD.t:locus_0001[1 1] (0.0,Infinity): 0.04284762675685933 </statenode>
+<statenode id='turnoverFBD.t:locus_0001'>turnoverFBD.t:locus_0001[1 1] (0.0,1.0): 0.0024020813706708026 </statenode>
+<statenode id='samplingProportionFBD.t:locus_0001'>samplingProportionFBD.t:locus_0001[1 1] (0.0,1.0): 0.21637912712629986 </statenode>
+</itsabeastystatewerein>
+<!--
+{"operators":[
+{"id":"BMT_ModelTestOperator.s:locus_0001","p":"NaN","accept":11555,"reject":44519,"acceptFC":11525,"rejectFC":44424,"rejectIv":1411,"rejectOp":1411},
+{"id":"BMT_Ratescaler.s:locus_0001","p":0.5212490791722597,"accept":14936,"reject":41515,"acceptFC":14844,"rejectFC":41457,"rejectIv":2288,"rejectOp":2288},
+{"id":"BMT_gammaShapeScaler.s:locus_0001","p":0.39358669004047314,"accept":7058,"reject":20906,"acceptFC":7037,"rejectFC":20860,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0001","p":0.2306379868856727,"accept":4349,"reject":23695,"acceptFC":4318,"rejectFC":23655,"rejectIv":15459,"rejectOp":15459},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0001","p":"NaN","accept":0,"reject":5489,"acceptFC":0,"rejectFC":5477,"rejectIv":2755,"rejectOp":2755},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0001","p":"NaN","accept":994,"reject":4415,"acceptFC":993,"rejectFC":4399,"rejectIv":2759,"rejectOp":2759},
+{"id":"BMT_FreqsFlipOperator.s:locus_0001","p":"NaN","accept":45,"reject":5641,"acceptFC":38,"rejectFC":5631,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0001","p":0.6984411982467977,"accept":2462,"reject":8801,"acceptFC":2430,"rejectFC":8800,"rejectIv":0,"rejectOp":0},
+{"id":"FixMeanMutationRatesOperator","p":0.4107297746547615,"accept":22168,"reject":89894,"acceptFC":22111,"rejectFC":89671,"rejectIv":1077,"rejectOp":1077},
+{"id":"BMT_ModelTestOperator.s:locus_0002","p":"NaN","accept":5398,"reject":50716,"acceptFC":5370,"rejectFC":50573,"rejectIv":19111,"rejectOp":19111},
+{"id":"BMT_Ratescaler.s:locus_0002","p":1.0202262290177828,"accept":11071,"reject":45098,"acceptFC":10951,"rejectFC":45054,"rejectIv":18951,"rejectOp":18951},
+{"id":"BMT_gammaShapeScaler.s:locus_0002","p":0.2946864794018916,"accept":7320,"reject":20799,"acceptFC":7289,"rejectFC":20736,"rejectIv":186,"rejectOp":186},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0002","p":0.213385400910527,"accept":5313,"reject":22657,"acceptFC":5278,"rejectFC":22617,"rejectIv":13463,"rejectOp":13463},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0002","p":"NaN","accept":14,"reject":5631,"acceptFC":14,"rejectFC":5622,"rejectIv":2851,"rejectOp":2851},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0002","p":"NaN","accept":1243,"reject":4374,"acceptFC":1236,"rejectFC":4359,"rejectIv":2822,"rejectOp":2822},
+{"id":"BMT_FreqsFlipOperator.s:locus_0002","p":"NaN","accept":10,"reject":5704,"acceptFC":4,"rejectFC":5697,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0002","p":0.09927921190423729,"accept":3418,"reject":7786,"acceptFC":3390,"rejectFC":7785,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0003","p":"NaN","accept":10057,"reject":45783,"acceptFC":10019,"rejectFC":45664,"rejectIv":1530,"rejectOp":1530},
+{"id":"BMT_Ratescaler.s:locus_0003","p":0.5628258774009209,"accept":15016,"reject":40772,"acceptFC":14904,"rejectFC":40728,"rejectIv":2331,"rejectOp":2331},
+{"id":"BMT_gammaShapeScaler.s:locus_0003","p":0.3756620806040169,"accept":7973,"reject":20499,"acceptFC":7949,"rejectFC":20442,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0003","p":0.3098668466035325,"accept":5214,"reject":22581,"acceptFC":5182,"rejectFC":22536,"rejectIv":7299,"rejectOp":7299},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0003","p":"NaN","accept":0,"reject":5469,"acceptFC":0,"rejectFC":5452,"rejectIv":2678,"rejectOp":2678},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0003","p":"NaN","accept":348,"reject":5336,"acceptFC":344,"rejectFC":5320,"rejectIv":2845,"rejectOp":2845},
+{"id":"BMT_FreqsFlipOperator.s:locus_0003","p":"NaN","accept":18,"reject":5658,"acceptFC":12,"rejectFC":5651,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0003","p":0.1029711998677075,"accept":4956,"reject":6030,"acceptFC":4918,"rejectFC":6029,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0004","p":"NaN","accept":8158,"reject":48097,"acceptFC":8132,"rejectFC":47965,"rejectIv":5997,"rejectOp":5997},
+{"id":"BMT_Ratescaler.s:locus_0004","p":0.6052026044474093,"accept":13815,"reject":42631,"acceptFC":13714,"rejectFC":42569,"rejectIv":7038,"rejectOp":7038},
+{"id":"BMT_gammaShapeScaler.s:locus_0004","p":0.4299225118722091,"accept":7170,"reject":20828,"acceptFC":7157,"rejectFC":20763,"rejectIv":5,"rejectOp":5},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0004","p":0.2915683118332831,"accept":5100,"reject":23201,"acceptFC":5093,"rejectFC":23128,"rejectIv":16924,"rejectOp":16924},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0004","p":"NaN","accept":2,"reject":5592,"acceptFC":0,"rejectFC":5579,"rejectIv":2786,"rejectOp":2786},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0004","p":"NaN","accept":1054,"reject":4673,"acceptFC":1051,"rejectFC":4662,"rejectIv":2915,"rejectOp":2915},
+{"id":"BMT_FreqsFlipOperator.s:locus_0004","p":"NaN","accept":11,"reject":5526,"acceptFC":7,"rejectFC":5515,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0004","p":0.10065537928161147,"accept":3725,"reject":7488,"acceptFC":3699,"rejectFC":7482,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0005","p":"NaN","accept":10450,"reject":45989,"acceptFC":10423,"rejectFC":45880,"rejectIv":2508,"rejectOp":2508},
+{"id":"BMT_Ratescaler.s:locus_0005","p":0.620334746680465,"accept":13917,"reject":42268,"acceptFC":13803,"rejectFC":42205,"rejectIv":4426,"rejectOp":4426},
+{"id":"BMT_gammaShapeScaler.s:locus_0005","p":0.3625677377233775,"accept":6853,"reject":21268,"acceptFC":6818,"rejectFC":21215,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0005","p":0.24351211302684012,"accept":5952,"reject":22193,"acceptFC":5938,"rejectFC":22127,"rejectIv":9344,"rejectOp":9344},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0005","p":"NaN","accept":0,"reject":5670,"acceptFC":0,"rejectFC":5655,"rejectIv":2874,"rejectOp":2874},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0005","p":"NaN","accept":846,"reject":4881,"acceptFC":840,"rejectFC":4866,"rejectIv":2824,"rejectOp":2824},
+{"id":"BMT_FreqsFlipOperator.s:locus_0005","p":"NaN","accept":113,"reject":5396,"acceptFC":102,"rejectFC":5392,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0005","p":0.514516322694589,"accept":4549,"reject":6798,"acceptFC":4530,"rejectFC":6798,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0006","p":"NaN","accept":11425,"reject":44629,"acceptFC":11396,"rejectFC":44540,"rejectIv":2487,"rejectOp":2487},
+{"id":"BMT_Ratescaler.s:locus_0006","p":0.48129067339535053,"accept":14315,"reject":42411,"acceptFC":14208,"rejectFC":42361,"rejectIv":3185,"rejectOp":3185},
+{"id":"BMT_gammaShapeScaler.s:locus_0006","p":0.394463220049524,"accept":6678,"reject":21303,"acceptFC":6652,"rejectFC":21253,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0006","p":0.35634910821920873,"accept":6942,"reject":21210,"acceptFC":6916,"rejectFC":21152,"rejectIv":1307,"rejectOp":1307},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0006","p":"NaN","accept":0,"reject":5596,"acceptFC":0,"rejectFC":5581,"rejectIv":2835,"rejectOp":2835},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0006","p":"NaN","accept":114,"reject":5446,"acceptFC":114,"rejectFC":5433,"rejectIv":2800,"rejectOp":2800},
+{"id":"BMT_FreqsFlipOperator.s:locus_0006","p":"NaN","accept":43,"reject":5734,"acceptFC":41,"rejectFC":5724,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0006","p":0.40209545943793895,"accept":3939,"reject":7358,"acceptFC":3913,"rejectFC":7352,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0007","p":"NaN","accept":6519,"reject":49655,"acceptFC":6493,"rejectFC":49511,"rejectIv":746,"rejectOp":746},
+{"id":"BMT_Ratescaler.s:locus_0007","p":0.4592227763699629,"accept":15841,"reject":40104,"acceptFC":15758,"rejectFC":40054,"rejectIv":15,"rejectOp":15},
+{"id":"BMT_gammaShapeScaler.s:locus_0007","p":0.4326063467186924,"accept":7130,"reject":20796,"acceptFC":7105,"rejectFC":20745,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0007","p":0.34052226942465713,"accept":6656,"reject":21048,"acceptFC":6626,"rejectFC":20987,"rejectIv":3118,"rejectOp":3118},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0007","p":"NaN","accept":0,"reject":5540,"acceptFC":0,"rejectFC":5529,"rejectIv":2807,"rejectOp":2807},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0007","p":"NaN","accept":228,"reject":5280,"acceptFC":228,"rejectFC":5259,"rejectIv":2740,"rejectOp":2740},
+{"id":"BMT_FreqsFlipOperator.s:locus_0007","p":"NaN","accept":14,"reject":5587,"acceptFC":2,"rejectFC":5575,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0007","p":0.07486187175538837,"accept":3043,"reject":8038,"acceptFC":3021,"rejectFC":8034,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0008","p":"NaN","accept":12140,"reject":43748,"acceptFC":12108,"rejectFC":43628,"rejectIv":711,"rejectOp":711},
+{"id":"BMT_Ratescaler.s:locus_0008","p":0.4364800249791701,"accept":14458,"reject":41756,"acceptFC":14347,"rejectFC":41690,"rejectIv":1066,"rejectOp":1066},
+{"id":"BMT_gammaShapeScaler.s:locus_0008","p":0.40196899943744535,"accept":5868,"reject":22488,"acceptFC":5836,"rejectFC":22436,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0008","p":0.234887224185578,"accept":4038,"reject":24262,"acceptFC":4016,"rejectFC":24197,"rejectIv":16521,"rejectOp":16521},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0008","p":"NaN","accept":0,"reject":5774,"acceptFC":0,"rejectFC":5764,"rejectIv":2943,"rejectOp":2943},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0008","p":"NaN","accept":990,"reject":4603,"acceptFC":990,"rejectFC":4590,"rejectIv":2836,"rejectOp":2836},
+{"id":"BMT_FreqsFlipOperator.s:locus_0008","p":"NaN","accept":6,"reject":5669,"acceptFC":0,"rejectFC":5656,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0008","p":0.07775891137797603,"accept":3496,"reject":7625,"acceptFC":3468,"rejectFC":7613,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0009","p":"NaN","accept":7499,"reject":48609,"acceptFC":7483,"rejectFC":48465,"rejectIv":4329,"rejectOp":4329},
+{"id":"BMT_Ratescaler.s:locus_0009","p":0.5347563059699351,"accept":14072,"reject":42205,"acceptFC":13976,"rejectFC":42139,"rejectIv":1354,"rejectOp":1354},
+{"id":"BMT_gammaShapeScaler.s:locus_0009","p":0.4992256207173563,"accept":6604,"reject":21499,"acceptFC":6585,"rejectFC":21449,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0009","p":0.1773649056912609,"accept":3745,"reject":24358,"acceptFC":3709,"rejectFC":24328,"rejectIv":13459,"rejectOp":13459},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0009","p":"NaN","accept":0,"reject":5527,"acceptFC":0,"rejectFC":5509,"rejectIv":2770,"rejectOp":2770},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0009","p":"NaN","accept":832,"reject":4704,"acceptFC":832,"rejectFC":4691,"rejectIv":2646,"rejectOp":2646},
+{"id":"BMT_FreqsFlipOperator.s:locus_0009","p":"NaN","accept":0,"reject":5655,"acceptFC":0,"rejectFC":5644,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0009","p":0.0694442136833022,"accept":3100,"reject":8205,"acceptFC":3079,"rejectFC":8200,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ModelTestOperator.s:locus_0010","p":"NaN","accept":6973,"reject":49400,"acceptFC":6957,"rejectFC":49250,"rejectIv":5437,"rejectOp":5437},
+{"id":"BMT_Ratescaler.s:locus_0010","p":0.4101885008821161,"accept":12151,"reject":44182,"acceptFC":12062,"rejectFC":44131,"rejectIv":6007,"rejectOp":6007},
+{"id":"BMT_gammaShapeScaler.s:locus_0010","p":0.5116376797160582,"accept":6855,"reject":21455,"acceptFC":6837,"rejectFC":21397,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_ProportionInvariableScaler.s:locus_0010","p":0.2875391137094316,"accept":4987,"reject":23103,"acceptFC":4983,"rejectFC":23032,"rejectIv":11162,"rejectOp":11162},
+{"id":"BMT_hasGammaRatesFlipper.s:locus_0010","p":"NaN","accept":0,"reject":5708,"acceptFC":0,"rejectFC":5693,"rejectIv":2846,"rejectOp":2846},
+{"id":"BMT_hasInvariableSitesFlipper.s:locus_0010","p":"NaN","accept":513,"reject":5107,"acceptFC":512,"rejectFC":5091,"rejectIv":2801,"rejectOp":2801},
+{"id":"BMT_FreqsFlipOperator.s:locus_0010","p":"NaN","accept":0,"reject":5659,"acceptFC":0,"rejectFC":5643,"rejectIv":0,"rejectOp":0},
+{"id":"BMT_FrequenciesExchanger.s:locus_0010","p":0.05587768197731887,"accept":3058,"reject":8185,"acceptFC":3038,"rejectFC":8179,"rejectIv":0,"rejectOp":0},
+{"id":"ucldMeanScaler.c:locus_0001","p":0.7594748924890953,"accept":8934,"reject":47214,"acceptFC":8918,"rejectFC":47076,"rejectIv":0,"rejectOp":0},
+{"id":"ucldStdevScaler.c:locus_0001","p":0.8680446199719429,"accept":49828,"reject":118759,"acceptFC":49809,"rejectFC":118294,"rejectIv":0,"rejectOp":0},
+{"id":"CategoriesRandomWalk.c:locus_0001","p":"NaN","accept":329420,"reject":231989,"acceptFC":328695,"rejectFC":231208,"rejectIv":192430,"rejectOp":192430},
+{"id":"CategoriesSwapOperator.c:locus_0001","p":"NaN","accept":134901,"reject":428005,"acceptFC":134623,"rejectFC":426832,"rejectIv":0,"rejectOp":0},
+{"id":"CategoriesUniform.c:locus_0001","p":"NaN","accept":245856,"reject":316923,"acceptFC":245359,"rejectFC":315896,"rejectIv":0,"rejectOp":0},
+{"id":"relaxedUpDownOperator.c:locus_0001","p":0.6691514320776986,"accept":21778,"reject":147380,"acceptFC":21757,"rejectFC":146966,"rejectIv":88866,"rejectOp":88866},
+{"id":"divRateScalerFBD.t:locus_0001","p":0.8728399867759858,"accept":116409,"reject":444726,"acceptFC":116259,"rejectFC":443341,"rejectIv":201585,"rejectOp":0},
+{"id":"turnoverScalerFBD.t:locus_0001","p":0.3199306622727223,"accept":141235,"reject":420521,"acceptFC":140130,"rejectFC":420122,"rejectIv":63830,"rejectOp":0},
+{"id":"samplingPScalerFBD.t:locus_0001","p":0.4375539712587912,"accept":146439,"reject":417251,"acceptFC":145482,"rejectFC":416655,"rejectIv":97626,"rejectOp":1061},
+{"id":"LeafToSAFBD.t:locus_0001","p":"NaN","accept":30944,"reject":530104,"acceptFC":30808,"rejectFC":528708,"rejectIv":354906,"rejectOp":354906},
+{"id":"SAWilsonBaldingFBD.t:locus_0001","p":"NaN","accept":1946,"reject":559503,"acceptFC":1938,"rejectFC":557973,"rejectIv":483195,"rejectOp":8920},
+{"id":"SAWideFBD.t:locus_0001","p":"NaN","accept":1022,"reject":560641,"acceptFC":1017,"rejectFC":559117,"rejectIv":541213,"rejectOp":313457},
+{"id":"SANarrowFBD.t:locus_0001","p":"NaN","accept":27998,"reject":533574,"acceptFC":27926,"rejectFC":532181,"rejectIv":359633,"rejectOp":218334},
+{"id":"SAUniformOperatorFBD.t:locus_0001","p":"NaN","accept":446684,"reject":676084,"acceptFC":445904,"rejectFC":673792,"rejectIv":0,"rejectOp":0},
+{"id":"SATreeRootScalerFBD.t:locus_0001","p":0.8622948913239836,"accept":15382,"reject":40903,"acceptFC":15339,"rejectFC":40797,"rejectIv":16391,"rejectOp":16391},
+{"id":"SATreeScalerFBD.t:locus_0001","p":0.8695706765872364,"accept":41831,"reject":125757,"acceptFC":41740,"rejectFC":125396,"rejectIv":41686,"rejectOp":41686},
+{"id":"unknown","p":1,"accept":534478,"reject":27171,"acceptFC":533079,"rejectFC":27007,"rejectIv":5211,"rejectOp":5211}
+]}
+-->
