@@ -205,7 +205,9 @@ The approach implemented in CladeAge initially assumed that the oldest fossil re
 
 		squeue -u `whoami`
 
-* As soon as the analysis is no longer listed in the output of the above command, it has stopped. Check the output file `run_cladeage.out` when that is the case, and scroll to the end. **Question 1:** Did the BEAST2 analysis finish correctly? [(see answer)](#q1)
+* As soon as the analysis is no longer listed in the output of the above command, it has stopped. Check the output file `run_cladeage.out` when that is the case, and scroll to the end.
+
+	**Question 1:** Did the BEAST2 analysis finish correctly? [(see answer)](#q1)
 
 As a starting tree for the BEAST2 analysis, it would be convenient if we could use the MCC tree produced with bModelTest in tutorial [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md). However, we will have to make a few changes to the tree before we can use it as a starting tree. First, we have to change the format of the tree from Nexus to Newick, and second, we have to extend all terminal branches so that all branches are at least as old as the fossils assigned to them. In the current version of the tree, particularly the divergences of cichlids are too young to agree with the fossil record, given that Cichlinae and Pseudocrenilabrinae diverged around 25 million years ago according to the tree, but both clades have fossil records that are at least 40 million years old.
 
@@ -223,7 +225,9 @@ As a starting tree for the BEAST2 analysis, it would be convenient if we could u
 
 * Modify the tree string in Newick format by adding 60 to every number that directly follows a species name, only separated by a column. For example, "Chatrabus_melanurus:61.59974" should become "Chatrabus_melanurus:121.59974", and so on. Perhaps the best way to make sure that you don't miss a number is to search for colons, and change the number after the colon only if a species name comes right before the colon. By doing this, you extend all terminal branches by 50 million years, which will make their ages comparable with the fossil records of each clade.
 
-* In the end, copy the whole Newick string and paste it into a new FigTree window. **Question 2:** Is the tree ultrametric with terminal branches that all end on a line as the tree in the next screenshot? [(see answer)](#q2)<p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>
+* In the end, copy the whole Newick string and paste it into a new FigTree window.
+
+	**Question 2:** Is the tree ultrametric with terminal branches that all end on a line as the tree in the next screenshot? [(see answer)](#q2)<p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>
 
 * Next, the modified tree string needs to be manually inserted into file `cladeage.xml`. Thus, download this file from Saga with `scp`.
 
@@ -258,7 +262,9 @@ As a starting tree for the BEAST2 analysis, it would be convenient if we could u
 
 	This time, the analysis should not stop after a few seconds.
 	
-* Also monitor how BEAST2 writes output to the file `run_cladeage.out`. **Question 3:** How long does BEAST2 take for one million iterations with this file? [(see answer)](#q3)
+* Also monitor how BEAST2 writes output to the file `run_cladeage.out`.
+
+	**Question 3:** How long does BEAST2 take for one million iterations with this file? [(see answer)](#q3)
 
 While the BEAST2 analysis is running, you can continue with the next part of the tutorial in which we repeat the CladeAge analysis with a constraint that accounts for uncertainty in the oldest fossil record of one clade.
 
@@ -600,22 +606,30 @@ We are now going to use the program Tracer once again (as in tutorial [Bayesian 
 	
 	After adjusting the burnin, and excluding the parameters named "hasEqualFreqs...", the lowest ESS values are probably around 30, indicating that the chain should definitely be run for more iterations, perhaps five times as many, if the analysis was to be published. Nevertheless, we'll assume that the degree of stationarity is sufficient for our interpretation here.
 
-* Find the "TreeHeight" parameter indicating the root age in the list on the left. **Question 4:** What is the mean estimate and its confidence interval for the age of the first split in the phylogeny? [(see answer)](#q4)
+* Find the "TreeHeight" parameter indicating the root age in the list on the left.
+	
+	**Question 4:** What is the mean estimate and its confidence interval for the age of the first split in the phylogeny? [(see answer)](#q4)
 
-* Next, find the age of the most recent common ancestor of the cichlids in the dataset. This age is identical to the divergence time between the South American Cichlinae and the African Pseudocrenilabrinae, because no cichlids outside of these two groups were included in the dataset. To find the age estimate, scroll almost to the bottom of the list on the left, select "mrcatime(Cichlidae)". You should see that this divergence event was estimated around 90 Ma, with a range of uncertainty roughly between 70 Ma and 110 Ma, as shown in the next screenshot.<p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>
+* Next, find the age of the most recent common ancestor of the cichlids in the dataset. This age is identical to the divergence time between the Neotropical Cichlinae and the African Pseudocrenilabrinae, because no cichlids outside of these two groups were included in the dataset. To find the age estimate, scroll almost to the bottom of the list on the left, select "mrcatime(Cichlidae)". You should see that this divergence event was estimated around 90 Ma, with a range of uncertainty roughly between 70 Ma and 110 Ma, as shown in the next screenshot.<p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>
 	Given that the confidence interval includes 100 million years, this age estimate is in agreement with the long-held assumption of "Gondwanan vicariance", according to which the two groups diverged when the continents Africa and South America separated.
 
-* Finally, select the speciation-rate parameter named "BDBirthRate" from the list on the left to see the summary statistics for this parameter, as in the next screenshot.<p align="center"><img src="img/tracer6.png" alt="Tracer" width="700"></p> **Question 5:** How do these estimates compare to those that we used to define prior densities for fossil calibrations with the CladeAge approach? [(see answer)](#q5)
+* Finally, select the speciation-rate parameter named "BDBirthRate" from the list on the left to see the summary statistics for this parameter, as in the next screenshot.<p align="center"><img src="img/tracer6.png" alt="Tracer" width="700"></p>
+
+	**Question 5:** How do these estimates compare to those that we used to define prior densities for fossil calibrations with the CladeAge approach? [(see answer)](#q5)
 
 * Next, also open in Tracer the file `cladeage2.log`, from the analysis with the new type of age constraints that accounts for uncertainty in fossil assignments.
 
 * Adjust the burnin if necessary.
 
-* Inspect the estimate for the divergence time between the South American Cichlinae and the African Pseudocrenilabrinae from this analysis. **Question 6:** Is this estimate still in agreement with an assumed Gondwanan vicariance of the two groups before 100 Ma? [(see answer)](#q6)
+* Inspect the estimate for the divergence time between the Neotropical Cichlinae and the African Pseudocrenilabrinae from this analysis.
+
+	**Question 6:** Is this estimate still in agreement with an assumed Gondwanan vicariance of the two groups before 100 Ma? [(see answer)](#q6)
 
 * Also open the log file of the analysis with the FBD model, named `fbd.log`, in Tracer, and adjust the burnin if necessary. The degree of stationarity in the MCMC chain of this analysis may be comparable or slightly lower than that of the analyses with CladeAge.<p align="center"><img src="img/tracer7.png" alt="Tracer" width="700"></p>
 
-* Again, find the "TreeHeight" parameter. **Question 7:** How old is the age of the first divergence event of the phylogeny, as estimated with the FBD model? [(see answer)](#q7)
+* Again, find the "TreeHeight" parameter.
+	
+	**Question 7:** How old is the age of the first divergence event of the phylogeny, as estimated with the FBD model? [(see answer)](#q7)
 
 The divergence time of African and Neotropical cichlids is this time not included in the list of parameters. To see it, you'll need to use the posterior tree distribution.
 

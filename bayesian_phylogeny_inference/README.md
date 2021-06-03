@@ -441,7 +441,9 @@ Thus, both the calculation of ESS values as well as the visual inspection of tra
 
 * Open this file in the program Tracer. The Tracer window should then look more or less as shown in the next screenshot<p align="center"><img src="img/tracer1.png" alt="Tracer" width="700"></p>In the top left panel of the Tracer window, you'll see a list of the loaded log files, which currently is just the single file `beast2.log`. This panel also specifies the number of states found in this file, and the burn-in to be cut from the beginning of the MCMC chain. Cutting away a burn-in removes the initial period of the MCMC chain during which it may not have sampled from the true posterior distribution yet.
 
-	In the bottom left panel of the Tracer window, you'll see statistics for the estimate of the posterior probability (just named "posterior"), the likelihood, and the prior probability (just named "prior"), as well as for the parameters estimated during the analysis (except the phylogeny, which also represents a set of parameters). The second column in this part shows the mean estimates for each parameter and their ESS values. **Question 2:** Do the ESS values of all parameters indicate stationarity? [(see answer)](#q2)
+	In the bottom left panel of the Tracer window, you'll see statistics for the estimate of the posterior probability (just named "posterior"), the likelihood, and the prior probability (just named "prior"), as well as for the parameters estimated during the analysis (except the phylogeny, which also represents a set of parameters). The second column in this part shows the mean estimates for each parameter and their ESS values.
+
+	**Question 2:** Do the ESS values of all parameters indicate stationarity? [(see answer)](#q2)
 
 	In the top right panel of the Tracer window, you will see more detailed statistics for the parameter currently selected in the bottom left panel of the window. Finally, in the bottom right, you will see a visualization of the samples taken during the MCMC search. By default, these are shown in the form of a histogram as in the above screenshot.
 
@@ -451,7 +453,10 @@ Thus, both the calculation of ESS values as well as the visual inspection of tra
 
 * Now, click on the prior probability in the list at the bottom left of the window. You'll note that the trace looks very similar to that of the posterior, which may not be surprising given that the posterior probability is a (normalized) product of the prior probability and the likelihood. Thus, the auto-correlation in the prior probability seems to drive the auto-correlation in the posterior probability. Another way to visualize this is to select both the posterior and the prior probability at the same time (you may have to shift-click to do so) and then click on the "Joint-Marginal" tab next to the "Trace" tab. Also remove the tick from the checkbox for "Sample only" at the bottom of the window. The plot should then clearly show that the two measures are strongly correlated.<p align="center"><img src="img/tracer3.png" alt="Tracer" width="700"></p>
 
-* Have a look at the list of ESS values in the bottom left again. **Question 3:** Besides the prior and posterior probabilities, which parameter has the lowest ESS value? [(see answer)](#q3) **Question 4:** Could this parameter be responsible for the low ESS value of the prior probability? [(see answer)](#q4)
+* Have a look at the list of ESS values in the bottom left again.
+
+	**Question 3:** Besides the prior and posterior probabilities, which parameter has the lowest ESS value? [(see answer)](#q3)
+	**Question 4:** Could this parameter be responsible for the low ESS value of the prior probability? [(see answer)](#q4)
 
 * To find out why the estimation of the A &arr; T substitution rate seems to be difficult for the second partition, we can use a Ruby script to calculate the number of sites in an alignment at which each pair of nucleotides co-occur. Download this script to Saga:
 
@@ -472,9 +477,13 @@ Bayesian analysis with MCMC are considered "converged" when multiple replicates 
 
 * To allow a comparison of the results of the two replicate analyses of the input file `beast.xml`, also download the file `beast2.log` from the `r02` directory on Saga to your local computer. However, to avoid overwriting the previously downloaded file with the same name, first rename that file as `r01_beast2.log`, then download the second file with `scp`, and perhaps also rename the second file as `r02_beast2.log`.
 
-* Open both files in Tracer. The top left panel of the Tracer window should then shown that two log files are loaded.<p align="center"><img src="img/tracer7.png" alt="Tracer" width="700"></p>**Question 6:** Has the second analysis become more stationary than the first? [(see answer)](#q6)
+* Open both files in Tracer. The top left panel of the Tracer window should then shown that two log files are loaded.<p align="center"><img src="img/tracer7.png" alt="Tracer" width="700"></p>
 
-* Compare some of the estimates of both replicate analyses, including the posterior probability, the likelihood, and the prior.**Question 7:** Do these appear different between the two replicate analyses? [(see answer)](#q7)
+	**Question 6:** Has the second analysis become more stationary than the first? [(see answer)](#q6)
+
+* Compare some of the estimates of both replicate analyses, including the posterior probability, the likelihood, and the prior.
+		
+	**Question 7:** Do these appear different between the two replicate analyses? [(see answer)](#q7)
 
 The similarity in most estimates between both replicates is a good indication of convergence. But a better quantification of convergence are the ESS values for the combined MCMC chains. To allow the calculation of these, Tracer has already combined the two MCMC chains, after removing the first million iterations from each as "burnin". This combined chain is shown in the top left panel of the Tracer window, in the list below the two loaded log files. As the default burnin is 10% of the chain, the first million iterations of each chain were considered as burnin and thus the combined chain has a length of 18 million iterations.
 
@@ -486,9 +495,13 @@ Even though both chains are clearly not stationary yet, their comparison indicat
 <a name="comparison"></a>
 ## Comparison of run results
 
-* If the BEAST2 analyses of file `bmodeltest.xml` have finished on Saga, also download file `bmodeltest.log` to your local computer and open it in Tracer. The Tracer window should then look similar to the one shown in the screenshot.<p align="center"><img src="img/tracer8.png" alt="Tracer" width="700"></p> **Question 8:** Does this analysis appear more stationary than the one of file `beast2.xml`? [(see answer)](#q8)
+* If the BEAST2 analyses of file `bmodeltest.xml` have finished on Saga, also download file `bmodeltest.log` to your local computer and open it in Tracer. The Tracer window should then look similar to the one shown in the screenshot.<p align="center"><img src="img/tracer8.png" alt="Tracer" width="700"></p>
 
-* Scroll down in the list of parameters at the bottom left of the window to see if any parameters still have low ESS values. You'll see that this is indeed the case for some parameters of the bModelTest model, as shown in the next screenshot.<p align="center"><img src="img/tracer7.png" alt="Tracer" width="700"></p>The parameters named "hasEqualFreqs..." shown in the above plot indicate if nucleotide frequencies should be estimated (then the parameter state is "0") or if they they should be assumed to be all equal (then the parameter state is "1"). Whenever during the MCMC analysis bModelTest switches between a model that includes estimation of nucleotide frequencies and a model that doesn't, these parameters switch from "1" to "0" or vice versa. I would argue that these parameters named "hasEqualFreqs..." as well as some other parameters of the bModelTest model are not directly of interest and that these should therefore be excempted from the rule that parameters should have ESS values above 200. **Question 9:** Does the A &rarr; T substitution rate parameter now have a better ESS value, compared to the analysis without the bModelTest model? [(see answer)](#q9)
+	**Question 8:** Does this analysis appear more stationary than the one of file `beast2.xml`? [(see answer)](#q8)
+
+* Scroll down in the list of parameters at the bottom left of the window to see if any parameters still have low ESS values. You'll see that this is indeed the case for some parameters of the bModelTest model, as shown in the next screenshot.<p align="center"><img src="img/tracer7.png" alt="Tracer" width="700"></p>The parameters named "hasEqualFreqs..." shown in the above plot indicate if nucleotide frequencies should be estimated (then the parameter state is "0") or if they they should be assumed to be all equal (then the parameter state is "1"). Whenever during the MCMC analysis bModelTest switches between a model that includes estimation of nucleotide frequencies and a model that doesn't, these parameters switch from "1" to "0" or vice versa. I would argue that these parameters named "hasEqualFreqs..." as well as some other parameters of the bModelTest model are not directly of interest and that these should therefore be excempted from the rule that parameters should have ESS values above 200.
+	
+	**Question 9:** Does the A &rarr; T substitution rate parameter now have a better ESS value, compared to the analysis without the bModelTest model? [(see answer)](#q9)
 
 * To see which substitution models have been used in the analysis by bModelTest, we can use the BModelAnalyser App that comes with the bModelTest installation. It can be opened with the program AppLauncher that you should find in the same directory on your local computer as the BEAST2 and BEAUti GUIs. After double-clicking on the AppLauncher icon, you'll see the window shown below.<p align="center"><img src="img/applauncher1.png" alt="AppLauncher" width="450"></p>
 
@@ -496,7 +509,11 @@ Even though both chains are clearly not stationary yet, their comparison indicat
 
 * Click "OK" to close the window. This will open an output window as shown in the below screenshot, which lists the relative frequency at which the different substitution models were used for each partition. The models are encoded with six numbers that indicate which of the six subsitution rates (in this order: A &rarr; C, A &rarr; G, A &rarr; T, C &rarr; G, C &rarr; T, G &rarr; T) are linked in this model. For example the GTR model in which all rates are unlinked is encoded by the numbers "123456", the HKY model in which all transitions and all transversions are linked is encoded by "121121", and the Jukes-Cantor model in which all rates are linked is encoded by "111111". Codes for other models are listed in the Supplementary Material of [Bouckaert and Drummond (2017)](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6).
 
-	The output in the below screenshot lists two percentages for each model of each of the four partitions; the first of these indicates the frequency of this model and the second indicates the cumulative frequency of this and all models listed above it. **Question 10:** Which models are most frequently used for the ten partitions? [(see answer)](#q10)<p align="center"><img src="img/bmodelanalyser2.png" alt="Tracer" width="600"></p>As you'll see, the BModelAnalyser App will also have opened ten browser tabs with graphs of the used models. The nodes in these graphs illustrate the frequencies with which the models are used during the analysis, and the edges show the ways in which the different models are nested within each other (those above an edge are special cases of those below it). **Question 11:** Do you have any idea why the estimation of the A &arr; T substitution rate parameter for the second partition may have been improved in the analysis with the bModelTest model?[(see answer)](#q11)
+	The output in the below screenshot lists two percentages for each model of each of the four partitions; the first of these indicates the frequency of this model and the second indicates the cumulative frequency of this and all models listed above it.
+
+	**Question 10:** Which models are most frequently used for the ten partitions? [(see answer)](#q10)<p align="center"><img src="img/bmodelanalyser2.png" alt="Tracer" width="600"></p>As you'll see, the BModelAnalyser App will also have opened ten browser tabs with graphs of the used models. The nodes in these graphs illustrate the frequencies with which the models are used during the analysis, and the edges show the ways in which the different models are nested within each other (those above an edge are special cases of those below it).
+
+	**Question 11:** Do you have any idea why the estimation of the A &arr; T substitution rate parameter for the second partition may have been improved in the analysis with the bModelTest model?[(see answer)](#q11)
 	
 * Have a look whether for one of the partitions you find a pattern in the traces of the substitution rates like the one shown in the next screenshot.<p align="center"><img src="img/tracer12.png" alt="Tracer" width="700"></p>
 
@@ -533,9 +550,13 @@ So far, we have only used the log files produced by the two BEAST2 analyses to a
 
 * To add a time scale to the phylogeny, set a tick next to "Scale Axis" in the menu on the left. Also click the triangle next to it, remove the tick next to "Show grid" in the newly opened menu field, but set a tick next to "Reverse axis" instead. The result is shown in the next screenshot.<p align="center"><img src="img/figtree4.png" alt="FigTree" width="700"></p>
 
-* To also see the confidence intervals for the age estimates, click on the triangle next to "Node Bars" in the menu on the left. Also set a tick in the checkbox for "Node Bars". Choose the first item from the drop-down menu for "Display", the "height_95%_HPD" ("HPD" = "highest posterior density"; this is the most common measure of the confidence interval in a Bayesian analysis). You should then see blue bars on each node, these indicate the age range within which the node lies with 95% certainty. The phylogeny should then look as shown below.<p align="center"><img src="img/figtree5.png" alt="FigTree" width="700"></p>**Question 12:** When did the two main groups of Cichlids, Cichlinae (Neotropical cichlids) and Pseudocrenilabrinae (African cichlids), split from each other (you can look up the taxa assigned to both groups in the table at the start of this tutorial)?[(see answer)](#q12)
+* To also see the confidence intervals for the age estimates, click on the triangle next to "Node Bars" in the menu on the left. Also set a tick in the checkbox for "Node Bars". Choose the first item from the drop-down menu for "Display", the "height_95%_HPD" ("HPD" = "highest posterior density"; this is the most common measure of the confidence interval in a Bayesian analysis). You should then see blue bars on each node, these indicate the age range within which the node lies with 95% certainty. The phylogeny should then look as shown below.<p align="center"><img src="img/figtree5.png" alt="FigTree" width="700"></p>
 
-* Compare the age estimates resulting from the analysis with the bModelTest model with those from the analyses with the GTR and (if you applied it) the HKY model. **Question 13:** Are the age estimates for cichlids substantially different between these analyses?[(see answer)](#q13)
+	**Question 12:** When did the two main groups of Cichlids, Cichlinae (Neotropical cichlids) and Pseudocrenilabrinae (African cichlids), split from each other (you can look up the taxa assigned to both groups in the table at the start of this tutorial)?[(see answer)](#q12)
+
+* Compare the age estimates resulting from the analysis with the bModelTest model with those from the analyses with the GTR and (if you applied it) the HKY model.
+
+	**Question 13:** Are the age estimates for cichlids substantially different between these analyses?[(see answer)](#q13)
 
 According to the BEAST2 analyses of this tutorial, African and Neotrocial cichlid fishes diverged about 20 to 30 million years ago. However, the reliability of these estimates may be questioned, given that we used sequences of only two markers, and particularly because we calibrated the phylogeny with only a single constraint on the root node, which was taken from the results of another study rather than based on our own interpretation of the fossil record.
 ([Betancur-R. et al. 2013](http://currents.plos.org/treeoflife/article/the-tree-of-life-and-a-new-classification-of-bony-fishes/)).
