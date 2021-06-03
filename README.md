@@ -65,6 +65,8 @@ Each day we will begin at 9 am and end at around 5:30 pm. In between, we will ha
 
 * [Whole-Genome Alignment](XXX)<br>A tutorial on repeat masking and whole-genome alignment of assembled genomes
 
+* [Maximum-Likelihood Analysis of Species Networks](ml_analysis_of_species_networks/README.md)<br>A tutorial on maximum-likelihood phylogenetic analysis of species networks
+
 * [Bayesian Analysis of Species Networks](bayesian_analysis_of_species_networks/README.md)<br>A tutorial on Bayesian phylogenetic analysis of species networks
 
 #### Thursday
