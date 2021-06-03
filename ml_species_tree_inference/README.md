@@ -1,6 +1,7 @@
 # Maximum-Likelihood Species-Tree Inference
 
-A tutorial on maximum-likelihood species-tree inference based on gene trees
+A tutorial on maximum-likelihood species-tree inference based on gene trees<br/>
+By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner)
 
 ## Summary
 

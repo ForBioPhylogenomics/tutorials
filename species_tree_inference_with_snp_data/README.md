@@ -1,6 +1,7 @@
 # Species-Tree Inference with SNP Data
 
-A tutorial on the inference of species trees from SNP data based on quartets
+A tutorial on the inference of species trees from SNP data based on quartets<br/>
+By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner)
 
 ## Summary
 
@@ -103,7 +104,7 @@ The dataset of SNP variation for the above-listed 28 individuals of 14 Lake Tang
 	
 	**Question 1:** How far, approximately, is the spacing between SNPs? [(see answer)](#q1)
 	
-* To see the genotype information for the first few SNPs, hit the right-arrow key a few times to scroll to the right. You should then see the information shown in the next screenshot. Note that the tab-delimited columns are shifted between lines; thus, genotypes that appear to be in one column are not usually from the same individual. Per SNP, individuals that are homozygous for the reference allele are marked with "0/0", individuals homozygous for the first alternative allele are marked with "1/1", and "0/1" indicates heterozygous alleles. As you'll see, the dataset contains a large proportion of missing data, marked by "./.".<p align="center"><img src="img/terminal3.png" alt="Terminal" width="600"></p>
+* To see the genotype information for the first few SNPs, hit the right-arrow key a few times to scroll to the right. You should then see the information shown in the next screenshot. Note that the tab-delimited columns are shifted between lines; thus, genotypes that appear to be in one column are not usually from the same individual. Per SNP, individuals that are homozygous for the reference allele are marked with "0/0", individuals homozygous for the first alternative allele are marked with "1/1", and "0/1" indicates heterozygous alleles. As you'll see, the dataset contains a large proportion of missing data, marked by "./.".<p align="center"><img src="img/terminal3.png" alt="Terminal" width="700"></p>
 
 	If you're not familiar with the VCF file format yet, you can find more information about it in the [format specification](https://samtools.github.io/hts-specs/VCFv4.2.pdf).
 	
@@ -296,7 +297,7 @@ The dataset is now sufficiently filtered for analysis with SVDQuartets. However,
 
 <a name="q3"></a>
 
-* **Question 3:** The (first half of) the tree should look as in the next screenshot, where indeed the two individuals of each of the 14 species all appear next to each other, indicating monophyly of all species. While non-monophyly of species could result from incomplete lineage sorting, it could also indicate misidentified individuals. In any case, the fact that species appear monophyletic means that there is no reason not to combine individuals per species into one unit and use species as taxa in another analysis with SVDQuartets.<p align="center"><img src="img/paup6.png" alt="PAUP\*" width="600"></p>
+* **Question 3:** The (first half of) the tree should look as in the next screenshot, where indeed the two individuals of each of the 14 species all appear next to each other, indicating monophyly of all species. While non-monophyly of species could result from incomplete lineage sorting, it could also indicate misidentified individuals. In any case, the fact that species appear monophyletic means that there is no reason not to combine individuals per species into one unit and use species as taxa in another analysis with SVDQuartets.<p align="center"><img src="img/paup6.png" alt="PAUP\*" width="700"></p>
 
 
 <a name="q4"></a>
