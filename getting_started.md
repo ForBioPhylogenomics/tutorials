@@ -16,28 +16,51 @@ This document describes how the directory structure should be set up, how comman
 <a name="directory_structure"></a>
 ## Directory structure
 
-Following the tutorials in this collection may be easiest if separate directories are used for each tutorial. These directories could be named after the tutorial, so for example, to follow tutorial [Substitution Model Selection](substitution_model_selection/README.md), a directory named `substitution_model_selection` could be generated. It should not matter where on your computer the directory is placed as long as you do have the rights to execute programs and commands in that directory. After the directory has been generated, let's say, in `/USERNAME/Desktop/`, it would be best to navigate to that directory both with a file manager program (such as Finder on Mac OS X, Konqueror on Linux, or Explorer on Windows) and with a console program (like the program called Terminal on Mac OS X and Linux or the Windows Console on Windows). The console program will be important to execute commands, which will sometimes be required during the tutorials. You will recognize such commands in the tutorials by monospace font, gray background, and an outline, like for example this command:
+Following the tutorials in this collection may be easiest if you follow the instructions in each tutorial closely. Given that it is an online course this year we decided for a cookbook model of teaching. We go through each command and explain what it is doing.
+All data and scripts are available on SAGA and you should copy them for their to your working folder during the course. This will much faster than downloading them from here and uploading them to SAGA.
 
+The data and scripts for each session can be found in the folders
+
+/cluster/projects/nn9458k/phylogenomics/week1
+
+/cluster/projects/nn9458k/phylogenomics/week2
+
+In the first exercise, we will ask you to generate your own working folder within the "_phylogenomics_" folder using your name
+
+/cluster/projects/nn9458k/phylogenomics/$YOURNAME
+
+Within each will ask then in each exercise to generate subfolder for each session to keep things orgainzed.
+
+The exercises are also on SAGA in the "_phylogenomics_" folder, but it is easiest if you follow them here in this GitHub repository. A link to each tutorial is provided at the [starting page](https://github.com/ForBioPhylogenomics/tutorials/blob/main/README.md).
+
+To work on SAGA you need a console program (like the program called Terminal on Mac OS X and Linux or the Windows Console on Windows). The console from Windows might work, but we would advise to use an emulgator like Cmder (see [Requirements](requirements.md)). The console program will be important to execute commands on SAGA and transfer data to your own computer, when we ant to look at results with a GUI program. You will recognize such commands in the tutorials by monospace font, gray background, and an outline, like for example this command:
+
+		```
 		pwd
+		```
 		
-To execute commands like the above, the "Enter" key always needs to be hit after writing the command. In general, steps that should be executed by you during the tutorial are marked with a bullet point, such as this:
+To execute commands like the above, the "Enter" key always needs to be hit after writing the command. BTW, the command means "_print working directory_".
 
-* Unless you have already navigated into the tutorial directory with your console program (because you already know how to do that), do so now. If the directory would be named and placed as described above, the command to do so would be this one (assuming that BASH is installed and used; see [Requirements](requirements.md)):
+To access SAGA, you have to use the following command:
 
-		cd /USERNAME/Desktop/substitution_model_selection
+		```
+		ssh $YOURUSERNAME@saga.sigma2.no
+		```
 		
-	Because your actual user name is unlikely to be "USERNAME" and you may have placed the directory not on the Desktop but elsewhere, you will need to adjust the above command before executing it.
+To upload data to SAGA, you can use the following command:
 
-* To verify that you have successfully navigated to the tutorial directory, you could type this following command, which is an abbreviation for "print working directory":
+		```
+		scp -R $YOURFILE(S) $YOURFOLDER(S) $YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/$YOURNAME/$PATH_TO_YOUR_FOLDER_ON_SAGA
+		```
+To download from SAGA, it is similar. However, we suggest that you first navigate to the folder you would like to download the data to in the console:
 
-		pwd
-		
-	The console should then print a line with the path and the name of the tutorial directory, such as "/USERNAME/Desktop/substitution\_model\_selection".
-
+		```
+		scp -R $YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/$YOURNAME/$PATH_TO_YOUR_FOLDER_ON_SAGA/$YOURFILE(or $YOURFOLDER) .
+		```
 <a name="copy_pasting"></a>
 ## Copying and pasting commands
 
-After you've navigated to the tutorial directory with the console program, it should be possible to execute all commands that are mentioned in the tutorial instructions exactly as they are specified. All one-line commands can be copied from the instructions and pasted into the console window, but care should be taken not to include whitespace symbols before the first letter or after the last letter of the command. Sometimes, it is not evident from the text selection that is used for copying, but whitespace nevertheless appears after the last letter copied to the command line (recognizable as a space between the last letter and the cursor); in that case, the whitespace on the command line should be deleted before executing the command.
+After you've navigated to the tutorial directory on SAGA, it should be possible to execute all commands that are mentioned in the tutorial instructions exactly as they are specified. All one-line commands can be copied from the instructions and pasted into the console window, but care should be taken not to include whitespace symbols before the first letter or after the last letter of the command. Sometimes, it is not evident from the text selection that is used for copying, but whitespace nevertheless appears after the last letter copied to the command line (recognizable as a space between the last letter and the cursor); in that case, the whitespace on the command line should be deleted before executing the command.
 
 For multi-line commands, however, it is safer to copy and paste each line individually, and hit the Enter key each time a line has been copied (again, whitespace before and after the first and last letters of the line should not be copied).
 	
