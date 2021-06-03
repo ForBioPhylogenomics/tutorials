@@ -1,6 +1,7 @@
 # ForBio Phylogenomics
 
 A collection of tutorials to be covered in the [ForBio Phylogenomics](https://www.forbio.uio.no/events/courses/2021/phylogenomics.html) course.
+Each day we will begin at 9 am and end at around 5:30 pm. In between, we will have lunch break. It depends a little bit on the progress during the morning session, but it is planned to be between 1:00 pm and 1:30 pm. Each session will consists of lectures and practical exercises, except for the very first one, which does not have practical exercises.
 
 ## Prepration
 
@@ -24,9 +25,9 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 
 #### Wednesday
 
-* XXX
+* [Determination of rogue taxa](week1_day3_morning/README.md)<br>A tutorial on the detection of rogue taxa in datasets using different approaches.
 
-* XXX
+* [Model misspecification and partinioning](week1_day3_afternoon/README.md)<br>A tutorial on reducing model misspecifications by using partitioning schemes.
 
 #### Thursday
 
