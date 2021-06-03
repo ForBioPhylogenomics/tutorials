@@ -8,6 +8,7 @@ class Window(object):
 
 	def __init__(self, ids, align_length, align_poss, align_refs, align_alts, align_gts):
 		DNA_alphabet = ['A','C','G','T']
+		genotype_warning_printed = False
 		# Prepare an alignment without variation from randomly chosen nucleotides.
 		self.ids = ids
 		self.seqs = []
@@ -35,12 +36,21 @@ class Window(object):
 						print("WARNING: Genotypes do not seem to be phased but will be assumed to be so!")
 						genotype_warning_printed = True
 					align_gt = align_gt.replace("/","|")
-				gts_as_indices.append(int(align_gt.split("|")[0]))
-				gts_as_indices.append(int(align_gt.split("|")[1]))
+				if align_gt.split("|")[0] == ".":
+					gts_as_indices.append(-1)
+				else:
+					gts_as_indices.append(int(align_gt.split("|")[0]))
+				if align_gt.split("|")[1] == ".":
+					gts_as_indices.append(-1)
+				else:
+					gts_as_indices.append(int(align_gt.split("|")[1]))
 			# Convert genotypes to alleles using the array of ref and alt alleles.
 			gts_as_alleles = []
 			for gts_as_index in gts_as_indices:
-				gts_as_alleles.append(ref_alts[gts_as_index])
+				if gts_as_index == -1:
+					gts_as_alleles.append("N")
+				else:
+					gts_as_alleles.append(ref_alts[gts_as_index])
 			# Insert the genotypes into the alignment.
 			for y in range(len(self.ids)):
 				self.seqs[y][pos_in_align] = gts_as_alleles[y]
@@ -162,7 +172,6 @@ align_refs = []
 align_alts = []
 align_gts = []
 ids = []
-genotype_warning_printed = False
 with open(vcf_name) as vcf:
 	for line in vcf:
 		if line[0:2] == "##":

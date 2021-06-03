@@ -52,59 +52,64 @@ vcf_file.each do |l|
 		end
 		ids.size.times do |x|
 			gt = line_ary[9+x]
-			if gt.match(/([\d\.])\/|\|([\d\.])/)
-				if $1 == "." and $2 == "."
-					sample_allele1 = "N"
-					sample_allele2 = "N"
-				else
-					sample_allele1 = alleles[$1.to_i]
-					sample_allele2 = alleles[$2.to_i]
-				end
-				if sample_allele1 == "A" and sample_allele2 == "A"
-					gt_iupac = "A"
-				elsif sample_allele1 == "A" and sample_allele2 == "C"
-					gt_iupac = "M"
-				elsif sample_allele1 == "A" and sample_allele2 == "G"
-					gt_iupac = "R"
-				elsif sample_allele1 == "A" and sample_allele2 == "T"
-					gt_iupac = "W"
-				elsif sample_allele1 == "C" and sample_allele2 == "A"
-					gt_iupac = "M"
-				elsif sample_allele1 == "C" and sample_allele2 == "C"
-					gt_iupac = "C"
-				elsif sample_allele1 == "C" and sample_allele2 == "G"
-					gt_iupac = "S"
-				elsif sample_allele1 == "C" and sample_allele2 == "T"
-					gt_iupac = "Y"
-				elsif sample_allele1 == "G" and sample_allele2 == "A"
-					gt_iupac = "R"
-				elsif sample_allele1 == "G" and sample_allele2 == "C"
-					gt_iupac = "S"
-				elsif sample_allele1 == "G" and sample_allele2 == "G"
-					gt_iupac = "G"
-				elsif sample_allele1 == "G" and sample_allele2 == "T"
-					gt_iupac = "K"
-				elsif sample_allele1 == "T" and sample_allele2 == "A"
-					gt_iupac = "W"
-				elsif sample_allele1 == "T" and sample_allele2 == "C"
-					gt_iupac = "Y"
-				elsif sample_allele1 == "T" and sample_allele2 == "G"
-					gt_iupac = "K"
-				elsif sample_allele1 == "T" and sample_allele2 == "T"
-					gt_iupac = "T"
-				elsif sample_allele1 == "N" and sample_allele2 == "N"
-					gt_iupac = "N"
-				else
-					puts "ERROR: Unexpected genotype: #{gt}, recognized as alleles #{sample_allele1} and #{sample_allele2}!"
-					exit 1
-				end
-				seqs[x] << gt_iupac
+			tmp1 = nil
+			tmp2 = nil
+			if gt.include?("/")
+				tmp1 = gt.split("/")[0]
+				tmp2 = gt.split("/")[1]
+			elsif gt.include?("|")
+				tmp1 = gt.split("|")[0]
+				tmp2 = gt.split("|")[1]
 			else
-				puts "ERROR: A genotype (#{gt}) could not be read correctly!"
-				puts "  This was found on the following line:"
-				puts "  #{l}"
+				puts "ERROR: Unexpected genotype #{gt}!"
 				exit 1
 			end
+			if tmp1 == "." and tmp2 == "."
+				sample_allele1 = "N"
+				sample_allele2 = "N"
+			else
+				sample_allele1 = alleles[tmp1.to_i]
+				sample_allele2 = alleles[tmp2.to_i]
+			end
+			if sample_allele1 == "A" and sample_allele2 == "A"
+				gt_iupac = "A"
+			elsif sample_allele1 == "A" and sample_allele2 == "C"
+				gt_iupac = "M"
+			elsif sample_allele1 == "A" and sample_allele2 == "G"
+				gt_iupac = "R"
+			elsif sample_allele1 == "A" and sample_allele2 == "T"
+				gt_iupac = "W"
+			elsif sample_allele1 == "C" and sample_allele2 == "A"
+				gt_iupac = "M"
+			elsif sample_allele1 == "C" and sample_allele2 == "C"
+				gt_iupac = "C"
+			elsif sample_allele1 == "C" and sample_allele2 == "G"
+				gt_iupac = "S"
+			elsif sample_allele1 == "C" and sample_allele2 == "T"
+				gt_iupac = "Y"
+			elsif sample_allele1 == "G" and sample_allele2 == "A"
+				gt_iupac = "R"
+			elsif sample_allele1 == "G" and sample_allele2 == "C"
+				gt_iupac = "S"
+			elsif sample_allele1 == "G" and sample_allele2 == "G"
+				gt_iupac = "G"
+			elsif sample_allele1 == "G" and sample_allele2 == "T"
+				gt_iupac = "K"
+			elsif sample_allele1 == "T" and sample_allele2 == "A"
+				gt_iupac = "W"
+			elsif sample_allele1 == "T" and sample_allele2 == "C"
+				gt_iupac = "Y"
+			elsif sample_allele1 == "T" and sample_allele2 == "G"
+				gt_iupac = "K"
+			elsif sample_allele1 == "T" and sample_allele2 == "T"
+				gt_iupac = "T"
+			elsif sample_allele1 == "N" and sample_allele2 == "N"
+				gt_iupac = "N"
+			else
+				puts "ERROR: Unexpected genotype: #{gt}, recognized as alleles #{sample_allele1} and #{sample_allele2}!"
+				exit 1
+			end
+			seqs[x] << gt_iupac
 		end
 	else
 		puts "ERROR: The vcf header could not be read correctly!"
