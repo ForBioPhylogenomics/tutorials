@@ -24,9 +24,9 @@ A collection of tutorials to be covered in the [ForBio Phylogenomics](https://ww
 
 #### Wednesday
 
-* XXX
+* [Determination of rogue taxa](week1_day3_morning/README.md)<br>A tutorial on the detection of rogue taxa in datasets using different approaches.
 
-* XXX
+* [Model misspecification and partinioning](week1_day3_afternoon/README.md)<br>A tutorial on reducing model misspecifications by using partitioning schemes.
 
 #### Thursday
 
