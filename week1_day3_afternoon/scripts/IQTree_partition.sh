@@ -7,7 +7,7 @@
 #SBATCH --account=nn9408k
 #
 # Wall time limit:
-#SBATCH --time=01-00:00:00
+#SBATCH --time=00-03:00:00
 #
 # Other parameters:
 #SBATCH --mem-per-cpu=3G
