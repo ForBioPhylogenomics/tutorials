@@ -27,7 +27,7 @@ workdir=$USERWORK/$SLURM_JOB_ID
 mkdir -p $workdir
 
 ## Copy input files to the work directory and move to work dir:
-cp Matrix_Concatenated_Para_supermatrix.phy $workdir
+cp Matrix_Concatenated_supermatrix* $workdir
 cd $workdir
 
 ## Do some work:
