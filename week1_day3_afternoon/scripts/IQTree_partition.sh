@@ -31,9 +31,9 @@ cp Matrix_Concatenated_supermatrix* $workdir
 cd $workdir
 
 ## Do some work:
-iqtree2-mpi -s Matrix_Concatenated_supermatrix.fas -p Matrix_Concatenated_supermatrix_partition.txt -m MFP+MERGE -prefix no_rcluster
+iqtree2-mpi -s Matrix_Concatenated_supermatrix.fas -p Matrix_Concatenated_supermatrix_partition.txt -m MFP+MERGE --prefix no_rcluster
 
-iqtree2-mpi -s Matrix_Concatenated_supermatrix.fas -p Matrix_Concatenated_supermatrix_partition.txt -m MFP+MERGE -rcluster 10 -prefix rcluster
+iqtree2-mpi -s Matrix_Concatenated_supermatrix.fas -p Matrix_Concatenated_supermatrix_partition.txt -m MFP+MERGE -rcluster 10 --prefix rcluster
 
 ## Make sure the results are copied back to the submit directory:
 cp * $backdir
