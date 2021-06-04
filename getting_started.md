@@ -21,13 +21,17 @@ All data and scripts are available on SAGA and you should copy them for their to
 
 The data and scripts for each session can be found in the folders
 
-/cluster/projects/nn9458k/phylogenomics/week1
+_/cluster/projects/nn9458k/phylogenomics/week1_
 
-/cluster/projects/nn9458k/phylogenomics/week2
+_/cluster/projects/nn9458k/phylogenomics/week2_
+
+Additionally, you find literature in the folder
+
+_/cluster/projects/nn9458k/phylogenomics/Literature_
 
 In the first exercise, we will ask you to generate your own working folder within the "_phylogenomics_" folder using your name
 
-/cluster/projects/nn9458k/phylogenomics/$YOURNAME
+_/cluster/projects/nn9458k/phylogenomics/$YOURNAME_
 
 Within each will ask then in each exercise to generate subfolder for each session to keep things orgainzed.
 
@@ -35,28 +39,22 @@ The exercises are also on SAGA in the "_phylogenomics_" folder, but it is easies
 
 To work on SAGA you need a console program (like the program called Terminal on Mac OS X and Linux or the Windows Console on Windows). The console from Windows might work, but we would advise to use an emulgator like Cmder (see [Requirements](requirements.md)). The console program will be important to execute commands on SAGA and transfer data to your own computer, when we ant to look at results with a GUI program. You will recognize such commands in the tutorials by monospace font, gray background, and an outline, like for example this command:
 
-		```
 		pwd
-		```
 		
 To execute commands like the above, the "Enter" key always needs to be hit after writing the command. BTW, the command means "_print working directory_".
 
 To access SAGA, you have to use the following command:
 
-		```
 		ssh $YOURUSERNAME@saga.sigma2.no
-		```
 		
 To upload data to SAGA, you can use the following command:
 
-		```
 		scp -R $YOURFILE(S) $YOURFOLDER(S) $YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/$YOURNAME/$PATH_TO_YOUR_FOLDER_ON_SAGA
-		```
+
 To download from SAGA, it is similar. However, we suggest that you first navigate to the folder you would like to download the data to in the console:
 
-		```
 		scp -R $YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/$YOURNAME/$PATH_TO_YOUR_FOLDER_ON_SAGA/$YOURFILE(or $YOURFOLDER) .
-		```
+
 <a name="copy_pasting"></a>
 ## Copying and pasting commands
 
