@@ -4,10 +4,10 @@
 #SBATCH --job-name=PartitionFinding
 #
 # Project:
-#SBATCH --account=nn9408k
+#SBATCH --account=nn9458k
 #
 # Wall time limit:
-#SBATCH --time=00-03:00:00
+#SBATCH --time=04:00:00
 #
 # Other parameters:
 #SBATCH --mem-per-cpu=3G
