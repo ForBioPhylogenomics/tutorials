@@ -163,7 +163,7 @@ As mentioned above and in tutorial [Species-Tree Inference with SNP Data](../spe
 		
 * The script `snapp_prep.rb` should have written a file named `snapp.xml`. You could open that, for example with `less -S snapp.xml` and read some of the annotations if you'ld like to know more about the settings that we are about to use with SNAPP.
 		
-To "run SNAPP", we actually run BEAST2. The analysis can be sped up by using multiple CPUs, as SNAPP analyses are highly parallelizable. Thus, with e.g. four CPUs available that are all used for the SNAPP analysis, this analysis should take only about a fourth of the time that would be required with a single CPU. When running SNAPP analyses on a server such as Saga, one could even use tens of CPUs simultaneously, which would shorten SNAPP's run times tremendously. We will here use 16 CPUs on Saga (which is the maximum for most jobs on Saga) to speed up the analysis.
+To "run SNAPP", we actually run BEAST2. The analysis can be sped up by using multiple CPUs, as SNAPP analyses are highly parallelizable. Thus, with e.g. four CPUs available that are all used for the SNAPP analysis, this analysis should take only about a fourth of the time that would be required with a single CPU. When running SNAPP analyses on a server such as Saga, one could even use tens of CPUs simultaneously, which would shorten SNAPP's run times tremendously. We will here use 16 CPUs on Saga  to speed up the analysis.
 
 * Write a Slurm script named `run_snapp.slurm` with the following content to prepare the SNAPP analysis:
 

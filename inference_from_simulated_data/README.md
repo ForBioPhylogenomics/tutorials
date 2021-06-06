@@ -16,13 +16,19 @@ All methods used for phylogenomic inference have assumptions, and these are ofte
 	* [Getting started with Msprime](#start)
 	* [Realistic simulations of genomic data](#real_simulations)
 * [Inference from simulated data](#inference)
+	* [Inference with ASTRAL](#astral)
+	* [Inference with StarBEAST2](#starbeast2)
+	* [Inference with SVDQuartets](#svdquartets)
 	* [Inference with SNAPP](#snapp)
+	* [Inference with PhyloNet](#phylonet)
+	* [Inference with SpeciesNetwork](#speciesnetwork)
+	* [Inference with Dsuite](#dsuite)
 
 
 <a name="outline"></a>
 ## Outline
 
-In this tutorial I am going to demonstrate how coalescent simulations of genomic data can be used to test the reliability of inference methods when their assumptions are violated. The genomic data will be simulated using the Python library [msprime](https://tskit.dev/msprime/docs/stable/intro.html), and the simulated data will be used for inference of the species tree with methods covered in the tutorials [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](divergence_time_estimation_with_snp_data/README.md), and [Bayesian Inference of Species Networks](bayesian_analysis_of_species_networks/README.md), as well as inference of introgression signals with methods covered in tutorial [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md).
+In this tutorial I am going to demonstrate how coalescent simulations of genomic data can be used to test the reliability of inference methods when their assumptions are violated. The genomic data will be simulated using the Python library [msprime](https://tskit.dev/msprime/docs/stable/intro.html), and the simulated data will be used for inference of the species tree with methods covered in the tutorials [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), and [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), as well as inference of introgression signals with methods covered in tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md).
 
 
 <a name="dataset"></a>
@@ -36,6 +42,10 @@ To also test the effect of population-size variation on the inference methods, a
 <a name="requirements"></a>
 ## Requirements
 
+This tutorial requires **BEAST2**, **bModelTest**, **Tracer**, **FigTree**, **ASTRAL**, **PAUP\***, **SNAPP**, **SNAPPER** to be installed. Details about the installation of these tools can be found in tutorials [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md), [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md).
+
+The following tool is required additionally:
+
 * **Msprime:** The Python library [msprime](https://tskit.dev/msprime/docs/stable/intro.html) ([Kelleher et al. 2016](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842)) will be required for all simulations. The library can be installed with pip for Python, using the following commands:
 
 		module purge
@@ -46,91 +56,12 @@ To also test the effect of population-size variation on the inference methods, a
 	
 		python -c 'import msprime'
 		
-	If this does not produce an error message, the installation has worked.
-
-To infer the species tree and introgression signals from the simulated data, any combination of the methods covered in tutorials [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](divergence_time_estimation_with_snp_data/README.md), [Bayesian Inference of Species Networks](bayesian_analysis_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md) can be used. Thus, the programs listed below are only required if they are chosen for the inference part of the tutorial.
-
-* **ASTRAL:** The program [ASTRAL](https://github.com/smirarab/ASTRAL) ([Zhang et al. 2017](https://link.springer.com/chapter/10.1007%2F978-3-319-67979-2_4)) allows efficient and accurate estimation of the species tree based on a set of gene trees. ASTRAL is not available as a module on Saga, but it can easily be installed simply by placing it in the analysis directory. This can be done with the following commands:
-
-		wget https://github.com/smirarab/ASTRAL/raw/master/Astral.5.7.7.zip
-		unzip Astral.5.7.7.zip
-		rm Astral.5.7.7.zip
-		
-	To run ASTRAL, Java is required, and can be loaded with this command:
-	
-		module purge
-		module load Java/11.0.2
-		
-	The installation can be tested with this command, which should output the help text of ASTRAL:
-	
-			java -jar Astral/astral.5.7.7.jar
-
-<!--
-* **PAUP\*:** The software [PAUP\*](http://paup.phylosolutions.com) is a general-utility program for phylogenetic inference into which the SVDQuartets method, allowing the inference of species trees from SNP data, has been implemented. PAUP\* is available as a Graphical User Interface (GUI) version, which may be easier to use for those not familiar with the program yet, but can not be used on Saga. If you prefer to use the GUI version of PAUP\*, you would thus need to install it on your local computer, and you would need download the input file for PAUP\* from Saga. Unfortunately, this GUI version does not run on MacOS 10.15 (Catalina) or newer, but on other systems, the program can be installed using the instructions and precompiled versions available on [http://phylosolutions.com/paup-test/](http://phylosolutions.com/paup-test/). To alternatively run the command-line version of PAUP\* on Saga, it first needs to be installed in the analysis directory because it is not yet available as a module. This can be done with the following commands:
-
-		wget http://phylosolutions.com/paup-test/paup4a168_centos64.gz
-		gunzip paup4a168_centos64.gz
-		chmod +x paup4a168_centos64
-		mv paup4a168_centos64 paup
-		
-	The installation can be tested with this command, which should open the program interactively:
-	
-		./paup
-		
-	To quit the program, type `quit` and hit enter.
--->
-
-* **BEAST2:** The [BEAST2](https://www.beast2.org) ([Bouckaert et al. 2019](https://doi.org/10.1371/journal.pcbi.1006650)) package contains a suite of programs for Bayesian phylogenetic inference. It includes BEAST2 itself which implements Markov-chain Monte-Carlo search of tree space and thus represents the heart of the Bayesian workflow; BEAUti, a utility facilitating the preparation of input files for BEAST2; TreeAnnotator, a tool to combine and annotate posterior tree distributions, and other programs. Command-line versions are available for all of these programs and included in the module for BEAST2 on Saga, except for BEAUti, as BEAUti is only useful through it's GUI. The use of BEAUti is required for analyses with the BEAST2 package StarBEAST2; thus, the BEAST2 package needs to be installed on your local computer in order to prepare the StarBEAST2 analysis, even though this analysis itself can then be performed on Saga. Versions of the BEAST2 package can be downloaded from the BEAST2 website [https://www.beast2.org](https://www.beast2.org), with and without bundling the Java Runtime Environment. I recommend to choose the versions with this environment as they may prevent incompatibilities between BEAST2 and other Java versions that may already be installed on your local computer.
-
-* **StarBEAST2:** StarBEAST2 is an add-on package for BEAST2 that enables inference with the multi-species coalescent model, and can be installed using the BEAST2 Package Manager. The installation of the StarBEAST2 package influences the BEAUti GUI and both the command-line and GUI interfaces for BEAST2. As we will be using the BEAUti GUI on the local computer but running BEAST2 on Saga, the StarBEAST2 package will need to be installed both locally and on Saga.
-
-	Locally, the BEAST2 Package Manager can be called through the BEAUti GUI by clicking on "Manage Packages" in the "File" menu. This should open a new window as shown in this screenshot:<p align="center"><img src="img/packagemanager1.png" alt="Package Manager" width="700"></p>
-To install StarBEAST2, scroll down in the list of available packages until you find the package, select it, and click "Install/Upgrade". A message will appear that can be closed by clicking on "OK". Then close and reopen the BEAUti window for the changes to the interface to take effect.
-
-	On Saga, the StarBEAST2 package needs to be installed through the command-line version of the BEAST2 Package Manager. Use the following commands to do so:
-	
-		module purge
-		module load Beast/2.6.4-GCC-9.3.0
-		packagemanager -add StarBEAST2
-
-* **SpeciesNetwork:** SpeciesNetwork is an add-on package for BEAST2 that combines the multi-species coalescent model with a model of reticulation, where reticulation events can be seen as instances of hybrid speciation. Like StarBEAST2, the SpeciesNetwork package can be installed using the BEAST2 Package Manager, and this should be done both locally and on Saga, since SpeciesNetwork also influences both the appearance of the BEAUti GUI and BEAST2. To install this package locally, open the BEAST2 Package Manager through the BEAUti GUI as described for StarBEAST2, select the SpeciesNetwork package, and click "Install/Upgrade", followed by "OK". For the installation on Saga, use the following commands:
-
-		module purge
-		module load Beast/2.6.4-GCC-9.3.0
-		packagemanager -add SpeciesNetwork
-
-* **SNAPP:** The SNAPP method implements a version of the multi-species coalescent model that mathematically integrates over all possible locus trees at biallelic loci, and is therefore particularly well suited for SNP data. Like StarBEAST2 and SpeciesNetwork, SNAPP is an add-on package for BEAST2 and can be installed through the BEAST2 Package Manager. However, since BEAUti will not be used to prepare SNAPP input files, the SNAPP package does not need to be installed on local computers, but only on Saga. Use these commands to do so:
-
-		module purge
-		module load Beast/2.6.4-GCC-9.3.0
-		packagemanager -add SNAPP
-
-* **Tracer:** The program [Tracer](http://beast.community/tracer) ([Rambaut et al. 2018](https://doi.org/10.1093/sysbio/syy032)) greatly facilitates the inspection of output from Bayesian analyses such as those done with BEAST2. It is a GUI program that therefore can not be used on Saga, but it is easy to install on your local computer. Input files for Tracer will thus need to be downloaded from Saga. Executables of Tracer for MacOS, Linux, and Window can be found on [https://github.com/beast-dev/tracer/releases](https://github.com/beast-dev/tracer/releases). Download the file [Tracer.v1.7.2.dmg](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer.v1.7.2.dmg) if your local computer is running MacOS, [Tracer_v1.7.2.tgz](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer_v1.7.2.tgz) if it is running Linux, and [Tracer_v1.7.2.tgz](https://github.com/beast-dev/tracer/releases/download/v1.7.2/Tracer_v1.7.2.tgz) if it is running Windows.
-
-* **FigTree:** The program [FigTree](http://tree.bio.ed.ac.uk/software/figtree/) is a very intuitive and useful tool for the visualization and (to a limited extent) manipulation of phylogenies encoded in [Newick](http://evolution.genetics.washington.edu/phylip/newicktree.html) format. Being a GUI program, FigTree can not be run on Saga, but needs to be installed and used on your local computer. Input files for FigTree will thus need to be downloaded from Saga. Executables of FigTree for MacOS, Linux, and Windows are provided on [https://github.com/rambaut/figtree/releases](https://github.com/rambaut/figtree/releases). Download the file [FigTree.v1.4.4.dmg](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree.v1.4.4.dmg) if your local computer is running MacOS, [FigTree_v1.4.4.tgz](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree_v1.4.4.tgz) if it is running Linux, and [FigTree.v1.4.4.zip](https://github.com/rambaut/figtree/releases/download/v1.4.4/FigTree.v1.4.4.zip) if it is running Windows.
-
-<!--
-* **Dsuite:** The [Dsuite](https://github.com/millanek/Dsuite) ([Malinsky et al. 2021](https://doi.org/10.1111/1755-0998.13265)) program allows the fast calculation of the *D*-statistic from SNP data in VCF format. The program is particularly useful because it automatically calculates the *D*-statistic for all possible species trios, optionally also in a way that the trios are compatible with a user-provided species tree. Dsuite is not currently available as a module on Saga, but it can be downloaded and compiled in the analysis directory with the following commands:
-
-		module purge
-		module load GCCcore/10.2.0
-		git clone https://github.com/millanek/Dsuite
-		cd Dsuite
-		make
-		mv Dsuite/Build/Dsuite Dsuite2
-		rm -rf Dsuite
-		mv Dsuite2 Dsuite
-
-	To test the installation, the help text of Dsuite can be called with this command:
-	
-		./Dsuite
--->
-
+	If this does not produce an error message, the installation was successful.
 
 <a name="msprime"></a>
 ## Coalescent simulations with Msprime
 
-All of the inference methods used in other tutorials of this course (e.g. [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](divergence_time_estimation_with_snp_data/README.md), [Bayesian Inference of Species Networks](bayesian_analysis_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md)) are based on assumptions that may in fact rarely be met by empirical datasets. For example, ASTRAL, StarBEAST2, and SpeciesNetwork assume the absence of recombination within a locus, ASTRAL, SVDQuartets, StarBEAST2, and SNAPP assume the absence of gene flow, and StarBEAST2 and SNAPP assume constant population sizes (this assumption can be relaxed for StarBEAST2, but it was used in the [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md) tutorial). And while Dsuite does not implement a model but only report the *D*-statistic for a set of quartets, the interpretation of the *D*-statistic as support for introgression between two species is based on the assumption (among others) that only this pair of species is affected by introgression and that introgression was direct and not flowing through unsampled species.
+All of the inference methods used in other tutorials of this course (e.g. [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)) are based on assumptions that may in fact rarely be met by empirical datasets. For example, ASTRAL, StarBEAST2, and SpeciesNetwork assume the absence of recombination within a locus, ASTRAL, SVDQuartets, StarBEAST2, and SNAPP assume the absence of gene flow, and StarBEAST2 and SNAPP assume constant population sizes (this assumption can be relaxed for StarBEAST2, but it was used in the [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) tutorial). And while Dsuite does not implement a model but only report the *D*-statistic for a set of quartets, the interpretation of the *D*-statistic as support for introgression between two species is based on the assumption (among others) that only this pair of species is affected by introgression and that introgression was direct and not flowing through unsampled species.
 
 To test how the reliability of the inference methods can be affected by model violations, we can deliberately simulate data with such violations and compare results inferred from these data to results inferred from data simulated without model violations.
 
@@ -389,7 +320,7 @@ This should specify a demographic model in which two species named "A" and "B" h
 
 Finally, it is time to run a more realistic simulation that mimicks the diversification of the five *Neolamprologus* species and their outgroup, *Metriaclima zebra*. For this, we need a phylogeny in Newick format, an estimate of the population size, as well as a sequence length, and recombination and mutation rates.
 
-For the species tree, we'll use the following Newick string that encodes the phylogeny of the six species that received the strongest support in [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650): "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)". To verify that this Newick string encodes the phylogeny correctly, you could copy it and paste it into a new FigTree window. This should show the following tree:<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p> In contrast to the Newick string that we had used in the first demographic model for species "A" and "B", the branch lengths of this Newick string are now not in units of generations, but in units of millions of years, according to how the species tree was inferred in Bouckaert et al. (2019). However, we can still use the Newick string as it is; we just need to provide a generation time to Msprime so that Msprime can convert the branch lengths internally.
+For the species tree, we'll use the following Newick string that encodes the phylogeny of the six species that received the strongest support in [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650): "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)". To verify that this Newick string encodes the phylogeny correctly, you could copy it and paste it into a new FigTree window. This should show the following tree:<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p> In contrast to the Newick string that we had used in the first demographic model for species "A" and "B", the branch lengths of this Newick string are now not in units of generations, but in units of millions of years, according to how the species tree was inferred in Bouckaert et al. (2019). However, we can still use the Newick string as it is; we just need to provide a generation time to Msprime so that Msprime can convert the branch lengths internally.
 
 Reasonable parameters for our simulations may be a generation time of 3 years ([Malinsky et al. 2018](https://doi.org/10.1038/s41559-018-0717-x)), a population size of 9.3 &times; 10<sup>4</sup> (as inferred with SNAPP in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md)), a sequence length of 5 million bp (a longer one would be unnecessarily computationally demanding), a recombination rate of 3 &times; 10<sup>-8</sup> per bp per generation (corresponding to one recombination event per generation on a chromosome that is 33 Mbp long –- a length compararable to those of cichlids), and a mutation rate of 3.5 &times; 10<sup>-9</sup> per bp per generation ([Malinsky et al. 2018](https://doi.org/10.1038/s41559-018-0717-x)).
 
@@ -494,13 +425,13 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 
 <!-- Run time: 30-40 min -->
 
-* While the above job is running on Saga, we can already prepare another script, with which we simulate genomic data as before, but now with additional introgression between *Neolamprologus marunguensis* (neomar) and *Neolamprologus olivaceous* (neooli), as inferred by [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650). To do that, first copy the existing script named `simulate_data.py` to a new file named `simulate_data_introgression1.py`:
+* While the above job is running on Saga, we can already prepare another script, with which we simulate genomic data as before, but now with additional introgression between *Neolamprologus marunguensis* (neomar) and *Neolamprologus olivaceous* (neooli), as inferred by [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). To do that, first copy the existing script named `simulate_data.py` to a new file named `simulate_data_introgression1.py`:
 
 		cp simulate_data.py simulate_data_introgression1.py
 		
-* Open the new file `simulate_data_introgression1.py` in Emacs or another text editor. To simulate genomic data as before but with introgression between *Neolamprologus marunguensis* (neomar) and *Neolamprologus olivaceous* (neooli), we need to modify the demographic model. We'll use the [`set_migration_rate`](https://tskit.dev/msprime/docs/stable/api.html#msprime.Demography.set_migration_rate) command to specify unidirectional introgression between the two species, from *Neolamprologus marunguensis* (neomar) into *Neolamprologus olivaceous* (neooli), as inferred by [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650). If we would instead prefer to specify a symmetric rate of introgression, we could do so using the [`set_symmetric_migration_rate`](https://tskit.dev/msprime/docs/stable/api.html?highlight=set_symmetric_migration_rate#msprime.Demography.set_symmetric_migration_rate) command. More information about both commands can be found in the [Msprime manual](https://tskit.dev/msprime/docs/stable/demography.html).
+* Open the new file `simulate_data_introgression1.py` in Emacs or another text editor. To simulate genomic data as before but with introgression between *Neolamprologus marunguensis* (neomar) and *Neolamprologus olivaceous* (neooli), we need to modify the demographic model. We'll use the [`set_migration_rate`](https://tskit.dev/msprime/docs/stable/api.html#msprime.Demography.set_migration_rate) command to specify unidirectional introgression between the two species, from *Neolamprologus marunguensis* (neomar) into *Neolamprologus olivaceous* (neooli), as inferred by [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). If we would instead prefer to specify a symmetric rate of introgression, we could do so using the [`set_symmetric_migration_rate`](https://tskit.dev/msprime/docs/stable/api.html?highlight=set_symmetric_migration_rate#msprime.Demography.set_symmetric_migration_rate) command. More information about both commands can be found in the [Msprime manual](https://tskit.dev/msprime/docs/stable/demography.html).
 
-	The command `set_migration_rate` requires the specification of three parameter values with the keywords "source" (the source of introgression), "dest" (the destination of introgression), and "rate" (the introgression rate, measured as the proportion of individuals per generation that move from one population to the other). There is great potential for confusion with the "source" and "dest" parameters, because both are used in the view that is standard in the context of the coalescent; where events are followed from the present back into the past. So if a population is the introgression source when viewed forward in time, it is called the destination of introgression when the population history is traced back in time. This means that if we want to implement the scenario inferred by [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650), according to which *Neolamprologus marunguensis* (neomar) is the source of introgression into *Neolamprologus olivaceous* (neooli), we have to specify `source="neooli` and `dest="neomar"`.
+	The command `set_migration_rate` requires the specification of three parameter values with the keywords "source" (the source of introgression), "dest" (the destination of introgression), and "rate" (the introgression rate, measured as the proportion of individuals per generation that move from one population to the other). There is great potential for confusion with the "source" and "dest" parameters, because both are used in the view that is standard in the context of the coalescent; where events are followed from the present back into the past. So if a population is the introgression source when viewed forward in time, it is called the destination of introgression when the population history is traced back in time. This means that if we want to implement the scenario inferred by [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650), according to which *Neolamprologus marunguensis* (neomar) is the source of introgression into *Neolamprologus olivaceous* (neooli), we have to specify `source="neooli` and `dest="neomar"`.
 	
 	As the rate of introgression, please select any value from "1E-1", "1E-2", "1E-3", "1E-4", "1E-5", and "1E-6". The idea is that different course participants select different values and thus a different amount of introgression, so that we can compare the effects of stronger or weaker introgression on inference methods. The `set_migration_rate` command can then be called for example with `demography.set_migration_rate(source="neooli", dest="neomar", rate=1E-4)`. Add this command (or a variation of it with a different rate) to the script, after the command to set up a demographic model (don't execute the script yet).
 	
@@ -615,7 +546,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 
 <!-- Run time: 30-40 min -->
 
-* Besides the simulations without introgression and those with introgression from *Neolamprologus marunguensis* (neomar) into *Neolamprologus olivaceous* (neooli), we'll also simulate genomic data with additional introgression from *Neolamprologus gracilis* (neogra) into the common ancestor of *Neolamprologus brichardi* (neobri), *Neolamprologus olivaceous* (neooli), and *Neolamprologus pulcher* (neopul), as also inferred by [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650). For this, we will need to know the population ID of the common ancestor of the three species.
+* Besides the simulations without introgression and those with introgression from *Neolamprologus marunguensis* (neomar) into *Neolamprologus olivaceous* (neooli), we'll also simulate genomic data with additional introgression from *Neolamprologus gracilis* (neogra) into the common ancestor of *Neolamprologus brichardi* (neobri), *Neolamprologus olivaceous* (neooli), and *Neolamprologus pulcher* (neopul), as also inferred by [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). For this, we will need to know the population ID of the common ancestor of the three species.
 	
 	**Question 6:** Can you figure out the population ID of the common ancestor from the last output of the `DemographyDebugger`? [(see answer)](#q6)
 
@@ -833,7 +764,7 @@ As you may have noticed, the sample IDs in the VCF files are not those that we u
 | tsk_4     | neopul     | *Neolamprologus pulcher*      |
 | tsk_5     | metzeb     | *Metriaclima zebra*           |
 
-The IDs used in the alignment files are similar to those used in the VCF files, but end in "\_1" and "\_2", which indicates the first and second of the two phased sequences per individual.
+The IDs used in the alignment files are similar to those used in the VCF files, but end in "\_1" and "\_2", which indicates the first and second of the two sequences per individual.
 
 
 <a name="inference"></a>
@@ -841,14 +772,15 @@ The IDs used in the alignment files are similar to those used in the VCF files, 
 
 You should now have simulated genomic data in the form of four files in VCF format (`simulation.vcf`, `simulation_introgression1.vcf`, `simulation_introgression2.vcf`, and `simulation_bottleneck.vcf`) as well as four sets of alignments in Phylip format (in directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`).
 
-These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials.
+These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, PhyloNet, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials.
 
-If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets). For each inference method, you could focus on one or two of the simulated datasets (either with or without introgression, and with or without bottleneck) –as long as different course participants select different datasets to analyze, a comparison of the results will allow us to assess the impact of the model violations on each inference method.
+If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets, PhyloNet <!--XXX Check speed of PhyloNet XXX-->). For each inference method, you could focus on one or two of the simulated datasets (either with or without introgression, and with or without bottleneck) – as long as different course participants select different datasets to analyze, a comparison of the results will allow us to assess the impact of the model violations on each inference method.
+
 
 <a name="astral"></a>
 ### Inference with ASTRAL
 
-* Follow the instructions given in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md) to first infer trees for all alignments with IQ-TREE and then use these trees as input for ASTRAL, with the following exceptions:
+* Follow the instructions given in tutorial [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md) to first infer trees for all alignments with IQ-TREE and then use these trees as input for ASTRAL, with the following modifications:
 
 	* In the Slurm script to run IQ-TREE, specify a maximum run time of 20 minutes (`--time=0:20:00`), a maximum of 1 GB of memory (`--mem-per-cpu=1G`), and ask for a single thread (`--ntasks=1`).
 
@@ -856,18 +788,18 @@ If you should not have enough time to test all of these inference methods, I sug
 
 	* Bootstrapping is not required.
 
-	* Because unlike in tutorial [Maximum-Likelihood Species-Tree Inference](ml_species_tree_inference/README.md), all trees now contain two tips for the same species, a file with a table connecting species names and individual IDs needs to be prepared and provided to ASTRAL with option `-a`. This file should have the following format and content, and could be named `astral_table.txt`:
+	* Because unlike in tutorial [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), all trees now contain two tips for the same species, a file with a table connecting species names and individual IDs needs to be prepared and provided to ASTRAL with option `-a`. This file should have the following format and content, and could be named `astral_table.txt`:
 	
-		neomar:tsk_0_1,tsk_0_2
-		neogra:tsk_1_1,tsk_1_2
-		neobri:tsk_2_1,tsk_2_2
-		neooli:tsk_3_1,tsk_3_2
-		neopul:tsk_4_1,tsk_4_2
-		metzeb:tsk_5_1,tsk_5_2
+			neomar:tsk_0_1,tsk_0_2
+			neogra:tsk_1_1,tsk_1_2
+			neobri:tsk_2_1,tsk_2_2
+			neooli:tsk_3_1,tsk_3_2
+			neopul:tsk_4_1,tsk_4_2
+			metzeb:tsk_5_1,tsk_5_2
 
-	* ASTRAL could be run with `srun`, using a command such as this one:
+	* Run ASTRAL with `srun`, using a command such as this one (replace "XXX.trees" with the actual name of the file containing the trees):
 	
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty java -jar Astral/astral.5.7.7.jar -i tmp.trees -a astral_table.txt -o simulation_astral.tre
+			srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty java -jar Astral/astral.5.7.7.jar -i XXX.trees -a astral_table.txt -o simulation_astral.tre
 
 
 <a name="starbeast2"></a>
@@ -898,7 +830,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 * Download these alignment files in Nexus format to your local computer, e.g. using `scp`.
 
-* Follow the instructions given in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md) to set up an XML file for StarBEAST2, with the following modifications:
+* Follow the instructions given in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) to set up an XML file for StarBEAST2, with the following modifications:
 
 	* Ignore the step in which the script `filter_genes_by_missing_data.rb` is used.
 
@@ -936,7 +868,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 			#SBATCH --account=nn9458k
 			#
 			# Output:
-			#SBATCH --output=run_starbeast.out
+			#SBATCH --output=run_simulation_starbeast.out
 
 			# Set up job environment.
 			set -o errexit  # Exit the script on any error
@@ -951,46 +883,76 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 	<!-- Run time: 50 minutes -->
 
-SVDQuartets: [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md)
 
-SNAPP: [Divergence-Time Estimation with SNP Data](divergence_time_estimation_with_snp_data/README.md)
+<a name="svdquartets"></a>
+### Inference with SVDQuartets
 
-SpeciesNetwork: [Bayesian Inference of Species Networks](bayesian_analysis_of_species_networks/README.md)
+* Follow the instructions given in tutorial [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md) to infer a species tree with SVDQuartets, with the following modifications:
 
-Dsuite: [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md)
+	* No individuals need to be filtered with `bcftools`, but the `prune` function of `bcftools` should again be used to ensure a minimum distance of 100 bp between SNPs, with commands similar to the following:
 
+			module purge
+			module load BCFtools/1.12-GCC-10.2.0
+			srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty bcftools +prune -w 100bp -n 1 -N 1st -o simulation_pruned.vcf simulation.vcf
 
+	* Run only what is called the "second analysis with SVDQuartets" in that tutorial, in which an assignment between individuals and species is made.
 
+	* The number used for the species are different with this simulated dataset, which affects both the content of the file `taxpartitions.txt` and of how the PAUP\*s `outgroup` command is executed. Use again the PAUP\* command `tstatus full` to find out which numbers are used for the six individuals, and compare these to the table given above to assign the numbers to the six species. Then, use these assignments between the numbers and the species when you write the `taxpartitions.txt` file and when you execute the `outgroup` command. Note that you'll need to quit the interactive PAUP\* environment after executing the `tstatus full` command to be able to write the file `taxpartitions.txt` (and to concatenate that file with the Nexus-format alignment file), before you need to enter the PAUP\* interactive environment once again for the rest of the analysis. When writing the new version of the file `taxpartitions.txt`, be careful to place the commas and semi-colons as in the original version of that file.
 
 
 <a name="snapp"></a>
 ### Inference with SNAPP
 
-- specimens.txt:
+* Follow the instructions given in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) to first prepare an input file for SNAPP with the script `snapp_prep.rb`, with the following modifications:
 
-		species specimen
-		neomar tsk_0
-		neogra tsk_1
-		neobri tsk_2
-		neooli tsk_3
-		neopul tsk_4
-		metzeb tsk_5
+	* No filtering with `bcftools` is required.
 
-- constraint:
+	* The file with a table assigning individuals to species should have the following content:
 
-		lognormal(0,9.5,0.1)        crown    metzeb,neooli,neopul,neobri,neogra,neomar
+			species individual
+			neomar tsk_0
+			neogra tsk_1
+			neobri tsk_2
+			neooli tsk_3
+			neopul tsk_4
+			metzeb tsk_5
 
-- `ruby snapp_prep.rb -v simulation.vcf -t specimens.txt -c constraint.txt -q 1000 -m 1000 -l 500000 -o simulation -x simulation.xml`
+	* The constraint file should have this content:
 
-- Use `#SBATCH --time=3:00:00`
-- Use `#SBATCH --ntasks=8`
-- Use `beast -threads 8 simulation_introgression1.xml`
+			lognormal(0,9.5,0.1)        crown    metzeb,neooli,neopul,neobri,neogra,neomar
 
-- Is the population size correctly estimated?
-- Are the age estimates accurate?
+	* To generate an input file for SNAPP with `snapp_prep.rb`, use commands like the following:
+
+			module load
+			srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby snapp_prep.rb -v simulation.vcf -t individuals.txt -c constraint.txt -q 1000 -m 1000 -l 500000 -o simulation_snapp -x simulation_snapp.xml
+
+	* Adjust the job name, the name of the output file, and the name of the input file for SNAPP in the Slurm script.
 
 
-# Inference with Dsuite
+<a name="phylonet"></a>
+### Inference with PhyloNet
+
+PhyloNet: [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md)
+
+
+XXX
+
+
+<a name="speciesnetwork"></a>
+### Inference with SpeciesNetwork
+
+SpeciesNetwork: [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)
+
+XXX
+
+
+<a name="dsuite"></a>
+### Inference with Dsuite
+
+Dsuite: [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)
+
+XXX
+
 - sets.txt:
 
 		tsk_0   neomar

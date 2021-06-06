@@ -136,7 +136,7 @@ As analyses with StarBEAST2 are relatively computationally demanding, we are goi
 
 * Scroll to the right of the window to see the shape of the specified prior density for the age of the divergence of Cichlinae and Pseudocrenilabrinae, as shown in the next screenshot.<p align="center"><img src="img/beauti15.png" alt="BEAUti" width="700"></p>As listed in the summary statistics below the density plot, the 2.5% quantile is at 70.3 Ma and the 97% quantile is at 104 Ma; thus 95% of the prior mass lie between these values.
 
-* Finally, continue to the "MCMC" tab. Set the chain length to 10 million as shown in the next screenshot. Set the value for "Store Every" to 50,000. Click on the black triangle to the left of "tracelog" to open the settings for the log file, and keep the default "starbeast.log" as the file name and specify 50,000 as the log frequency (to the right of "Log Every") as shown in the screenshot below.<p align="center"><img src="img/beauti16.png" alt="BEAUti" width="700"></p>
+* Finally, continue to the "MCMC" tab. Set the chain length to 100 million as shown in the next screenshot. Set the value for "Store Every" to 50,000. Click on the black triangle to the left of "tracelog" to open the settings for the log file, and keep the default "starbeast.log" as the file name and specify 50,000 as the log frequency (to the right of "Log Every") as shown in the screenshot below.<p align="center"><img src="img/beauti16.png" alt="BEAUti" width="700"></p>
 
 * Click on the next black triangle to see the settings for the species-tree log file. Set the name of this file to "starbeast_species.trees" and the log frequency again to 50,000 as in the next screenshot.<p align="center"><img src="img/beauti17.png" alt="BEAUti" width="700"></p>
 

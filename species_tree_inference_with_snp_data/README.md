@@ -120,7 +120,7 @@ The dataset of SNP variation for the above-listed 28 individuals of 14 Lake Tang
 
 	**Question 2:** How many SNPs were removed in the last step? [(see answer)](#q2)
 		
-* As we've seen above, some SNPs in file `NC_031969.f5.sub2.vcf.gz` were too close to each other on the chromosome to be considered independent markers. Some of these might have been removed in the last filtering step. Nevertheless, to ensure that no SNPs are closer to each other than a minimum distance of 100 bp, we can use the prune function of bcftools:
+* As we've seen above, some SNPs in file `NC_031969.f5.sub2.vcf.gz` were too close to each other on the chromosome to be considered independent markers. Some of these might have been removed in the last filtering step. Nevertheless, to ensure that no SNPs are closer to each other than a minimum distance of 100 bp, we can use the `prune` function of bcftools:
 	
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty bcftools +prune -w 100bp -n 1 -N 1st -o NC_031969.f5.sub4.vcf NC_031969.f5.sub3.vcf.gz
 
