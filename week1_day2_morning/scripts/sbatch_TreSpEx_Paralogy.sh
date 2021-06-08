@@ -23,7 +23,7 @@ workdir=$USERWORK/$SLURM_JOB_ID
 mkdir -p $workdir
 
 ## Copy input files to the work directory and move to work dir:
-cp -r SingelGenes/Results/*.treefile SingelGenes/*.phy TreSpEx.v1.2_SAGA.pl blast $workdir
+cp -r SingleGenes/Results/*.treefile SingleGenes/*.phy TreSpEx.v1.2_SAGA.pl blast $workdir
 cd $workdir
 
 # run Paralogy screening - bootstrap screening
