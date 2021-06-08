@@ -62,7 +62,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	```
 	awk -F" " '{if($2>70)print$1}' < Average_BS_perPartition.txt | sed "s/fas.treefile/fas/" > Average_BS_above70.txt
 	mkdir Above70
-	while read LINE; do cp ../Day2Morning/SingelGenes/$LINE Above70; done < Average_BS_above70.txt
+	while read LINE; do cp ../Day2Morning/SingleGenes/$LINE Above70; done < Average_BS_above70.txt
 	```
 	
 9. Now we need to concatenate these again and run a tree reconstruction of the new supernatrix
