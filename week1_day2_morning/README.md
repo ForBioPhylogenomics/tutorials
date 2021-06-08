@@ -4,6 +4,10 @@ The folder "_data_" contains the smaller data files for the morning session of d
 # [SCRIPTS](scripts)
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
+# [LECTURE](Lecture)
+The folder "_Lecture_" contains all the lecture from this session.
+* [Paralogy](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_morning/Lecture/Day2_01_Paralogy.pdf)
+
 # EXERCISE
 1. For the TreSpEx analyses we first need to install some modules in your home directory as they are not included in the availables in SAGA<br>
 
