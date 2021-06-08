@@ -4,6 +4,10 @@ The folder "_data_" contains the smaller data files for the afternoon session of
 # [SCRIPTS](scripts)
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
+# [LECTURE](Lecture)
+The folder "_Lecture_" contains all the lecture from this session.
+* [Missingness & Phylogenetic signal](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_afternoon/Lecture/Day2_02_Missingness_Signal.pdf)
+
 # EXERCISE
 1. For getting started, copy all data from the folder "_Day2Afternon_" to your folder in the project area in SAGA
 	
