@@ -4,6 +4,10 @@ The folder "_data_" contains the smaller data files for the afternoon session of
 # [SCRIPTS](scripts)
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
+# [LECTURE](Lecture)
+The folder "_Lecture_" contains all the lecture from this session.
+* [Missingness & Phylogenetic signal](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_afternoon/Lecture/Day2_02_Missingness_Signal.pdf)
+
 # EXERCISE
 1. For getting started, copy all data from the folder "_Day2Afternon_" to your folder in the project area in SAGA
 	
@@ -62,7 +66,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	```
 	awk -F" " '{if($2>70)print$1}' < Average_BS_perPartition.txt | sed "s/fas.treefile/fas/" > Average_BS_above70.txt
 	mkdir Above70
-	while read LINE; do cp ../Day2Morning/SingelGenes/$LINE Above70; done < Average_BS_above70.txt
+	while read LINE; do cp ../Day2Morning/SingleGenes/$LINE Above70; done < Average_BS_above70.txt
 	```
 	
 9. Now we need to concatenate these again and run a tree reconstruction of the new supernatrix

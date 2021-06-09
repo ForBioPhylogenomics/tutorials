@@ -13,6 +13,7 @@ set -o errexit # exit on errors
 set -o nounset  # Treat any unset variables as an error
 
 module purge  # Reset the modules to the system default
+module load Java/11.0.2
 
 ## Create work dir
 backdir=$(pwd)
@@ -34,7 +35,7 @@ java -jar /cluster/projects/nn9458k/phylogenomics/week1/Programs/phyutility/phyu
 java -jar /cluster/projects/nn9458k/phylogenomics/week1/Programs/phyutility/phyutility.jar -lm -in Matrix_original_supermatrix.fas.ufboot_rooted.tre -tree Matrix_original_supermatrix.fas.treefile_rooted.tre -out Matrix_original_supermatrix.fas.treefile_BAF_Argentina.tre -names Teleost_Euteleost_Argentiniformes_Argentinidae_Argentina_sp
 
 ## Make sure the results are copied back to the submit directory:
-cp -r *_results *.txt *.tre phyutility.log $backdir
+cp -r *.txt *.tre phyutility.log $backdir
 rm -rf $workdir
 
 #### submit job as "sbatch this_script_name" ####
