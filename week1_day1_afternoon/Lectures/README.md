@@ -1,1 +1,1 @@
-Here are lectures.
+Here are the lectures.
