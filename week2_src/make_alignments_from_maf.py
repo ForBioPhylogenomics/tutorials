@@ -26,7 +26,7 @@ class Window(object):
 		# Write the output file.
 		with open(f_name, "w") as f:
 			f.write(outstring)
-			print("Wrote file " + f_name + " with " + str(self.n_polymorphic) + " polymorphic sites.")
+			print("Wrote file " + f_name + " with a length of " + str(len(self.seqs[0])) + " bp and " + str(self.n_polymorphic) + " polymorphic sites.")
 
 
 
@@ -74,6 +74,14 @@ parser.add_argument(
     default=[1],
     dest='min_align_length',
     help='Minimum length of alignments in bp (default: 1)'
+        )
+parser.add_argument(
+    '-k',
+    nargs=1,
+    type=str,
+    default=["None"],
+    dest='max_align_length',
+    help='Maximum length of alignments in bp (default: None)'
         )
 parser.add_argument(
     '-c',
@@ -127,6 +135,11 @@ prefix = args.prefix[0]
 max_n_align = args.max_n_align[0]
 min_n_seqs = args.min_n_seqs[0]
 min_align_length = args.min_align_length[0]
+max_align_length = args.max_align_length[0]
+if max_align_length == "None":
+	max_align_length = -1
+else:
+	max_align_length = int(max_align_length)
 min_completeness = args.min_completeness[0]
 min_n_polymorphic = args.min_n_polymorphic[0]
 path = args.path[0] + "/"
@@ -184,18 +197,41 @@ with open(maf_name) as vcf:
 							sys.exit(1)
 						# Use only alignments with sufficient completeness.
 						if completeness >= min_completeness:
-							# Calculate the number of polymorphic sites in the alignment.
-							n_polymorphic = 0
-							for pos in range(len(seqs[0])):
-								chars_this_site = []
+							window_rel_start_poss = []
+							window_rel_end_poss = []
+							# If a maximum length has been specified, extract one or more windows from it.
+							if max_align_length > 1 and len(seqs[0]) >= max_align_length:
+								n_alignments_from_this_block = int(len(seqs[0])/max_align_length)
+								window_center_spacing = int(len(seqs[0]) / n_alignments_from_this_block)
+								window_rel_start_pos = int(window_center_spacing/2) - int(max_align_length/2)
+								window_rel_end_pos = window_rel_start_pos + max_align_length
+								window_rel_start_poss.append(window_rel_start_pos)
+								window_rel_end_poss.append(window_rel_end_pos)
+								for _ in range(n_alignments_from_this_block-1):
+									window_rel_start_pos += window_center_spacing
+									window_rel_start_poss.append(window_rel_start_pos)
+									window_rel_end_pos += window_center_spacing
+									window_rel_end_poss.append(window_rel_end_pos)
+							else:
+								window_rel_start_poss = [0]
+								window_rel_end_poss = [len(seqs[0])]
+
+							for x in range(len(window_rel_start_poss)):
+								window_seqs = []
 								for seq in seqs:
-									if seq[pos] in ["A", "a", "C", "c", "G", "g", "T", "t"]:
-										chars_this_site.append(seq[pos].upper())
-								if len(set(chars_this_site)) > 1:
-									n_polymorphic += 1
-							# Use only alignments with sufficient numbers of polymorphic sites:
-							if n_polymorphic >= min_n_polymorphic:
-								windows.append(Window(ids, seqs, scfs[0], start_poss[0], end_poss[0], n_polymorphic))
+									window_seqs.append(seq[window_rel_start_poss[x]:window_rel_end_poss[x]])
+								# Calculate the number of polymorphic sites in the alignment.
+								n_polymorphic = 0
+								for pos in range(len(window_seqs[0])):
+									chars_this_site = []
+									for window_seq in window_seqs:
+										if window_seq[pos] in ["A", "a", "C", "c", "G", "g", "T", "t"]:
+											chars_this_site.append(window_seq[pos].upper())
+									if len(set(chars_this_site)) > 1:
+										n_polymorphic += 1
+								# Use only alignments with sufficient numbers of polymorphic sites:
+								if n_polymorphic >= min_n_polymorphic:
+									windows.append(Window(ids, window_seqs, scfs[0], start_poss[0] + window_rel_start_poss[x], end_poss[0] + window_rel_end_poss[x], n_polymorphic))
 			ref_line = None
 			other_lines = []
 		elif line[0:2] == "s\t" and ref_line != None:
