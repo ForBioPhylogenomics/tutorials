@@ -20,6 +20,7 @@ All methods used for phylogenomic inference have assumptions, and these are ofte
 	* [Inference with StarBEAST2](#starbeast2)
 	* [Inference with SVDQuartets](#svdquartets)
 	* [Inference with SNAPP](#snapp)
+	* [Inference with SNAPPER](#snapper)
 	* [Inference with PhyloNet](#phylonet)
 	* [Inference with SpeciesNetwork](#speciesnetwork)
 	* [Inference with Dsuite](#dsuite)
@@ -42,7 +43,7 @@ To also test the effect of population-size variation on the inference methods, a
 <a name="requirements"></a>
 ## Requirements
 
-This tutorial requires **BEAST2**, **bModelTest**, **Tracer**, **FigTree**, **ASTRAL**, **PAUP\***, **SNAPP**, **SNAPPER** to be installed. Details about the installation of these tools can be found in tutorials [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md), [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md).
+This tutorial requires **BEAST2**, **bModelTest**, **Tracer**, **FigTree**, **ASTRAL**, **PAUP\***, **SNAPP**, **SNAPPER**, **babette**, **ape**, **PhyloNet**, and **SpeciesNetwork** to be installed. Details about the installation of these tools can be found in tutorials [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md), [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md).
 
 The following tool is required additionally:
 
@@ -61,7 +62,7 @@ The following tool is required additionally:
 <a name="msprime"></a>
 ## Coalescent simulations with Msprime
 
-All of the inference methods used in other tutorials of this course (e.g. [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)) are based on assumptions that may in fact rarely be met by empirical datasets. For example, ASTRAL, StarBEAST2, and SpeciesNetwork assume the absence of recombination within a locus, ASTRAL, SVDQuartets, StarBEAST2, and SNAPP assume the absence of gene flow, and StarBEAST2 and SNAPP assume constant population sizes (this assumption can be relaxed for StarBEAST2, but it was used in the [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) tutorial). And while Dsuite does not implement a model but only report the *D*-statistic for a set of quartets, the interpretation of the *D*-statistic as support for introgression between two species is based on the assumption (among others) that only this pair of species is affected by introgression and that introgression was direct and not flowing through unsampled species.
+All of the inference methods used in other tutorials of this course (e.g. [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)) are based on assumptions that may in fact rarely be met by empirical datasets. For example, ASTRAL, StarBEAST2, and SpeciesNetwork assume the absence of recombination within a locus, ASTRAL, SVDQuartets, StarBEAST2, SNAPP, and SNAPPER assume the absence of gene flow, and StarBEAST2, SNAPP, and SNAPPER assume constant population sizes (this assumption can be relaxed for StarBEAST2, but it was used in the [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) tutorial). And while Dsuite does not implement a model but only report the *D*-statistic for a set of quartets, the interpretation of the *D*-statistic as support for introgression between two species is based on the assumption (among others) that only this pair of species is affected by introgression and that introgression was direct and not flowing through unsampled species.
 
 To test how the reliability of the inference methods can be affected by model violations, we can deliberately simulate data with such violations and compare results inferred from these data to results inferred from data simulated without model violations.
 
@@ -70,18 +71,12 @@ The most commonly used tool for such simulations of genomic data is currently Ms
 <a name="start"></a>
 ### Getting started with Msprime
 	 
-To perform simulations with Msprime, we are going to write a script in Python, and we will execute this script on the command line. The script can be written with a text editor available on Saga such as Emacs, Vim, or Nano, or it can be written with a GUI text editor on a local computer; but then it will always need to be uploaded to Saga before it can be executed. Commands given here assume that Emacs is used as a text editor on Saga; for other text editors, simply replace "emacs" with "vim" or "nano" in the commands given below.
+To perform simulations with Msprime, we are going to write a script in Python, and we will execute this script on the command line. The script can be written with a text editor available on Saga such as Emacs, Vim, or Nano.
 
-* Start editing a new script named `simulate_data.py` by typing
-
-		emacs simulate_data.py
-		
-* Then, write the following lines to the new script:
+* Write a new script on Saga that is named `simulate_data.py` and has the following content:
 
 		import msprime
 		ts = msprime.sim_ancestry(2)
-		
-* Save and close the script (if using Emacs, the rather complicated key combination to do so is Ctrl-X Ctrl-S Ctrl-X Ctrl-C).
 
 * Load a module for Python:
 
@@ -219,7 +214,7 @@ To perform simulations with Msprime, we are going to write a script in Python, a
 		
 * Execute once again the script, and download and open the new file `mts.svg`. The figure for the tree sequence with mutations should like like this:<p align="center"><img src="img/msprime3.png" alt="Msprime" width="700"></p>As you can see there are now three trees included in the tree sequence, for the regions from position 0 to 2442, from position 2442 to 7204, and from position 7205 to 10000 of the simulated chromsomes. Mutations have occurred on each of the tree, with the times and positions at which the mutations occurred marked in red on the tree and the x-axis, respectively. As mutations are labelled with numbers from 0 to 25, we know that a total of 26 mutations have occurred.
 
-In order to use the simulated genomic data for inference, we will need to export it in a format that is accepted by the inference methods. Thus, we will need to generate sequence alignments for tools like ASTRAL, StarBEAST2, SpeciesNetwork, and VCF files for SVDQuartets, SNAPP, and Dsuite. Fortunately, Msprime has a very convenient funtion for export in VCF format, named `write_vcf`, but in order to generate sequence alignments, we will need a separate script.
+In order to use the simulated genomic data for inference, we will need to export it in a format that is accepted by the inference methods. Thus, we will need to generate sequence alignments for tools like ASTRAL, StarBEAST2, SpeciesNetwork, and VCF files for SVDQuartets, SNAPP, SNAPPER, and Dsuite. Fortunately, Msprime has a very convenient funtion for export in VCF format, named `write_vcf`, but in order to generate sequence alignments, we will need a separate script.
 
 * To test data export in VCF format, try the following script:
 	
@@ -753,7 +748,7 @@ As some of the inference methods require sequence alignments rather than variant
 
 * Make sure the the specified number of alignments has been written to the four new directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`, for example using `ls simulation_alignments/*.phy | wc -l`.
 
-As you may have noticed, the sample IDs in the VCF files are not those that we used for the six cichlid species ("metzeb", "neomar", "neogra", "neobri", "neooli", and "neopul"), but instead "tsk_0", "tsk_1", "tsk_2", "tsk_3", "tsk_4", and "tsk_5". These IDs correspond to the species in the order in which the species were listed in the Newick string that was supplied to Msprime:
+As you may have noticed, the sample IDs in the VCF files are not those that we used for the six cichlid species ("metzeb", "neomar", "neogra", "neobri", "neooli", and "neopul"), but instead "tsk\_0", "tsk\_1", "tsk\_2", "tsk\_3", "tsk\_4", and "tsk\_5". These IDs correspond to the species in the order in which the species were listed in the Newick string that was supplied to Msprime:
 		
 | Sample ID | Species ID | Species name                  |
 |-----------|------------|-------------------------------|
@@ -770,11 +765,11 @@ The IDs used in the alignment files are similar to those used in the VCF files, 
 <a name="inference"></a>
 ## Inference from simulated data
 
-You should now have simulated genomic data in the form of four files in VCF format (`simulation.vcf`, `simulation_introgression1.vcf`, `simulation_introgression2.vcf`, and `simulation_bottleneck.vcf`) as well as four sets of alignments in Phylip format (in directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`).
+You should now have simulated genomic data in the form of four files in VCF format (`simulation.vcf`, `simulation_introgression1.vcf`, `simulation_introgression2.vcf`, and `simulation_bottleneck.vcf`) as well as four sets of files with alignments in Phylip format (in directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`).
 
-These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, PhyloNet, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials.
+These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, SNAPPER, PhyloNet, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials, either using the files in VCF format or the sets of alignments as input, depending on the type of input that is required for the inference methods.
 
-If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets, PhyloNet <!--XXX Check speed of PhyloNet XXX-->). For each inference method, you could focus on one or two of the simulated datasets (either with or without introgression, and with or without bottleneck) – as long as different course participants select different datasets to analyze, a comparison of the results will allow us to assess the impact of the model violations on each inference method.
+If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SNAPPER, PhyloNet, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets). For each inference method, you could focus on one or two of the simulated datasets (either with or without introgression, and with or without bottleneck) – as long as different course participants select different datasets to analyze, a comparison of the results will allow us to assess the impact of the model violations on each inference method.
 
 
 <a name="astral"></a>
@@ -807,16 +802,17 @@ If you should not have enough time to test all of these inference methods, I sug
 
 As an analysis of a complete set of 1,000 alignments would be too computationally demanding, I suggest that you only use a subset of around 50 alignments. These will need to be converted from Phylip to Nexus format because the StarBEAST2 input file will be written with BEAUti, and BEAUti only accepts alignments in Nexus format.
 
-* To convert a set of alignments into Nexus format, you could write a script named `convert_to_nexus.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`):
+* To convert a set of 50 alignments into Nexus format, you could write a script named `convert_to_nexus.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`):
 
 		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0
-				
+		
 		for phy in `ls simulation_alignments/*.phy | head -n 50`
 		do
 			nex=${phy%.phy}.nex
 			python convert.py ${phy} ${nex} -f nexus
 		done
+
 
 * Before executing this script, you will need to download the conversion script `convert.py`:
 	
@@ -828,25 +824,27 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 	This should have produced 50 files in Nexus format in directory `simulation_alignments`, which you can verify with `ls simulation_alignments/*.nex | wc -l`.
 
-* Download these alignment files in Nexus format to your local computer, e.g. using `scp`.
+* Download these alignment files in Nexus format to your local computer, e.g. using `scp`. To download only the files in Nexus format from `simulation_alignments`, you could use a command similar to this one (on your local computer; replace "XXX" with the path to your current directory on Saga):
+
+		scp /XXX/simulation_alignments/*.nex .
 
 * Follow the instructions given in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) to set up an XML file for StarBEAST2, with the following modifications:
 
 	* Ignore the step in which the script `filter_genes_by_missing_data.rb` is used.
 
-	* Assign the sequences with IDs "tsk_0_1", "tsk_0_2", "tsk_1_1", etc. to the species IDs "neomar", "neogra", etc. according to the table given above (BEAUti panel "Taxon sets").
+	* Assign the sequences with IDs "tsk\_0\_1", "tsk\_0\_2", "tsk\_1\_1", etc. to the species IDs "neomar", "neogra", etc. according to the table given above (BEAUti tab "Taxon sets").
 
-	* Use 0.279 as the population size, because this value will correspond to the true population size used in the simulations (9.3E4) when scaled by the number of generations per time unit (333,333). But since we now have two sequences per species, we can attempt to estimate the population size, rather than fixing it; thus you could keep the tick in the checkbox to estimate the population size (BEAUti panel "Population Model").
+	* Use 0.279 as the population size, because this value will correspond to the true population size used in the simulations (9.3 &times; 10<sup>4</sup>) when scaled by the number of generations per time unit (333,333). But since we now have two sequences per species, we can attempt to estimate the population size, rather than fixing it; thus you could keep the tick in the checkbox to estimate the population size (BEAUti tab "Population Model").
 
-	* As the substitution model, specify the HKY model without among-site rate heterogeneity (simply leave the Gamma category count at "0") to match the model used for the simulations (BEAUti panel "Site Model").
+	* As the substitution model, specify the HKY model without among-site rate heterogeneity (simply leave the Gamma category count at "0") to match the model used for the simulations (BEAUti tab "Site Model").
 
-	* To simplify the StarBEAST2 analysis, you could also specify equal site frequencies (select "All Equal" from the drop-down menu next to "Frequencies"; BEAUti panel "Site Model").
+	* To simplify the StarBEAST2 analysis, you could also specify equal site frequencies (select "All Equal" from the drop-down menu next to "Frequencies"; BEAUti tab "Site Model").
 
-	* Instead of the birth-death model, you could select the Yule model, given that extinction was not included in the simulations (BEAUti panel "Priors").
+	* Instead of the birth-death model, you could select the Yule model, given that extinction was not included in the simulations (BEAUti tab "Priors").
 
-	* To time-calibrate the species tree, use a lognormal age constraint with a mean age of 9.5 Ma (the true age used in the simulations) and a standard deviation of 0.1 (make sure to set the tick for "Mean in Real Space"; BEAUti panel "Priors").
+	* To time-calibrate the species tree, use a lognormal age constraint with a mean age of 9.5 Ma (the true age used in the simulations) and a standard deviation of 0.1 (make sure to set the tick for "Mean in Real Space"; BEAUti tab "Priors").
 
-	* Use a chain length of 50 million and all log frequencies to 25,000 (BEAUti panel "MCMC").
+	* Use a chain length of 50 million and all log frequencies to 25,000 (BEAUti tab "MCMC").
 
 	* Save the XML file as `simulation_starbeast.xml`, `simulation_introgression1_starbeast.xml`, `simulation_introgression2_starbeast.xml`, or `simulation_bottleneck_starbeast.xml`, depending on the set of alignments that was used.
 
@@ -903,7 +901,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 <a name="snapp"></a>
 ### Inference with SNAPP
 
-* Follow the instructions given in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) to first prepare an input file for SNAPP with the script `snapp_prep.rb`, with the following modifications:
+* Follow the instructions given in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) to first prepare an input file for SNAPP with the script `snapp_prep.rb`, and then analyze this file with SNAPP, with the following modifications:
 
 	* No filtering with `bcftools` is required.
 
@@ -929,189 +927,131 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 	* Adjust the job name, the name of the output file, and the name of the input file for SNAPP in the Slurm script.
 
 
+<a name="snapper"></a>
+### Inference with SNAPPER
+
+* Follow the instructions given in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) to first prepare an input file for SNAPPER with the script `snapp_prep.rb`, and then analyze this file with SNAPPER, with the modifications listed above in [Inference with SNAPP](#snapp).
+<!--XXX User starting tree? XXX-->
+
+
+
 <a name="phylonet"></a>
 ### Inference with PhyloNet
 
-PhyloNet: [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md)
+As in the [Inference with StarBEAST2](#starbeast2), the use of a full set of 1,000 alignments, with two sequences per species in each alignment, would be too computationally demanding for an analysis with PhyloNet. Additionally, the format of the input files needs to be converted. Thus, a first step is again to write a script for the conversion of a set of alignment files that also removes the outgroup ("metzeb") and one sequence for each ingroup species. This time, 100 alignment files should be converted to Fasta format.
+
+* To convert a set of 100 alignments into Fasta format, and to include only one sequence from each ingroup species, you could write a script named `convert_to_fasta.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`). For convenience, the commands below include a step to replace the individual IDs ("tsk_0_1", "tsk_1_1", etc.) with the corresponding species IDs ("neomar", "neogra", etc.):
+
+		# Load the python module.
+		module load Python/3.8.2-GCCcore-9.3.0
+		
+		for phy in `ls simulation_alignments/*.phy | head -n 100`
+		do
+			fasta=${phy%.phy}.fasta
+			python convert.py ${phy} tmp.fasta -f fasta -p tsk_0_1 tsk_1_1 tsk_2_1 tsk_3_1 tsk_4_1 tsk_5_1
+			cat tmp.fasta | sed "s/tsk_0_1/neomar/g" | sed "s/tsk_1_1/neogra/g" | sed "s/tsk_2_1/neobri/g" | sed "s/tsk_3_1/neooli/g" | sed "s/tsk_4_1/neopul/g"  | sed "s/tsk_5_1/metzeb/g" > ${fasta}
+			rm -f tmp.phy
+		done
 
 
-XXX
+* Before executing this script, make sure that you have the file `convert.py` in your current directory (e.g. with `ls convert.py`). If not, download it from GitHub:
+	
+		wget https://raw.githubusercontent.com/mmatschiner/anguilla/master/radseq/src/convert.py
+	
+* Then use this command to execute the script:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty bash convert_to_fasta.sh
+
+	This should produce 100 files in Fasta format in the alignment directory (e.g. in `simulation_alignments`).
+	
+* Make sure that this is the case:
+
+		ls simulation_alignments/*.fasta | wc -l
+
+* Follow the instructions given in tutorial [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md) to first infer ultrametric phylogenies for each of the alignments in Fasta format with BEAST2 and then use these phylogenies to infer species networks with PhyloNet.
+
 
 
 <a name="speciesnetwork"></a>
 ### Inference with SpeciesNetwork
 
-SpeciesNetwork: [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)
+As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subset of the alignments produced through simulation. However, we now not only need to reduce the set of alignments and convert them to Nexus format, but we should also remove the outgroup species "metzeb" and we should also only use a single sequence per species (recall that we simulated one diploid individual with two sequences for each species), to shorten the run time of SpeciesNetwork as much as possible.
 
-XXX
+* To convert a set of 50 alignments into Nexus format, and remove both the outgroup and one sequence per species, you could write a script named `convert_to_nexus_and_reduce.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`):
+
+		# Load the python module.
+		module load Python/3.8.2-GCCcore-9.3.0
+				
+		for phy in `ls simulation_alignments/*.phy | head -n 50`
+		do
+			nex=${phy%.phy}_red.nex
+			python convert.py ${phy} ${nex} -f nexus -p tsk_0_1 tsk_1_1 tsk_2_1 tsk_3_1 tsk_4_1
+		done
+
+* Before executing this script, you will need to download the conversion script `convert.py`:
+	
+		wget https://raw.githubusercontent.com/mmatschiner/anguilla/master/radseq/src/convert.py
+	
+* Then you can use this command to execute the script:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty bash convert_to_nexus_and_reduce.sh
+
+	This should have produced 50 files in Nexus format in directory `simulation_alignments`, which you can verify with `ls simulation_alignments/*.nex | wc -l`.
+
+* Download these alignment files in Nexus format to your local computer, e.g. using `scp`. To download only the files in Nexus format from `simulation_alignments`, you could use a command similar to this one (on your local computer; replace "XXX" with the path to your current directory on Saga):
+
+		scp /XXX/simulation_alignments/*_red.nex .
+
+* Follow the instructions given in tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md) to infer species networks with SpeciesNetwork, with the following modifications:
+
+	* Assign the sequences with IDs "tsk\_0\_1", "tsk\_1\_1", etc. to the species IDs "neomar", "neogra", etc. according to the table given above (BEAUti tab "Taxon sets").<p align="center"><img src="img/beauti1.png" alt="BEAUti"  width="700"></p>
+
+	* Instead of estimating the kappa parameter of the HKY model, fix it to 2, the value used in the simulations, by removing the tick in the box to the right of it (BEAUti tab "Site Model"). Make sure to do that before copying the model to all other partitions.<p align="center"><img src="img/beauti2.png" alt="BEAUti"  width="700"></p>
+
+	* Use the mutation rate that was used for simulations, 3.5 &times; 10<sup>-9</sup>, as the clock rate. Note, however, that the mutation rate was given per generation and per bp, whereas SpeciesNetwork expects a clock rate given per million years and bp. With a generation time of 3 years and thus 333,333 generations per million years, the mutation rate of 3.5 &times; 10<sup>-9</sup> translates to 3.5 &times; 10<sup>-9</sup> * 333,333 = 0.00117. Thus, use "0.00117" as the clock rate instead of "5.4E-4". Do not set a set tick in the checkbox for "estimate" in the "Clock Model" tab, because this time we do not need to account for uncertainty in the rate (BEAUti tab "Clock Model").<p align="center"><img src="img/beauti3.png" alt="BEAUti"  width="700"></p>
+
+	* Use the population size that was used in the simulations, 9.3 &times; 10<sup>4</sup>, as the population-size parameter for SpeciesNetwork. As in in tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), this population size must be divided again by the number of generations per million years, so the value to specify for SpeciesNetwork is 9.3 &times; 10<sup>4</sup> &div; 333,333 = 0.279. It does not seem to be possible to completely fix the population size in BEAUti's "Priors" tab, but we can instead do so in two steps: First, set the initial value of the parameter to "0.279", by clicking on the button saying "initial = [0.01][0.0,&infin;]" to the right of "popMean.t:Species" in the "Priors" tab, as shown in the next screenshot:<p align="center"><img src="img/beauti4.png" alt="BEAUti"  width="700"></p> This should open a small pop-up window. In that pop-up window, specify "0.279" in the field below "Value".<p align="center"><img src="img/beauti5.png" alt="BEAUti"  width="700"></p> Second, disable the operator for this parameter, after making the "Operators" tab visible (see tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)). To do this, set the weight of the operator "Scale: popMean.t:Species" to 0, as shown in the next screenshot.<p align="center"><img src="img/beauti6.png" alt="BEAUti"  width="700"></p>
+
+	* The length of the MCMC can be reduced to 5 million iterations (BEAUti tab "MCMC").
 
 
 <a name="dsuite"></a>
 ### Inference with Dsuite
 
-Dsuite: [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)
+* Follow the instructions given in tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md) to test for the occurrence of introgression with Dsuite's `Dtrios` and `Fbranch` functions, with the following modifications:
 
-XXX
+	* The file `snapp_w_neocan.nwk` does not need to be prepared; instead of this file, use a file that contains the true tree used in the simulations with Msprime: "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)". This file should thus have the following content:
 
-- sets.txt:
+			(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)
 
-		tsk_0   neomar
-		tsk_1   neogra
-		tsk_2   neobri
-		tsk_3   neooli
-		tsk_4   neopul
-		tsk_5   Outgroup
+	* Instead of the file `individuals_dsuite.txt`, write and use a file that has the following content (as in tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md), make sure that the columns are separated by actual tabs and not other types of whitespace):
 
+			tsk_0	neomar
+			tsk_1	neogra
+			tsk_2	neobri
+			tsk_3	neooli
+			tsk_4	neopul
+			tsk_5	Outgroup
 
-Dsuite Dtrios simulation.vcf sets.txt
+* Also follow the instructions in tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md) to test if certain regions of the chromosome have elevated signals of introgression, using Dsuite's `Dinvestigate` function and with the following modifications:
 
+	* Run this analysis for the trio that showed the strongest signals of introgression according to Dsuite's `Fbranch` function. Thus, instead of file `test_trios.txt`, use a file that has, for example, this content:
 
+			neobri	neooli	neomar
 
-
-
-
-
-
-	
-<a name="cgenie"></a>
-## Simulating recombination with c-genie
-
-One assumption underlying the phylogenetic analyses in this tutorial is that the alignment blocks used for tree inference are free of recombination. If this assumption should be violated, the consequences for the accuracy of the phylogenetic analyses as well as all analyses of introgression based on these phylogenies would be difficult to predict. Given that we excluded alignments with high numbers of hemiplasies, one could probably argue that we minimized the possible effect of recombination sufficiently, so that our conclusions based on the inferred phylogenies may be reliable. However, how certain can we be that recombination is really absent from the alignments? And how would our inference be influenced if it was not? 
-
-These questions are so far rather poorly answered, even though they are actively debated in the recent literature (e.g. [Springer and Gatesy 2016](https://www.sciencedirect.com/science/article/pii/S1055790315002225); [Edwards et al. 2016](https://www.sciencedirect.com/science/article/pii/S1055790315003309?via%3Dihub)). One way to approach the problem is with simulations: We could simulate how probable it would be to actually have not even a single recombination breakpoint in an alignment of a certain length, and simulated sequences could also be used to test the reliability of phylogenetic inference under these conditions. In one such study, [Lanier and Knowles (2012)](https://academic.oup.com/sysbio/article/61/4/691/1637909) concluded that within-alignment recombination had no noticeable effect on species-tree reconstruction; however, the simulations used in this study were for a rather small set of species, and it is not clear if the results would hold for larger phylogenies. Furthermore, the possible effects of within-alignment recombination on phylogenomic tests for introgression have so far not been tested.
-
-To address at least the question of how probable the absence of recombination is in alignment blocks of 5 kbp, we can use the Python program [c-genie](https://github.com/mmatschiner/c-genie) (Malinsky and Matschiner; unpublished). This program simulates phylogenetic histories with recombination and calculates the average length of "c-genes" ("coalescent genes"; [Doyle 1995](https://www.jstor.org/stable/2419811)), genomic regions uninterrupted by recombination. In addition, c-genie also calculates the lengths of "single-topology tracts", fragments sharing the same tree topology even though recombination within these fragments might have led to variable branch lengths in different parts of the fragment. The length of these single-topology tracts might be more relevant for phylogenetic analysis, because one could argue that only those recombination breakpoints that change the tree topology within an aligment have negative consequence for phylogenetic inference while those breakpoints that only change the branch lengths are safe to ignore.
-
-As the probability of recombination depends on many factors, including the recombination rate, the generation time, the length of branches in the species tree, and the population size, c-genie requires estimates for these parameters as input. Conveniently, we can use the species tree as well as the population size estimate inferred by SNAPP in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) for the simulations with c-genie. In addition, we'll assume (as in other tutorials) again a generation time of 3 years for cichlid fishes and a recombination rate of 2&times;10<sup>-8</sup> per generation.
-
-* Start by download the c-genie program from its [github repository](https://github.com/mmatschiner/c-genie), using the following command:
-
-		wget https://raw.githubusercontent.com/mmatschiner/c-genie/master/c-genie
-
-* Make c-genie executable with this command:
-
-		chmod +x c-genie
-
-* Then, have a look at the help text of c-genie with this command (this is only going to work if your `python` is installed in `/usr/local/bin` - if `python` is in another location, use `python c-genie -h`*):
-
-		./c-genie -h
-		
-	You'll see that besides calculating the lengths of c-genes and single-topology tracts, c-genie also allows the simulation of alignments with recombination, which can then be used to test the accuracy of phylogenetic methods in the presence of within-alignment recombination. Here, however, we will use c-genie only to find out how plausible the assumed absence of recombination in our 5 kbp-alignment blocks really is.
-	
-* You may also have noticed from c-genie's help text that a generation time of 3 years and a recombination rate of 2&times;10<sup>-8</sup> are already the default values for these two parameters; thus, we only need to specify the species tree and the population size estimate from the SNAPP analysis in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md).
-
-* Run c-genie with file [`snapp.tre`](data/snapp.tre) as the species tree, "lamprologini" as the prefix for the file, and an assumed population size of 100,000, according to the estimate from the SNAPP analysis:
-
-		./c-genie snapp.tre lamprologini -n 100000
-
-	This anaysis should finish within a few minutes.
-	
-* As you will see from the screen output of c-genie, an output file in HTML format has been written to file [`lamprologini.html`](res/lamprologini.html). Open this HTML file in a web browser such as Firefox and scroll through the plots included in this file.
-
-	**Question 5:** What are the mean lengths of c-genes and single-topology tracts? What is the probability that an alignment of 5 kbp includes just one c-gene or one single-topology tract? [(see answer)](#q5)
-
-* Repeat the simulations with different assumptions for the population size to see how these assumptions inluence the resulting lengths of c-genes and single-topology tracts.
-
-There are some reasons why the lengths of c-genes and single-topology tracts may not be as short in practice as the results of c-genie may suggest. For example, undetected past population bottlenecks would reduce the amount of incomplete lineage sorting, which could extend the length of both types of fragments. In addition, the presence of "recombination deserts" ([Yu et al. 2001](https://www.nature.com/articles/35057185)) could lead to some very large c-genes and single-topology tracts. Nevertheless, it is important to be aware of the possible presence of recombination within the alignments used for phylogenetic inference. While the study of [Lanier and Knowles (2012)](https://academic.oup.com/sysbio/article/61/4/691/1637909) as well as preliminary analyses with c-genie suggest that within-alignment recombination may in fact not have a strong influence on the inference of the species-tree topology, the consequences for divergence-time estimates and downstream analyses of introgression are less clear and should be investigated in future studies.
+	* Use a combination of window size and increments that results in about 50 to 200 windows. You could first try `-w 500,100` for this.
 
 
-<a name="interrogation"></a>
-## Genome-wide genealogy interrogation
-
-When recombination is frequent in genome-length alignments, as suggested for the clade of cichlid fishes by the above simulations, the use of short genomic regions for phylogenetic analyses could help to avoid the issues of within-alignment recombination. Unfortunately, such short regions often do not have sufficient information to provide reliable phylogenies of entire clades; however, they can still be very useful to investigate phylogenetic relationships at one particular node, in a method termed genealogy interrogation by [Arcila et al. (2017)](https://www.nature.com/articles/s41559-016-0020). When using this method, each alignment is used repeatedly in maximum-likelihood phylogenetic analyses, each time with a different topological constraint for a particular relationship. The results of interest in these constrained analyses are then not the inferred phylogenies, but the likelihoods obtained with the different constraints. Even with alignments that are too short to resolve much of the phylogeny, those likelihoods can differ to the extent that it is possible to discriminate the support for the different topological hypotheses, as the hypothesis leading to the highest likelihoods for most alignments could then be considered to correspond to the species-tree topology. Moreover, asymmetry in the likelihood values supporting the two alternative topologies can again indicate whether these alternative topologies result from incomplete lineage sorting and low phylogenetic signal or whether introgression has influenced their frequencies.
-
-In this part of the tutorial, we are going to apply genealogy interrogation to investigate, in more detail than above, the relationship among the three species *Neolamprologus brichardi* ("neobri"), *Neolamprologus pulcher* ("neobri"), and *Neolamprologus olivaceous* ("neooli"). Among these species, introgression between *Neolamprologus brichardi* and *Neolamprologus pulcher* was inferred in the studies of [Gante et al. (2016)](https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.13767) and [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650), but did not seem to receive much support in the above analysis of block-topology frequencies.
-
-* Have a look once again at the file [`block_topology_frequencies.txt`](res/block_topology_frequencies.txt) to find the results for the species trio "neobri", "neopul", and "neooli". You could use the following command to do so:
-
-		cat block_topology_frequencies.txt | grep neobri | grep neopul | grep neooli
-
-	This should show that "neooli" and "neopul" are most frequently found as sister species, and that the *D*-statistic equivalent for this trio is around 0.18, with a *p*-value that is close to significance or barely significant. In my analyses, "neopul" and "neobri" formed a pair in 79 phylogenies while the other alternative topology, grouping "neooli" and "neobri", occurred 55 times. The difference between these frequencies of the alternative topologies is not large. Whether or not this difference occurred by chance or resulted from introgression between "neopul" and "neobri" is therefore difficult to tell from these results. To obtain more conclusive evidence for or against introgression among these species, a larger set of alignments might thus be required. While our dataset does not allow the extraction of more alignments of the same size as before, we can extract a larger number of shorter alignments that, even if they would not be sufficiently informative for full phylogenetic analyses, could be useful for genealogy interrogation.
-
-* Use the Ruby script [`extract_blocks.rb`](src/extract_blocks.rb) once again to extract alignment blocks from the chromosome-length alignment `NC_031969.f5.masked.fasta`, this time with a shorter size of 1,000 bp and a maximum proportion of missing data of 0.35:
-
-		ruby extract_blocks.rb NC_031969.f5.masked.fasta short_blocks 1000 0.35
-
-* Check how many alignments were extracted this time, using the following command:
-
-		ls short_blocks/*.nex | wc -l
-
-	This should show that 1,398 alignments were extracted.
-
-* Next, we'll need to specify the three topological hypotheses that we want to compare. For IQ-TREE to understand these hypotheses, we'll need to write them as constraints in Newick format. This is actually rather simple because we only need to write all sample IDs, separated by commas, within parentheses and we need to use one additional pair of parentheses to group the samples of the two species that form a pair in a given hypothesis. For example, the hypothesis that "neooli" and "neopul", represented by samples JWH6 and ISB3, respectively, form a pair can be encoded in Newick format as "(IZC5,AUE7,JBD6,LJC9,KHA7,IVE8,JWH2,JWG9,JWH4,ISA8,KFD2,JUH9,(JWH6,ISB3));". We call this hypothesis "T1" and label the two alternative hypotheses, in which either "neopul" and "neobri" or "neooli" and "neobri" form a pair, "T2" and "T3", resepectively. To save these three hypotheses to files in Newick format named `t1.tre`, `t2.tre`, and `t3.tre`, you could use the three following commands:
-
-		echo "(IZC5,AUE7,JBD6,LJC9,KHA7,IVE8,JWH2,JWG9,JWH4,ISA8,KFD2,JUH9,(JWH6,ISB3));" > t1.tre
-		echo "(IZC5,AUE7,JBD6,LJC9,KHA7,IVE8,JWH2,JWG9,JWH4,ISA8,KFD2,JWH6,(JUH9,ISB3));" > t2.tre
-		echo "(IZC5,AUE7,JBD6,LJC9,KHA7,IVE8,JWH2,JWG9,JWH4,ISA8,KFD2,ISB3,(JWH6,JUH9));" > t3.tre
 
 
-* We are then ready to run IQ-TREE with each alignment and each topological constraint. To allow the resulting likelihoods to be comparable, we will ensure that the same substitution model is used in all analyses rather than using IQ-TREE's automatic model selection; therefore, we specify the GTR substitution model with the `-m` option in all analyses. In addition, we need to specify the topological constraint file with the `-g` option, and we turn off the verbose screen output of IQ-TREE with the `--quiet` option. Thus, the set of commands to run IQ-TREE with all alignments and constraints is the following:
 
-		for i in short_blocks/*.nex
-		do
-			# Run iqtree with the t1 hypothesis.
-			iqtree -s ${i} -m GTR -g t1.tre --quiet
-			
-			# Rename the main output and remove unneeded output files.
-			mv ${i}.iqtree ${i%.iqtree}.t1.log
-			rm ${i}.*
-			
-			# Run iqtree with the t2 hypothesis.
-			iqtree -s ${i} -m GTR -g t2.tre --quiet
-			
-			# Rename the main output and remove unneeded output files.
-			mv ${i}.iqtree ${i%.iqtree}.t2.log
-			rm ${i}.*
-			
-			# Run iqtree with the t3 hypothesis.
-			iqtree -s ${i} -m GTR -g t3.tre --quiet
-			
-			# Rename the main output and remove unneeded output files.
-			mv ${i}.iqtree ${i%.iqtree}.t3.log
-			rm ${i}.*
-		done
 
-	These analyses should take around half an hour to finish. However, instead of waiting this long, you could also replace your `short_blocks` directory with a version of it in which all IQ-TREE results are already present. If you prefer to do so, download the compressed directory [`short_blocks.tgz`](res/short_blocks.tgz), place it in your analysis directory, and uncompress it with `tar -xzf short_blocks.tgz`.
-	
-	The `short_blocks` directory should then contain three files with endings `.t1.log`, `.t2.log`, and `.t3.log`.
-	
-* Have a look one of the files with ending `.t1.log`, e.g. file [`NC_031969.f5.masked_00581001_00581999.t1.log`](res/NC_031969.f5.masked_00581001_00581999.t1.log), using the `less` command:
 
-		less short_blocks/NC_031969.f5.masked_00581001_00581999.t1.log
-		
-	When you scroll down to just below "MAXIMUM LIKELIHOOD TREE", you should see a line like the following:
-	
-		Log-likelihood of the tree: -1404.8564 (s.e. 58.5720)
-		
-	This number, the log-likelihood of -1404.8564, is the only result of this IQ-TREE analysis that we need for genealogy interrogation.
-	
-* Compare the log-likelihoods among the three different hypotheses for the first alignment, using the following command:
 
-		cat short_blocks/NC_031969.f5.masked_00581001_00581999.t?.log | grep "Log-likelihood"
-		
-	This should show output similar to the one below:
-	
-		Log-likelihood of the tree: -1404.8564 (s.e. 58.5720)
-		Log-likelihood of the tree: -1404.3751 (s.e. 58.4653)
-		Log-likelihood of the tree: -1401.8835 (s.e. 57.5254)
-		
-	So this means that the first two hypotheses, T1 and T2, had a very similar likelihood while the likelihood of the third hypothesis, T3, was about three log units higher and thus better.
-	
-* To extract and compare the log-likelihood values from the output files of all IQ-TREE analyses, we can use the BASH script [`summarize_ggi.sh`](src/summarize_ggi.sh). This script expects two arguments, namely the name of a directory in which it can find the files with endings `.t1.log`, `.t2.log`, and `.t3.log`, and the name of a new file to which its output will be written. We'll use `short_blocks_ggi.txt` as the name of this output file; thus, run the script with this command:
-	
-		bash summarize_ggi.sh short_blocks short_blocks_ggi.txt
 
-* Have a look at the output file [`short_blocks_ggi.txt`](res/short_blocks_ggi.txt). You'll see that each line reports the comparison of likelihoods for one alignment. The second column specifies the hypothesis that received the best likelihood, and the third column indicates the difference between this likelihood and the second-best likelihood, in log units. The last three columns show the log-likelihoods themselves.
 
-* The output in file [`short_blocks_ggi.txt`](res/short_blocks_ggi.txt) can be analyzed and plotted with the Ruby script [`plot_ggi.rb`](src/plot_ggi.rb), specifying [`short_blocks_ggi.txt`](res/short_blocks_ggi.txt) as the name of the input file and `short_blocks_ggi.svg` as the name of the output file to which the plot will be written in SVG format:
 
-		ruby plot_ggi.rb short_blocks_ggi.txt short_blocks_ggi.svg
 
-* Open the output file [`short_blocks_ggi.svg`](res/short_blocks_ggi.svg) with Firefox, Adobe Illustrator, or another program capable of reading SVG format. The plot should look similar to the one shown below:<p align="center"><img src="img/short_blocks_ggi.png" alt="Heatmap D" width="600"></p> In this plot, each dot represents one alignment, and the position of the dot indicates the difference in likelihood support among the three competing hypotheses. If a dot is directly on the dashed line leading towards T1 at the bottom-left, this alignment has the best likelihood when using the T1 hypothesis and identical likelihoods when the other two hypotheses are used as constraints. When the two alternative hypotheses have different likelihoods (but both are lower than the best likelihood), then the dot is not placed directly on a dashed line but in one of the regions between them. A dot in the very center of the plot would represent an alignment that has the exact same likelihood no matter which hypothesis is used; this alignment would therefore be entirely uninformative. The black triangle near the middle of the plot connects the mean likelihoods, drawn on the three axes, of alignments that support the hypothesis corresponding to those axes. Thus, the further the central black triangle points towards the three hypotheses, the more these are supported overall. In the above plot, this central black triangle mostly indicates support for hypotheses T1 and T2 but less for T3. Finally, the numbers outside the plot indicate how many alignments have better support with T1 than with T2 or vice versa (at the bottom), better support with T2 than with T3 or vice versa (at the right), and better support with T1 than with T3 or vice versa (at the left). For example, in the above plot, 690 alignments support T1 over T2, and 594 alignments support T2 over T1.
-
-	Overall, most alignments seem to support T1, followed by T2. Genealogy interrogation therefore supports the hypothesis that *Neolamprologus olivaceous* and *Neolamprologus pulcher* form sister species in the species tree, in line with the results obtained in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md). However, genealogy interrogation further shows that the support for the two alternative topologies T2 and T3 is not balanced, instead 717 alignments support T2 over T3 and only 575 alignments support T3 over T2. This imbalance corroborates the conclusions of [Gante et al. (2016)](https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.13767) and [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650), according to which introgression occurred between *Neolamprologus pulcher* and *Neolamprologus brichardi*.
-
-As the analyses in this part of the tutorial have shown, genealogy interrogation can be useful to resolve relationships and identify introgression at one selected node of a phylogeny. The good thing about this type of analysis is that short and rather uninformative alignments can be used, which reduces the degree to which the analyses could be influenced by within-alignment recombination. Importantly, the fact that short alignments are sufficient also means that genealogy interrogation can be applied to datasets that consist exclusively of short alignments, such as RADseq data, opening up new possibilities for phylogenetic analyses and introgression tests in studies based on such datasets.
 
 <br><hr>
 

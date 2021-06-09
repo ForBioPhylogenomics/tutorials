@@ -1,0 +1,214 @@
+# m_matschiner Wed May 19 18:38:31 CEST 2021
+
+# This script reads a MAF file and generates a set of alignments
+# in Phylip format for regions sampled across the chromosome.
+
+class Window(object):
+
+	def __init__(self, ids, seqs, scf, start_pos, end_pos, n_polymorphic):
+
+		# Prepare an alignment without variation from randomly chosen nucleotides.
+		self.ids = ids
+		self.seqs = seqs
+		self.scf = scf
+		self.start_pos = start_pos
+		self.end_pos = end_pos
+		self.n_polymorphic = n_polymorphic
+
+	def write_align(self, path_prefix):
+
+		# Prepare the alignment string in Phylip format.
+		outstring = str(len(self.seqs)) + " " + str(len(self.seqs[0])) + "\n"
+		for y in range(len(self.seqs)):
+			outstring += self.ids[y] + "  " + "".join(self.seqs[y]) + "\n"
+		f_name = path_prefix + "_" + self.scf + "_" + str(self.start_pos) + "_" + str(self.end_pos) + ".phy"
+
+		# Write the output file.
+		with open(f_name, "w") as f:
+			f.write(outstring)
+			print("Wrote file " + f_name + " with " + str(self.n_polymorphic) + " polymorphic sites.")
+
+
+
+# Import libraries and make sure we're on python 3.
+import sys
+if sys.version_info[0] < 3:
+    print('Python 3 is needed to run this script!')
+    sys.exit(0)
+import argparse
+import textwrap
+from random import randint
+from random import sample
+import copy
+from pathlib import Path
+
+# Set up the argument parser.
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=textwrap.dedent('''\
+      %(prog)s
+    ------------------------------------------------------------
+      This script reads a MAF file and generates a set of alignments
+      in Phylip format for regions sampled across the chromosome.
+
+      Run e.g. with
+      python3 make_alignments_from_maf.py input.maf output_prefix -n 1000 -l 1000
+    '''))
+parser.add_argument(
+    '-v', '--version',
+    action='version',
+    version='%(prog)s 0.1'
+    )
+parser.add_argument(
+    '-n',
+    nargs=1,
+    type=int,
+    default=[1],
+    dest='max_n_align',
+    help='Maximum number of alignments (default: 1)'
+        )
+parser.add_argument(
+    '-l',
+    nargs=1,
+    type=int,
+    default=[1],
+    dest='min_align_length',
+    help='Minimum length of alignments in bp (default: 1)'
+        )
+parser.add_argument(
+    '-c',
+    nargs=1,
+    type=float,
+    default=[0.0],
+    dest='min_completeness',
+    help='Minimum completeness of alignments as a proportion (default: 0)'
+        )
+parser.add_argument(
+    '-x',
+    nargs=1,
+    type=int,
+    default=[1],
+    dest='min_n_seqs',
+    help='Minimum number of sequences in an alignment (default: 1)'
+        )
+parser.add_argument(
+    '-m',
+    nargs=1,
+    type=int,
+    default=[0],
+    dest='min_n_polymorphic',
+    help='Minimum number of polymorphic sites in an alignment (default: 0)'
+        )
+parser.add_argument(
+    '-p',
+    nargs=1,
+    type=str,
+    default=["./"],
+    dest='path',
+    help='Path to which to write output files (default: ./)'
+        )
+parser.add_argument(
+    'maf',
+    nargs=1,
+    type=str,
+    help='name of the input file in MAF format'
+    )
+parser.add_argument(
+    'prefix',
+    nargs=1,
+    type=str,
+    help='prefix for output file names'
+    )
+
+# Parse command-line arguments.
+args = parser.parse_args()
+maf_name = args.maf[0]
+prefix = args.prefix[0]
+max_n_align = args.max_n_align[0]
+min_n_seqs = args.min_n_seqs[0]
+min_align_length = args.min_align_length[0]
+min_completeness = args.min_completeness[0]
+min_n_polymorphic = args.min_n_polymorphic[0]
+path = args.path[0] + "/"
+path = path.replace("//","/")
+Path(path).mkdir(parents=True, exist_ok=True)
+path_prefix = path + prefix
+
+# Parse the VCF input file line by line.
+windows = []
+ref_line = None
+other_lines = []
+with open(maf_name) as vcf:
+	for line in vcf:
+		if line[:2] == "a\n":
+			ref_line = line.strip()
+		elif line.strip() == "" and ref_line != None:
+			ids = []
+			scfs = []
+			start_poss = []
+			end_poss = []
+			strands = []
+			seqs = []
+			for other_line in other_lines:
+				ary = other_line.split()
+				ids.append(ary[1].split(".")[0]) # This assumes that IDs are in the format "species.scaffold"
+				scfs.append(ary[1].split(".")[1])
+				start_poss.append(int(ary[2]))
+				end_poss.append(int(ary[2]) + int(ary[3]))
+				strands.append(ary[4])
+				seqs.append(ary[6])
+			# Use only alignments with sufficient sequences.
+			if len(ids) >= min_n_seqs:
+				# Make sure that the ids are unique to exclude paralogs.
+				if len(set(ids)) == len(ids):
+					# Make sure that all sequences have the same length.
+					for seq in seqs:
+						if len(seq) != len(seqs[0]):
+							print("ERROR: Sequences differ in length!")
+							sys.exit(1)
+					# Use only alignments with sufficient length.
+					if len(seqs[0]) >= min_align_length:
+						# Calculate the completeness of the alignment.
+						n_non_missing = 0
+						n_missing = 0
+						for seq in seqs:
+							n_non_missing += seq.count("A") + seq.count("a")
+							n_non_missing += seq.count("C") + seq.count("c")
+							n_non_missing += seq.count("G") + seq.count("g")
+							n_non_missing += seq.count("T") + seq.count("t")
+							n_missing += seq.count("-") + seq.count("N") + seq.count("n") + seq.count("?")
+						completeness = n_non_missing / (n_non_missing + n_missing)
+						# Make sure that all characters are counted.
+						if n_non_missing + n_missing != len(ids) * len(seqs[0]):
+							print("ERROR: Not all characters are counted!")
+							sys.exit(1)
+						# Use only alignments with sufficient completeness.
+						if completeness >= min_completeness:
+							# Calculate the number of polymorphic sites in the alignment.
+							n_polymorphic = 0
+							for pos in range(len(seqs[0])):
+								chars_this_site = []
+								for seq in seqs:
+									if seq[pos] in ["A", "a", "C", "c", "G", "g", "T", "t"]:
+										chars_this_site.append(seq[pos].upper())
+								if len(set(chars_this_site)) > 1:
+									n_polymorphic += 1
+							# Use only alignments with sufficient numbers of polymorphic sites:
+							if n_polymorphic >= min_n_polymorphic:
+								windows.append(Window(ids, seqs, scfs[0], start_poss[0], end_poss[0], n_polymorphic))
+			ref_line = None
+			other_lines = []
+		elif line[0:2] == "s\t" and ref_line != None:
+			other_lines.append(line.strip())
+
+# Write alignments to phylip files, considering the specified maximum number of alignments.
+n_aligns_written = 0
+if len(windows) <= max_n_align:
+	for window in windows:
+		window.write_align(path_prefix)
+		n_aligns_written += 1
+else:	
+	for window in sample(windows, max_n_align):
+		window.write_align(path_prefix)
+		n_aligns_written += 1
+print("Wrote " + str(n_aligns_written) + " out of " + str(len(windows)) + " alignments to directory " + path + ".")
