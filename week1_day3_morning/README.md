@@ -28,13 +28,13 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 8. For calculating the leaf stability indices using PhyUtility and the BAF for _Argentina_ sp. run the following command
 
 	```
-	sbatch sbatch_TreSpEx_Paralogy.sh
+	sbatch sbatch_PhyUtility.sh
 	```
 	
 9. Let's take a look at the leaf stability indices. The lower the value the worse.
 	
 	```
-	tail -40 PhyUtility_results.Matrix_original_supermatrix.fas.ufboot_roo ted.txt > LeafStability_Indices_PhyUtility.txt
+	tail -40 PhyUtility_results.Matrix_original_supermatrix.fas.ufboot_rooted.txt > LeafStability_Indices_PhyUtility.txt
 	sort -k2 -n LeafStability_Indices_PhyUtility.txt
 	```
 	
