@@ -80,3 +80,9 @@ Each day we will begin at 9 am and end at around 5:30 pm. In between, we will ha
 
 * [Inference from Simulated Data](inference_from_simulated_data/README.md)<br>A tutorial on coalescent simulations of genomic data and inferences from simulated data
 <!-- This will need to be written from scratch -->
+
+#### Exam
+
+* The [Inference from Simulated Data](inference_from_simulated_data/README.md) on Friday will also serve as our examination for this course as different analyses throughtout the course have to be recapitulated by the student using simulated data instead of empirical ones. Hence, the different causes are known. The final part will be that the students have to present their results at the end for passing the course.
+
+
