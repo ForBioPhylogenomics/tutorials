@@ -34,7 +34,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 9. Let's take a look at the leaf stability indices. The lower the value the worse.
 	
 	```
-	tail -40 PhyUtility_results.Matrix_original_supermatrix.fas.ufboot_roo ted.txt > LeafStability_Indices_PhyUtility.txt
+	tail -40 PhyUtility_results.Matrix_original_supermatrix.fas.ufboot_rooted.txt > LeafStability_Indices_PhyUtility.txt
 	sort -k2 -n LeafStability_Indices_PhyUtility.txt
 	```
 	
