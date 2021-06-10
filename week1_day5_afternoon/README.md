@@ -28,7 +28,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 
 5. We create now density plots, histograms, correlation plots and heatmaps in R to explore the distribution of the data
 
-	* Open R script "_RCFV_analyses.R_" and execute it
+	* Open R script "_LBscore_analyses.R_" and execute it
 	
 	* explore the plots, what could be reasonable thresholds? What do the correlation plots tell you? What does the heatmap show you?
 	
