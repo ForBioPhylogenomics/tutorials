@@ -64,7 +64,7 @@ The folder "_Lecture_" contains the lecture from this session.
 7. We now extract all files, which have a value above your specified threshold and which shall be included; please do the following step for all three values (c value, R2 and slope); one example is given 
 	
 	```
-	awk -F"\t" '{if($26>100)print$1}' < BaCoCa_Results/summarized_frequencies.txt | sed "s/locus/FcC_locus/" | sed "s/$/.phy/" > summarized_frequencies_above100.txt
+	awk -F"\t" '{if($26<100)print$1}' < BaCoCa_Results/summarized_frequencies.txt | sed "s/locus/FcC_locus/" | sed "s/$/.phy/" > summarized_frequencies_above100.txt
 	mkdir Cvalue_above100
 	while read LINE; do cp ../Day2Morning/SingelGenes/$LINE Cvalue_above100; done < summarized_frequencies_above100.txt
 	```
