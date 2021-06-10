@@ -22,7 +22,7 @@ workdir=$USERWORK/$SLURM_JOB_ID
 mkdir -p $workdir
 
 ## Copy input files to the work directory and move to work dir:
-cp -r Matrix_original_supermatrix.fas *.treefile ../Programs/TreSpEx/TreSpEx.v1.2_SAGA.pl $workdir
+cp -r Matrix_original_supermatrix.fas *.treefile ../../week1/Programs/TreSpEx/TreSpEx.v1.2_SAGA.pl $workdir
 cd $workdir
 
 grep "^>" < Matrix_original_supermatrix.fas | sed "s/>//" > Taxa_Matrix_original_supermatrix.txt
