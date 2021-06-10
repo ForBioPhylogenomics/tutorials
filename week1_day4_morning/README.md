@@ -5,7 +5,7 @@ The folder "_data_" contains the smaller data files for the morning session of d
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
 # [LECTURE](Lecture)
-The folder "_Lecture_" contains all the lecture from this session.
+The folder "_Lecture_" contains the lecture from this session.
 * [Evolutionary rate & Saturation](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day4_morning/Lecture/Day4_01_EvolutionaryRateSaturation.pdf)
 
 # EXERCISE
