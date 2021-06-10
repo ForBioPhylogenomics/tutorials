@@ -382,16 +382,27 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 	If PhyloNet in fact found support for a reticulation edge (we allowed maximally one), the network should contain two occurrences of the keyword "#H1", indicating the connection points of the reticulation edge. The specification is then not strictly in Newick format anymore, but instead in "extended Newick" format, which is described in Cardona et al. ([2008](https://doi.org/10.1186/1471-2105-9-532)). The format is extremely difficult to read, and FigTree is unable to read it. To visualize the network, other programs must be used. One tool capable of reading and visualizing extended Newick format is Dendroscope ([Huson et al. 2007](https://doi.org/10.1186/1471-2105-8-460)), but we'll here use an easier-to-use alternative, the browser-based tree viewer [IcyTree](https://icytree.org) ([Vaughan 2017](https://doi.org/10.1093/bioinformatics/btx155))
 
 
-
 <a name="icytree"></a>
 ### Visualizing species networks with IcyTree
 
-XXX
+* To see how species networks in extended Newick format are visualized with IcyTree, write the following text to a new file on your local computer that you could for example name `tmp.tre`:
 
+		#nexus
+		begin trees;
+			tree example = (((A,#H1),B),(C)#H1);
+		end;
 
-* Copy the string with the network (starting with the first opening parenthesis and ending with the semi-colon) and paste it into a new file, named for example `tmp.tre`, on your local computer.
+	As you may guess, this text encodes a species network in which "A" and "B" are sister species, and a hybridization branch connects "A" with the outgroup "C".
 
-* Open the [IcyTree webpage](https://icytree.org) in a browser and load the file `tmp.tre` that you just wrote.
+* Open the [IcyTree webpage](https://icytree.org) in a browser and load the file `tmp.tre` that you just wrote. As expected, the tree includes a hybridization branch that connects species "A" and "C", as shown in the next screenshot.<p align="center"><img src="img/safari1.png" alt="Safari" width="700"></p>
+
+* You could browse the style settings of IcyTree to learn a bit about how to optimize the visualization. For example, you could change the width of the branches by clicking "Edge width" > "Increase" in IcyTree's "Style" menu as in the next screenshot. You may need to click on it multiple times to see a difference.<p align="center"><img src="img/safari2.png" alt="Safari" width="700"></p>
+
+* You could also to increase the font size for the tip labels, as shown below. click on "Font size" > "Increase" in the "Style" menu multiple times, the network will look as shown below.<p align="center"><img src="img/safari3.png" alt="Safari" width="700"></p>
+
+* Copy the string with the network in file `run_phylonet.out` (starting with the first opening parenthesis and ending with the semi-colon) and use it to replace the content of file `tmp.tre`, on your local computer.
+
+* Load the file `tmp.tre` with its new content once again in IcyTree.
 
 	**Question 1:** Did PhyloNet infer a network with a reticulation edge or merely a tree without any? [(see answer)](#q1)
 
