@@ -38,12 +38,14 @@ class Window(object):
         elif file_format == "nexus":
             outstring = "#nexus\n"
             outstring += "begin data;\n"
-            outstring += "  dimensions ntax=" + str(len(ids)) + " nchar=" + str(len(seqs[0])) + ";\n"
+            outstring += "  dimensions ntax=" + str(len(self.ids)) + " nchar=" + str(len(self.seqs[0])) + ";\n"
             outstring += "  format datatype=dna missing=? gap=-;\n"
+            outstring += "  matrix\n"
             for y in range(len(self.seqs)):
                 outstring += "  " + self.ids[y].ljust(max_id_length+2) + "".join(self.seqs[y]) + "\n"
             outstring += "  ;\n"
             outstring += "end;\n"
+            f_name = path_prefix + "_" + self.scf + "_" + str(self.start_pos) + "_" + str(self.end_pos) + ".nex"
             
         # Write the output file.
         with open(f_name, "w") as f:
@@ -183,22 +185,23 @@ if file_format not in ["phylip", "fasta", "nexus"]:
     print("ERROR: Unknown file format " + file_format + "!")
     sys.exit(1)
 
-# Parse the VCF input file line by line.
+# Parse the MAF input file line by line.
 windows = []
-ref_line = None
-other_lines = []
-with open(maf_name) as vcf:
-    for line in vcf:
+a_line = None
+s_lines = []
+first_set_of_ids = None
+with open(maf_name) as maf_file:
+    for line in maf_file:
         if line[:2] == "a\n":
-            ref_line = line.strip()
-        elif line.strip() == "" and ref_line != None:
+            a_line = line.strip()
+        elif line.strip() == "" and a_line != None:
             ids = []
             scfs = []
             start_poss = []
             end_poss = []
             strands = []
             seqs = []
-            for other_line in other_lines:
+            for other_line in s_lines:
                 ary = other_line.split()
                 ids.append(ary[1].split(".")[0]) # This assumes that IDs are in the format "species.scaffold"
                 scfs.append(ary[1].split(".")[1])
@@ -215,6 +218,13 @@ with open(maf_name) as vcf:
                         if len(seq) != len(seqs[0]):
                             print("ERROR: Sequences differ in length!")
                             sys.exit(1)
+                    # Make sure that the ids are unchanged from the first alignment.
+                    if first_set_of_ids == None:
+                        first_set_of_ids = ids
+                    else:
+                        if ids != first_set_of_ids:
+                            print("ERROR: The order of IDs seems to vary between alignments!")
+                            sys.exit(0)
                     # Use only alignments with sufficient length.
                     if len(seqs[0]) >= min_align_length:
                         # Calculate the completeness of the alignment.
@@ -251,7 +261,7 @@ with open(maf_name) as vcf:
                             else:
                                 window_rel_start_poss = [0]
                                 window_rel_end_poss = [len(seqs[0])]
-
+                            # For each window, truncate the sequences, and check if they're still polymorphic enough, then write the alignment.
                             for x in range(len(window_rel_start_poss)):
                                 window_seqs = []
                                 for seq in seqs:
@@ -268,10 +278,10 @@ with open(maf_name) as vcf:
                                 # Use only alignments with sufficient numbers of polymorphic sites:
                                 if n_polymorphic >= min_n_polymorphic:
                                     windows.append(Window(ids, window_seqs, scfs[0], start_poss[0] + window_rel_start_poss[x], end_poss[0] + window_rel_end_poss[x], n_polymorphic))
-            ref_line = None
-            other_lines = []
-        elif line[0:2] == "s\t" and ref_line != None:
-            other_lines.append(line.strip())
+            a_line = None
+            s_lines = []
+        elif line[0:2] == "s\t" and a_line != None:
+            s_lines.append(line.strip())
 
 # Write alignments to phylip files, considering the specified maximum number of alignments.
 n_aligns_written = 0

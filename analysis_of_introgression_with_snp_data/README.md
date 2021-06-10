@@ -24,6 +24,7 @@ If a putative hybrid individual as well as the presumed parental species have al
 	* [Localizing introgression on a phylogeny using *f*-branch](#fbranch)
 	* [Identifying introgressed loci](#loci)
 * [Ancestry painting](#painting)
+* [Avoiding reference bias](#bias)
 
 
 <a name="outline"></a>
@@ -332,6 +333,7 @@ Like the *D*-statistic, we can also plot the *f*<sub>4</sub>-ratio, quantifying 
 * Download the plot file `individuals_dsuite_BBAA_f4.svg` to your local computer and open it in a program capable of reading files in SVG format. The heatmap should look as shown below:<img src="img/individuals_dsuite_BBAA_f4.png" alt="Heatmap BBAA f4" width="600"></p>
 
 
+
 <a name="fbranch"></a>
 ### Localizing introgression on a phylogeny using *f*-branch
 
@@ -573,6 +575,71 @@ As the first script requires an uncompressed VCF file as input, first uncompress
 	**Question 9:** How can this difference be explained? [(see answer)](#q9)
 
 
+
+<a name="bias"></a>
+## Avoiding reference bias
+
+Reference bias can generate artificial signals of introgression when SNP datasets are based on mapping to a reference genome ([Günther and Nettelblad 2019](https://doi.org/10.1371/journal.pgen.1008302)). This is because reads with smaller numbers of substitutions compared to the reference may map better than those that have more substitutions, with the effect that the mapped genomes may appear slightly more similar to the reference genome than they truly are. The strength of this effect depends on the quantity and quality of the mapped reads as well as the phylogenetic distance to the reference species, and so genomes that are of lower quality, have a lower coverage, or are more distant to the reference species are more strongly affected than others. One way to minimize the risk of reference bias is to sequence all genomes with a similar coverage and quality and to map to an outgroup species that is equally distant to all ingroup species. However, even in such cases, species with a higher rate of evolution may be more affected than those with lower rates, as the higher rate of evolution also increases the genetic distance between these species and the reference.
+
+While the effect of reference bias may rarely large enough to lead to false conclusions of introgression, it might be a good idea to confirm any signals of introgression with an approach that is not based on mapping and thus immune to reference bias. One such approach is to use variant calls extracted from a whole-genome alignment. As these alignments are based on assemblies and not on mapping, no reference is used and thus no reference bias can arise. However, to analyse such datasets with Dsuite, SNPs need to be extracted from the whole-genome alignment and stored in a file in VCF format.
+
+In this part of the tutorial, I am going to demonstrate how SNPs can be extracted from a whole-genome alignment, using the whole-genome alignment for five *Neolamprologus* species and the outgroup Nile tilapia that was produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md).
+
+* Make sure that you still have the whole-genome alignment in MAF format, in file `cichlids_chr5.maf` that was produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md)<!--XXX or ml_inference_of_species_networks? XXX-->, in your current directory on Saga. If not, you can copy one prepared version of it from `/cluster/projects/nn9458k/phylogenomics/week2/data`:
+
+		cp /cluster/projects/nn9458k/phylogenomics/week2/data/cichlids_chr5.maf .
+		
+* Add the Python script `make_vcf_from_maf.py` to your current directory on Saga, either by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub with one of the following two commands:
+
+		cp /cluster/projects/nn9458k/phylogenomics/week2/src/make_vcf_from_maf.py .
+		
+	or
+	
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/make_vcf_from_maf.py
+
+* Have a look at the help text of the script `make_vcf_from_maf.py`:
+
+		module load Python/3.8.2-GCCcore-9.3.0
+		python make_vcf_from_maf.py -h
+
+	You'll see that the script requires two parameters that specify the name of the input file in MAF format and the name of an output file in VCF format, and that additionally, a minimum length of alignment blocks (`-l`), a minimum completeness of these blocks (`-c`), and a minimum number of sequences per block (`-x`) can be specified. These options are analogous to those of the script `make_alignments_from_maf.py` that was used in tutorial [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md) and are here supposed to allow filtering of the most reliable alignment blocks.
+	
+* Extract SNPs from alignment blocks of the whole-genome alignment `cichlids_chr5.maf` that have a minimum length of 500 bp (`-l 500`), a minimum completeness of 80% (`-c 0.8`), and include sequences from all six species of the whole-genome alignment (`-x 6`):
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:05:00 --account=nn9458k --pty python make_vcf_from_maf.py cichlids_chr5.maf cichlids_chr5.vcf -l 500 -c 0.8 -x 6
+
+	**Question 10:** How many SNPs are extracted from the whole-genome alignment? [(see answer)](#q10)
+	
+* Have a look at the VCF file `cichlids_chr5.vcf` written by the script.
+
+	**Question 11:** What is unusual about the genotypes in the VCF file? [(see answer)](#q11)
+
+To analyze the new VCF file with Dsuite, we still need a file with a table assigning individual IDs to species IDs. In this case, the IDs that were used in the whole-genome alignment ("orenil", "neomar", etc.) were individual IDs and species IDs at the same time, but we nevertheless have to write the table file for Dsuite, and we need to specify the outgroup in this file.
+
+* Write a new file named `individuals_wga_dsuite.txt` in your current directory on Saga, with the following content:
+
+		orenil	Outgroup
+		neomar	neomar
+		neogra	neogra
+		neobri	neobri
+		neooli	neooli
+		neopul	neopul
+		
+* Then, run Dsuite's `Dtrios` command to analyze the VCF file `cichlids_chr5.vcf`:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:05:00 --account=nn9458k --pty Dsuite Dtrios cichlids_chr5.vcf individuals_wga_dsuite.txt
+
+* Have a look at the output file `individuals_wga_dsuite_BBAA.txt` written by Dsuite:
+
+		less individuals_wga_dsuite_BBAA.txt
+
+	**Question 12:** Did this new Dsuite analysis corroborate the earlier results or indicate that earlier results were the result of reference bias?  [(see answer)](#q12)
+
+
+
+
+
+
 <br><hr>
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -661,3 +728,18 @@ As the first script requires an uncompressed VCF file as input, first uncompress
 <a name="q9"></a>
 
 * **Question 9:** The fact that both *Neolamprologus cancellatus* samples are heterozygous for basically all sites that are differentially fixed in the two parental species can only be explained if both of these samples are in fact first-generation hybrids. If introgression would instead be more ancient and backcrossing (or recombination within the hybrid population) had occurred, we would expect that only certain regions of the chromosome are heterozygous while others should be homozygous for the alleles of one or the other of the two parental species. However, unlike in cases where the genomes have been sequenced of parent-offspring trios, we do not know who the actual parent individuals were. We can guess that the parent individuals were members of the species *Altolamprologus fasciatus* and *Telmatochromis vittatus*, but whether the parental individuals were part of the same population as the sampled individuals or a more distantly related population within these species remains uncertain. 
+
+
+<a name="q10"></a>
+
+* **Question 10:** The screen output of the script `make_vcf_from_maf.py` should report that around 650,000 SNPs were extracted from the whole-genome alignment and written to file `cichlids_chr5.vcf`.
+
+
+<a name="q11"></a>
+
+* **Question 11:** As you might notice, the genotypes are all homozygous. This is unusual for VCF files but comes from the fact that the assemblies used for the whole-genome alignment did not include any heterozygous sites, as is common for assemblies. Thus, information about within-species variation has been lost, but this should not bias the analysis of introgression signals with Dsuite.
+
+
+<a name="q12"></a>
+
+* **Question 12:** The *D*-statistic should again support the introgression signals that were before detected with the mapping-based VCF file `NC_031969.f5.sub1.vcf.gz`, in other turorials, and in [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). In particular, introgression between *N. marunguensis* ("neomar") and *N. olivaceous* (neooli) should be supported with a highly significant *D*-statistic around 0.1, and introgression between *N. brichardi* ("neobri") and *N. pulcher* ("neopul") should be supported by a *D*-statistic over 0.2. 

@@ -931,8 +931,6 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 ### Inference with SNAPPER
 
 * Follow the instructions given in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) to first prepare an input file for SNAPPER with the script `snapp_prep.rb`, and then analyze this file with SNAPPER, with the modifications listed above in [Inference with SNAPP](#snapp).
-<!--XXX User starting tree? XXX-->
-
 
 
 <a name="phylonet"></a>
@@ -940,7 +938,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 As in the [Inference with StarBEAST2](#starbeast2), the use of a full set of 1,000 alignments, with two sequences per species in each alignment, would be too computationally demanding for an analysis with PhyloNet. Additionally, the format of the input files needs to be converted. Thus, a first step is again to write a script for the conversion of a set of alignment files that also removes the outgroup ("metzeb") and one sequence for each ingroup species. This time, 100 alignment files should be converted to Fasta format.
 
-* To convert a set of 100 alignments into Fasta format, and to include only one sequence from each ingroup species, you could write a script named `convert_to_fasta.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`). For convenience, the commands below include a step to replace the individual IDs ("tsk_0_1", "tsk_1_1", etc.) with the corresponding species IDs ("neomar", "neogra", etc.):
+* To convert a set of 100 alignments into Fasta format, and to include only one sequence from each ingroup species, you could write a script named `convert_to_fasta.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`). For convenience, the commands below include a step to replace the individual IDs ("tsk\_0\_1", "tsk\_1\_1", etc.) with the corresponding species IDs ("neomar", "neogra", etc.):
 
 		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0

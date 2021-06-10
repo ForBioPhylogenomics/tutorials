@@ -18,6 +18,8 @@ Particularly when investigating groups of rapidly diverging species, incomplete 
 * [Inferring species networks with PhyloNet](#phylonet)
 	* [Preparing input for PhyloNet](#preparephylonet)
 	* [Running the PhyloNet analysis](#runphylonet)
+	* [Visualizing species networks with IcyTree](#icytree)
+	* [PhyloNet analysis without branch lengths](#nobranches)
 
 
 <a name="outline"></a>
@@ -92,7 +94,7 @@ As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../w
 		#SBATCH --job-name=convert_hal_to_maf
 		#
 		# Wall clock limit:
-		#SBATCH --time=1:00:00
+		#SBATCH --time=5:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
@@ -141,7 +143,7 @@ As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../w
 
 	The screen output of this command should indicate that 500 alignment files have been written to directory `alignments`.
 	
-* Make sure that in fact the directory `alignments` contains 1,000 alignments in Fasta format:
+* Make sure that in fact the directory `alignments` contains 500 alignments in Fasta format:
 
 		ls alignments/*.fasta | wc -l
 
@@ -196,7 +198,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		#SBATCH --job-name=prep_phylonet
 		#
 		# Wall clock limit:
-		#SBATCH --time=5:00:00
+		#SBATCH --time=2:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
@@ -334,7 +336,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		#SBATCH --job-name=phylonet
 		#
 		# Wall clock limit:
-		#SBATCH --time=1:00:00
+		#SBATCH --time=3:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
@@ -378,7 +380,15 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		((neogra:3.724082696E-4,(neomar:3.156985884E-4,(neobri:1.811811478E-4,(neopul:1.322393568E-4,neooli:1.322393568E-4):4.8941791E-5):1.345174406E-4):5.67096812E-5):0.0076685959323999995,orenil:0.008041004202);
 
 	If PhyloNet in fact found support for a reticulation edge (we allowed maximally one), the network should contain two occurrences of the keyword "#H1", indicating the connection points of the reticulation edge. The specification is then not strictly in Newick format anymore, but instead in "extended Newick" format, which is described in Cardona et al. ([2008](https://doi.org/10.1186/1471-2105-9-532)). The format is extremely difficult to read, and FigTree is unable to read it. To visualize the network, other programs must be used. One tool capable of reading and visualizing extended Newick format is Dendroscope ([Huson et al. 2007](https://doi.org/10.1186/1471-2105-8-460)), but we'll here use an easier-to-use alternative, the browser-based tree viewer [IcyTree](https://icytree.org) ([Vaughan 2017](https://doi.org/10.1093/bioinformatics/btx155))
-	
+
+
+
+<a name="icytree"></a>
+### Visualizing species networks with IcyTree
+
+XXX
+
+
 * Copy the string with the network (starting with the first opening parenthesis and ending with the semi-colon) and paste it into a new file, named for example `tmp.tre`, on your local computer.
 
 * Open the [IcyTree webpage](https://icytree.org) in a browser and load the file `tmp.tre` that you just wrote.
@@ -399,9 +409,141 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 
 
 
-<!--XXX Why is there no reticulation??? Test with Dsuite (first convert to VCF) and with SpeciesNetwork XXX-->
+<!--XXX Why is there no reticulation??? Test with SpeciesNetwork XXX-->
 
+<a name="nobranches"></a>
+### PhyloNet analysis without branch lengths
 
+If there is time left, you could repeat the PhyloNet analysis with gene trees without branch lengths. These trees can be inferred under maximum likelihood with IQ-TREE. The comparison of the results of this PhyloNet analysis with the previous one might then shed light on the effect that the types of gene trees and the inclusion of branch lengths have.
+
+* Write a script named `prepare_phylonet2.slurm` to run an IQ-TREE analysis for each Fasta file in the directory `alignments`. The script should have the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=prep_phylonet2
+		#
+		# Wall clock limit:
+		#SBATCH --time=1:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --ntasks=1
+		#SBATCH --mem-per-cpu=1G
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=prepare_phylonet2.out
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load modules
+		module load IQ-TREE/2.1.2-foss-2020a
+
+		# Set a variable for the directory.
+		dir=alignments
+
+		# Infer a tree for every fasta file.
+		for fasta in ${dir}/*.fasta
+		do
+			iqtree2 -s ${fasta} -o orenil
+		done
+
+		# Clean up.
+		rm alignments/*.bionj
+		rm alignments/*.ckp.gz
+		rm alignments/*.iqtree
+		rm alignments/*.mldist
+		rm alignments/*.model.gz
+		rm alignments/*.fasta.log
+
+* Submit this script with `sbatch`:
+
+		sbatch prepare_phylonet2.slurm`
+		
+	This script should take around 5 minutes to complete.
+	
+* To prepare the new PhyloNet input file, first copy file `prepare_phylonet.sh` to a new file named `prepare_phylonet2.sh`:
+
+		cp prepare_phylonet.sh prepare_phylonet2.sh
+
+* Edit the new file `prepare_phylonet2.sh` so that it has the following content:
+
+		# Set the directory with alignments.
+		dir=alignments
+
+		# Set the name of the nexus file.
+		nex=phylonet2.nex
+
+		# Write a nexus file with all trees.
+		echo -e "#NEXUS\n\nBEGIN TREES;\n" > ${nex}
+		count=1
+		for tre in ${dir}/*.treefile
+		do
+			echo -n "Tree gt${count} = " >> ${nex}
+			cat ${tre} >> ${nex}
+			count=$(( ${count} + 1 ))
+		done
+		echo -e "\nEND;\n\n" >> ${nex}
+
+		# Add a phylonet block to the nexus file.
+		echo -e "BEGIN PHYLONET;\n" >> ${nex}		echo -e "InferNetwork_ML (all) 1;" >> ${nex}
+		echo -e "\nEND;" >> ${nex}
+
+	Note the changes on lines 5, 10, and the second-last line: The output Nexus file is now called `phylonet2.nex` (on line 5), the input tree files on now have the ending `.treefile` (on line 10), and the `InferNetwork_ML` command is now called without the option `-bl` (on the second-last line).
+	
+* Execute the new script `prepare_phylonet2.sh` with `srun`:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty bash prepare_phylonet2.sh
+
+* Prepare a new Slurm script for this new PhyloNet analysis, by copying file the first Slurm script `run_phylonet.slurm` to a new file named `run_phylonet2.slurm`:
+
+		cp run_phylonet.slurm run_phylonet2.slurm
+
+* Change the job name to `phylonet2` (on line 4), the screen output file name to `run_phylonet2.out` (on line 17), and the input file name for PhyloNet to `phylonet2.nex` (on the last line), so that the Slurm script has the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=phylonet2
+		#
+		# Wall clock limit:
+		#SBATCH --time=3:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --ntasks=1
+		#SBATCH --mem-per-cpu=10G
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=run_phylonet2.out
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load the java module.
+		module load Java/11.0.2
+
+		# Run phylonet.
+		java -jar PhyloNet_3.8.2.jar phylonet2.nex
+
+* Then, submit this Slurm script with `sbatch`:
+
+		sbatch run_phylonet2.slurm
+
+	This analysis might take longer than the previous one, perhaps over an hour. You could move on to the next tutorial and come back to this one later to check the results of this second PhyloNet analysis.
+
+* When this second PhyloNet analysis has finished, copy once again the string with the network from the screen output file `run_phylonet2.out` to a new file on your local computer, save this file under any name, and load it from the IcyTree website.
+
+	**Question 2:** How is the resulting network affected by the different trees used as input and the fact that branch lengths were not used this time? [(see answer)](#q2)
 
 
 
@@ -418,3 +560,10 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 <a name="q1"></a>
 
 * **Question 1:** The answer may vary in each case, and depend on the alignment blocks that were extracted from the whole-genome alignment, the gene trees that were inferred by BEAST2, and whether PhyloNet found the maximum likelihood or not. All of these analysis steps included stochastic elements and may not always produce the same result.
+
+
+<a name="q2"></a>
+
+* **Question 2:** The result might be quite different from the one obtained in the first PhyloNet analysis. In my case, XXX Update with screenshot XXX, as shown in the next screenshot:
+
+	In my view, these differences illustrate how the likelihood surface can be highly complex when species networks are inferred, and that maximum-likelihood approaches can therefore often produce results that are not particularly robust to minor changes in the model, or even to re-analyses with the same model. Species networks obtained with maximum-likelihood approaches should therefore be corroborated with other approaches, such as Bayesian inference (see tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)) or tests of introgression based on tree-topology comparisons (see tutorial `XXX Update name XXX`) or SNPs (see tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)), before drawing conclusions about introgression.
