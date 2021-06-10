@@ -31,12 +31,12 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	
 	* Correlation_Results/Correlation_Slope_Summary.txt
 	* BaCoCa_Results/summarized_frequencies.txt
-	
+
+**On your own computer**<br>
+
 	* Open "summarized_frequencies.txt" in a text editor, delete the first line and save the file
 
 5. Important these two txt-files in R studio using "_Import Database/From text (base)_"; the heading to "_yes_"; RowNames to "_Use first column_"
-
-**On your own computer**<br>
 
 6. We create now density plots in R to explore the distribution of the data
 
