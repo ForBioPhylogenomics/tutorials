@@ -4,6 +4,10 @@ The folder "_data_" contains the smaller data files for the afternoon session of
 # [SCRIPTS](scripts)
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
+# [LECTURE](Lecture)
+The folder "_Lecture_" contains the lecture from this session.
+* [Base composition heterogeneity](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day4_afternoon/Lecture/Day4_02_BaseCompositionHeterogeneity.pdf)
+
 # EXERCISE
 **On your computer**
 
@@ -47,7 +51,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	cp ../Day4Morning/BaCoCa_Results/summarized_frequencies.txt .
 	awk -F"\t" '{if($25<0.10)print$1}' < summarized_frequencies.txt | sed "s/locus/FcC_locus/" | sed "s/$/.phy/" > RCFV_locus_below010.txt
 	mkdir RCFV_locus_below010
-	while read LINE; do cp ../Day2Morning/SingelGenes/$LINE RCFV_locus_below010; done < RCFV_locus_below010.txt
+	while read LINE; do cp ../Day2Morning/SingleGenes/$LINE RCFV_locus_below010; done < RCFV_locus_below010.txt
 	```
 	
 8. Now we need to concatenate these again and run a tree reconstruction of the new supernatrix
