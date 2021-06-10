@@ -104,7 +104,7 @@ cd masked_assemblies
 rsync ../../../week2/data/cichlids/softmasked/* .
 cd ..
 ```
-When done, you should see something like this in masked_assemblies
+When done, you should see something like this in masked_assemblies:
 ```
 -rw-rw-r-- 1 olekto nn9458k   43497196 Jun  9 21:40 neobri.repeats.bed
 -rw-rw-r-- 1 olekto nn9458k  275320088 Jun  9 21:40 neobri.repeats.fasta
@@ -193,3 +193,24 @@ When we are done with this part, we have both a set of softmasked files and a gu
 
 <a name="cactus"></a>
 ## Running Cactus
+
+Multiple genome alignment programs align multiple genomes toward each other, and not used pairwise (such as Mummer and Minimap2). They have existed for more than a decade, but several of the older were reference based, meaning that one genome was the reference and all others were aligned towards that. Any regions shared by the non-reference genomes would not be represented in the final alignment, so it had some limitations. [Cactus](https://github.com/ComparativeGenomicsToolkit/cactus), or Progressive Cactus as the authors also call it, is one of the few modern reference-free multiple genome aligners. The only other I know of is [SibeliaZ](https://github.com/medvedevgroup/SibeliaZ), but in my experience hasn't performed as well as Cactus.
+
+Unfortunately, Cactus is not an easy program to use. There are likely multiple reasons for this, some might be that it parts are quite old (it builds directly on software older than a decade), which can lead to it being a bit clunky and not so easy to update those old parts. It is tightly connected to a system called Toil, that handles running jobs, and if that has some issues (we'll come back to that later), it can be hard to get working. For these reasons it can be really hard to install. Luckily the provide a Docker container, and Saga has support for that via Singularity, so we will use that.
+
+Earlier, and when working with this tutorial, I spent quite some time getting Cactus to run successfully. I think I know how now, but we might have some issues which I'll try to explain how to avoid. This might be a bit technical, but I think it is good to know.
+
+The first limitation is that [Toil](https://github.com/DataBiosphere/toil) uses a lot of hard links via [os.link](https://docs.python.org/3/library/os.html#os.link) (and not soft links) in Python to link files between folders, especially jobStore and workDir. Unfortunately, the filesystem on Saga, BeeGFS, [does not support hard linking between folders](https://www.beegfs.io/wiki/FAQ#hardlinks). That means that using --workDir as an option for Cactus will just not work, because files will be hard linked. You can also run into issues regarding temporary directories with this limitation. Some of this is discussed as [an issue on the Toil github page](https://github.com/DataBiosphere/toil/issues/2232).
+
+The second is that Cactus uses /tmp quite a bit (unless specifying --workDir, but which will not work on Saga). The normal nodes on Saga seem to only have 19 GB /tmp partitions, so larger jobs will quickly fill up these and then fail. Specifying a different temporary folder will not work, because that will be affected with the hard linking issue again. The bigmem nodes (specify #SBATCH --partition=bigmem in the sbatch script) have 303 GB /tmp partitions and will not as easily fill up those.
+
+In the future it is likely that Toil will change their code to not hard link or to handle those cases better at least, or if you run on a different system than Saga, you might not have these limitations. However, I think it is good to point out that your and our analyses might stop or be delayed by such choices as which filesystem is used on our computation cluster.
+
+As you might understand, Cactus is a beast and therefore is quite computing hungry. When I ran the dataset, I used 30 hours using 32 CPUs on a bigmem node. We have been given a reservation for nodes on Saga, 128 CPUs from 13:15:00 and for 26 hours. All of the participants cannot run the full dataset, nothing will finish in time then. We'll have 2 people running the full dataset, with the rest running a reduced one.
+
+All cannot run this in the course folder, that is, in /cluster/projects/nn9458k/phylogenomics/$USERNAME, because that might exceed the limiations of what the course have been given. So we need to run this in $USERWORK. I have set this up in the scripts, and hopefully it will work fine.
+
+To start, we need to grab the container. You don't have to do this, I put it into the work scripts, but this is basically the command:
+```
+singularity pull --name cactus-v1.3.0.sif docker://quay.io/comparative-genomics-toolkit/cactus:v1.3.0
+```
