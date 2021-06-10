@@ -73,7 +73,7 @@ Each day we will begin at 9 am and end at around 5:30 pm. In between, we will ha
 
 * [Analysis of Introgression with SNP Data](analysis_of_introgression_with_snp_data/README.md)<br>A tutorial on the analysis of hybridization and introgression with SNP data
 
-* [Analysis of Introgression with Chromosome-Length Alignments](analysis_of_introgression_with_chromosome_length_alignments/README.md)<br>A tutorial on the analysis of hybridization and introgression with whole-chromosome alignments
+* [Analysis of Introgression with Tree Topologies](analysis_of_introgression_with_tree_topologies/README.md)<br>A tutorial on the analysis of hybridization and introgression with tree topologies from across the genome.
 
 #### Friday
 

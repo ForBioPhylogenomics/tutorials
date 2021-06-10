@@ -1,6 +1,6 @@
 # Whole Genome Alignment
 
-A tutorial on multiple whole genome alignment Cactus<br/>
+A tutorial on multiple whole genome alignment with Cactus<br>
 By Ole K. Tørresen
 
 ## Summary
@@ -92,7 +92,7 @@ sh start_red.sh
 ```
 This little snippet starts one script per genome. Feel free to look around in it.
 
-Be aware that this creates lots of small files which exceeded the quota for the course. run_red.sh now navigates to $USERWORK and runs the job there instead.
+Be aware that this creates lots of small files which exceeded the quota for the course. run_red.sh now navigates to `$USERWORK` and runs the job there instead.
 
 When I ran through this, it took 15 to 60 minutes per genome to finish.
 
