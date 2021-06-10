@@ -54,7 +54,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	```
 	awk -F"\t" '{if($3<50)print$1}' < LB_scores_summary_perPartition.txt | sed "s/locus/FcC_locus/" | sed "s/.fas.treefile/.phy/" > LBscores_below50.txt
 	mkdir LBscores_below50
-	while read LINE; do cp ../Day2Morning/SingelGenes/$LINE LBscores_below50; done < LBscores_below50.txt
+	while read LINE; do cp ../Day2Morning/SingleGenes/$LINE LBscores_below50; done < LBscores_below50.txt
 	```
 
 9. Now we need to concatenate these again and run a tree reconstruction of the new supernatrix
