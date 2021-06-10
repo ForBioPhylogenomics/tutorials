@@ -66,7 +66,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	```
 	awk -F"\t" '{if($26<100)print$1}' < BaCoCa_Results/summarized_frequencies.txt | sed "s/locus/FcC_locus/" | sed "s/$/.phy/" > summarized_frequencies_below100.txt
 	mkdir Cvalue_below100
-	while read LINE; do cp ../Day2Morning/SingelGenes/$LINE Cvalue_below100; done < summarized_frequencies_below100.txt
+	while read LINE; do cp ../Day2Morning/SingleGenes/$LINE Cvalue_below100; done < summarized_frequencies_below100.txt
 	```
 	
 8. Now we need to concatenate these again and run a tree reconstruction of the new supermatrix
