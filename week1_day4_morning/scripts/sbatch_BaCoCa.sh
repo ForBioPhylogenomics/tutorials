@@ -21,7 +21,7 @@ workdir=$USERWORK/$SLURM_JOB_ID
 mkdir -p $workdir
 
 ## Copy input files to the work directory and move to work dir:
-cp Matrix_original_supermatrix.fas Matrix_original_supermatrix_partition.txt ../Programs/BaCoCa/BaCoCa.v1.105.pl $workdir
+cp Matrix_original_supermatrix.fas Matrix_original_supermatrix_partition.txt ../../Programs/BaCoCa/BaCoCa.v1.105.pl $workdir
 cd $workdir
 
 sed '/>/s/-/_/' < Matrix_original_supermatrix.fas >> Matrix_original_supermatrix_mod.fas
