@@ -4,6 +4,10 @@ The folder "_data_" contains the smaller data files for the morning session of d
 # [SCRIPTS](scripts)
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
+# [LECTURE](Lecture)
+The folder "_Lecture_" contains the lecture from this session.
+* [Evolutionary rate & Saturation](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day4_morning/Lecture/Day4_01_EvolutionaryRateSaturation.pdf)
+
 # EXERCISE
 1. For getting started, copy all data from the folder "_Day4Morning_" to your folder in the project area in SAGA
 	
@@ -27,16 +31,16 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	sbatch sbatch_BaCoCa.sh
 	```
 	
-4. Download the following files to your own computer using scp
+4. Download the following files to your own computer using _scp_
 	
 	* Correlation_Results/Correlation_Slope_Summary.txt
 	* BaCoCa_Results/summarized_frequencies.txt
-	
-	* Open "summarized_frequencies.txt" in a text editor and delete the first line
-
-5. Important these two txt-files in R studio using "_Import Database/From text (base)_"; the heading to "_yes_"; RowNames to "_Use first column_"
 
 **On your own computer**<br>
+
+	* Open "summarized_frequencies.txt" in a text editor, delete the first line and save the file
+
+5. Important these two txt-files in R studio using "_Import Database/From text (base)_"; the heading to "_yes_"; RowNames to "_Use first column_"
 
 6. We create now density plots in R to explore the distribution of the data
 

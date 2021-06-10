@@ -27,7 +27,7 @@ Each day we will begin at 9 am and end at around 5:30 pm. In between, we will ha
 
 * [Determination of rogue taxa](week1_day3_morning/README.md)<br>A tutorial on the detection of rogue taxa in datasets using different approaches.
 
-* [Model misspecification and partinioning](week1_day3_afternoon/README.md)<br>A tutorial on reducing model misspecifications by using partitioning schemes.
+* [Model misspecification and partitioning](week1_day3_afternoon/README.md)<br>A tutorial on reducing model misspecifications by using partitioning schemes.
 
 #### Thursday
 

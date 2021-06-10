@@ -22,7 +22,7 @@ workdir=$USERWORK/$SLURM_JOB_ID
 mkdir -p $workdir
 
 ## Copy input files to the work directory and move to work dir:
-cp -r *.fas *.treefile ../Programs/aligroove_1_07/* $workdir
+cp -r *.fas *.treefile ../../week1/Programs/aligroove_1_07/* $workdir
 cd $workdir
 
 sed '/>/s/-/_/' < Matrix_original_supermatrix.fas >> Matrix_original_supermatrix.fas_mod
