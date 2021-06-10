@@ -47,7 +47,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	cp ../Day4Morning/BaCoCa_Results/summarized_frequencies.txt .
 	awk -F"\t" '{if($25<0.10)print$1}' < summarized_frequencies.txt | sed "s/locus/FcC_locus/" | sed "s/$/.phy/" > RCFV_locus_below010.txt
 	mkdir RCFV_locus_below010
-	while read LINE; do cp ../Day2Morning/SingelGenes/$LINE RCFV_locus_below010; done < RCFV_locus_below010.txt
+	while read LINE; do cp ../Day2Morning/SingleGenes/$LINE RCFV_locus_below010; done < RCFV_locus_below010.txt
 	```
 	
 8. Now we need to concatenate these again and run a tree reconstruction of the new supernatrix
