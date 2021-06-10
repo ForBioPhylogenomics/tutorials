@@ -92,6 +92,8 @@ sh start_red.sh
 ```
 This little snippet starts one script per genome. Feel free to look around in it.
 
+Be aware that this creates lots of small files which exceeded the quota for the course. run_red.sh now navigates to $USERWORK and runs the job there instead.
+
 When I ran through this, it took 15 to 60 minutes per genome to finish.
 
 If you are unable to get it running for some reason, or want to continue anyhow, you can do this:
@@ -104,24 +106,24 @@ cd ..
 ```
 When done, you should see something like this in masked_assemblies
 ```
--rw-rw-r-- 1 olekto nn9244k   43497196 May 16 10:11 neobri.repeats.bed
--rw-rw-r-- 1 olekto nn9244k  275320088 May 16 10:11 neobri.repeats.fasta
--rw-rw-r-- 1 olekto nn9244k  865018698 Jun  5 01:10 neobri.softmasked.fa
--rw-rw-r-- 1 olekto nn9244k   45092622 May 16 13:37 neogra.repeats.bed
--rw-rw-r-- 1 olekto nn9244k  262196845 May 16 13:38 neogra.repeats.fasta
--rw-rw-r-- 1 olekto nn9244k  672846647 May 16 13:35 neogra.softmasked.fa
--rw-rw-r-- 1 olekto nn9244k   46494946 May 16 13:29 neomar.repeats.bed
--rw-rw-r-- 1 olekto nn9244k  269948250 May 16 13:29 neomar.repeats.fasta
--rw-rw-r-- 1 olekto nn9244k  683501275 May 16 13:27 neomar.softmasked.fa
--rw-rw-r-- 1 olekto nn9244k   46074867 May 16 13:50 neooli.repeats.bed
--rw-rw-r-- 1 olekto nn9244k  267874589 May 16 13:50 neooli.repeats.fasta
--rw-rw-r-- 1 olekto nn9244k  681893391 May 16 13:48 neooli.softmasked.fa
--rw-rw-r-- 1 olekto nn9244k   45076389 May 16 13:52 neopul.repeats.bed
--rw-rw-r-- 1 olekto nn9244k  262152533 May 16 13:52 neopul.repeats.fasta
--rw-rw-r-- 1 olekto nn9244k  674817636 May 16 13:49 neopul.softmasked.fa
--rw-rw-r-- 1 olekto nn9244k   30337323 May 16 10:24 orenil.repeats.bed
--rw-rw-r-- 1 olekto nn9244k  347698289 May 16 10:24 orenil.repeats.fasta
--rw-rw-r-- 1 olekto nn9244k 1025835685 Jun  5 01:09 orenil.softmasked.fa
+-rw-rw-r-- 1 olekto nn9458k   43497196 Jun  9 21:40 neobri.repeats.bed
+-rw-rw-r-- 1 olekto nn9458k  275320088 Jun  9 21:40 neobri.repeats.fasta
+-rw-rw-r-- 1 olekto nn9458k  865018698 Jun  9 21:40 neobri.softmasked.fa
+-rw-rw-r-- 1 olekto nn9458k   45092622 Jun  9 22:16 neogra.repeats.bed
+-rw-rw-r-- 1 olekto nn9458k  262196845 Jun  9 22:16 neogra.repeats.fasta
+-rw-rw-r-- 1 olekto nn9458k  672846647 Jun  9 22:14 neogra.softmasked.fa
+-rw-rw-r-- 1 olekto nn9458k   46494946 Jun  9 22:00 neomar.repeats.bed
+-rw-rw-r-- 1 olekto nn9458k  269948250 Jun  9 22:01 neomar.repeats.fasta
+-rw-rw-r-- 1 olekto nn9458k  683501275 Jun  9 21:59 neomar.softmasked.fa
+-rw-rw-r-- 1 olekto nn9458k   46074867 Jun  9 22:02 neooli.repeats.bed
+-rw-rw-r-- 1 olekto nn9458k  267874589 Jun  9 22:03 neooli.repeats.fasta
+-rw-rw-r-- 1 olekto nn9458k  681893391 Jun  9 22:01 neooli.softmasked.fa
+-rw-rw-r-- 1 olekto nn9458k   45076389 Jun  9 22:03 neopul.repeats.bed
+-rw-rw-r-- 1 olekto nn9458k  262152533 Jun  9 22:03 neopul.repeats.fasta
+-rw-rw-r-- 1 olekto nn9458k  674817636 Jun  9 22:02 neopul.softmasked.fa
+-rw-rw-r-- 1 olekto nn9458k   30337323 Jun  9 21:52 orenil.repeats.bed
+-rw-rw-r-- 1 olekto nn9458k  347698289 Jun  9 21:53 orenil.repeats.fasta
+-rw-rw-r-- 1 olekto nn9458k 1025835685 Jun  9 21:52 orenil.softmasked.fa
 ```
 
 <a name="mash"></a>
@@ -129,4 +131,65 @@ When done, you should see something like this in masked_assemblies
 
 In addition to softmasked genome assemblies, Cactus requires a guide tree. This is because it aligns two and two genomes. For instance, it could start with the two most closely related, aligns those, and then use that alignment to reconstruct an ancestral genome to those two. That reconstructed genome is then used to align against the next. This means that Cactus scales linear with the number of genomes and not quadratically as would have been the case if all genomes were compared against all. However, this approach might miss alignment of sequences where species A and C has it, and B not, but since A and B were closest related, those were aligned first and the reconstructed genome lacked the shared regions between A and C and therefore the resulting alignment didn't show that case.
 
-Creating phylogenies can be a time consuming process, and therefore we will cheat (the "phylogeny" in the title is there for a reason). We will use Mash ([Ondov et al. (2016)](https://doi.org/10.1186/s13059-016-0997-x)), which is a fast genome and metagenome distance estimator.
+Creating phylogenies can be a time consuming process, and therefore we will cheat (the "phylogeny" in the title is there for a reason). We will use Mash ([Ondov et al. (2016)](https://doi.org/10.1186/s13059-016-0997-x)), which is a fast genome and metagenome distance estimator. Mash reduces large sequences to compressed sketch representations, enabling much quicker comparisons between sequences compared to older methods.
+
+Since we use the original genome assembly fasta files, and not the softmasked ones, you can run this independent of the softmasking.
+
+If you followed the instructions above, you should have a script called run_mash_triangle.sh in your folder. Submit that:
+
+```
+sbatch run_mash_triangle.sh
+```
+
+This runs quite quickly, less than 1 minute when I did it. Considering that it is comparing the content of six fasta files containing genomes between 600 and 1000 Mbp, this is quite nice.
+
+The result, in the subfolder mash is this:
+```
+$cat mash/infile
+	6
+neobri
+neogra	0.00981378
+neomar	0.00985499	0.00888862
+neooli	0.00904645	0.00948708	0.0090861
+neopul	0.00924552	0.00924552	0.00932572	0.00659353
+orenil	0.0519203	0.0509537	0.0515304	0.0509537	0.0511448
+```
+
+If you recognise a lower-triangle [distance matrix](https://evolution.gs.washington.edu/phylip/doc/distance.html) here, you are quite correct. We need to create a guide tree based on this. However, the program we'll use don't support lower-triangle matrices, but needs a full. So we need to convert it. I rewrite slightly a function I found on the [support forum to Mash](https://github.com/marbl/Mash/issues/9) to do this. Run these commands:
+
+```
+module purge
+module load Biopython/1.72-foss-2018b-Python-3.6.6
+python /cluster/projects/nn9458k/phylogenomics/week2/src/convert_triangle_full.py mash/infile  > full_distance_matrix
+```
+
+We need to load that Biopython module so we have the Python libraries that we need (numpy and pandas) available. The file full_distance_matrix should contain this now:
+```
+6
+neobri	0.0	0.00981378	0.00985499	0.00904645	0.00924552	0.0519203
+neogra	0.00981378	0.0	0.00888862	0.00948708	0.00924552	0.0509537
+neomar	0.00985499	0.00888862	0.0	0.0090861	0.00932572	0.0515304
+neooli	0.00904645	0.00948708	0.0090861	0.0	0.00659353	0.0509537
+neopul	0.00924552	0.00924552	0.00932572	0.00659353	0.0	0.0511448
+orenil	0.0519203	0.0509537	0.0515304	0.0509537	0.0511448	0.0
+```
+
+Then we'll run [rapidNJ](https://github.com/somme89/rapidNJ) on the full distance matrix to get a tree. Since this is also a quick process, we'll just run it on the command line and not in a sbatch script:
+```
+module purge
+module load rapidNJ/210609-foss-2020b
+rapidnj full_distance_matrix -i pd |sed "s/'//g"  nj_tree
+```
+We're removing the single quote sign because it would confuse Cactus later on.
+
+
+The result is this:
+```
+((neomar:0.0045736,neogra:0.004315):0.00021445,((neopul:0.0033453,neooli:0.0032482):0.00094829,neobri:0.0049009):0.00032849,orenil:0.046583);
+```
+You can use [IcyTree](https://icytree.org/) (choose 'File' -> 'Enter tree directly') or [Phylogenetic tree (newick) viewer](http://etetoolkit.org/treeview/) (clear the alignment box and paste in the tree in the box on the left) to visualise it online.
+
+When we are done with this part, we have both a set of softmasked files and a guide tree, so we are all set to run Cactus!
+
+<a name="cactus"></a>
+## Running Cactus
