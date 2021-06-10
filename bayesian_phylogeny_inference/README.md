@@ -1,6 +1,6 @@
 # Bayesian Phylogenetic Inference
 
-A tutorial on Bayesian inference of time-calibrated phylogenies<br/>
+A tutorial on Bayesian inference of time-calibrated phylogenies<br>
 By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner)
 
 ## Summary

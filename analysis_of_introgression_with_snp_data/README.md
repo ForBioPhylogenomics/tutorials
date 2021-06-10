@@ -1,6 +1,6 @@
 # Analysis of Introgression with SNP Data
 
-A tutorial on the analysis of hybridization and introgression with SNP data<br/>
+A tutorial on the analysis of hybridization and introgression with SNP data<br>
 By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner) and [Milan Malinsky](https://www.milan-malinsky.org)
 
 ## Summary

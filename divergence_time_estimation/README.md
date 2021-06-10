@@ -1,6 +1,6 @@
 # Phylogenetic Divergence-Time Estimation
 
-A tutorial on phylogenetic divergence-time estimation with with fossils<br/>
+A tutorial on phylogenetic divergence-time estimation with with fossils<br>
 By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner)
 
 ## Summary
