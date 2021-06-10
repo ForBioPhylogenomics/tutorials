@@ -4,6 +4,10 @@ The folder "_data_" contains the smaller data files for the afternoon session of
 # [SCRIPTS](scripts)
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
+# [LECTURE](Lecture)
+The folder "_Lecture_" contains the lecture from this session.
+* [Base composition heterogeneity](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day4_afternoon/Lecture/Day4_02_BaseCompositionHeterogeneity.pdf)
+
 # EXERCISE
 **On your computer**
 
