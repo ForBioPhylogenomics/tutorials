@@ -20,6 +20,7 @@ Particularly when investigating groups of rapidly diverging species, incomplete 
 	* [Running the PhyloNet analysis](#runphylonet)
 	* [Visualizing species networks with IcyTree](#icytree)
 	* [PhyloNet analysis without branch lengths](#nobranches)
+* [Testing hypotheses of introgression with PhyloNet](#hypotheses)
 
 
 <a name="outline"></a>
@@ -51,9 +52,9 @@ Species from this group have previously been suggested to hybridize, based on mi
 <a name="requirements"></a>
 ## Requirements
 
-This tutorial requires **FigTree** to be installed. Details about the installation of this tool can be found in tutorial [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md).
+This tutorial requires **FigTree** and **ape** to be installed. Details about the installation of these tools can be found in tutorials [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md) and [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md).
 
-The following tool is required additionally:
+The following tools are required additionally:
 
 * **PhyloNet:** The [PhyloNet](https://bioinfocs.rice.edu/phylonet) program ([Than et al. 2008](https://doi.org/10.1186/1471-2105-9-322)) implements a range of methods for the inference of species trees and networks in a maximum-likelihood, Bayesian, or parsimony framework. PhyloNet is not available as a module on Saga, but as it is written in Java, it also does not need to be compiled and can thus simply be downloaded and placed in the current directory on Saga. This can be done with the following commands:
 
@@ -71,21 +72,18 @@ The following tool is required additionally:
 		install.packages("babette", repos='http://cran.us.r-project.org')
 		quit(save="no")
 
-* **ape:** [ape](http://ape-package.ird.fr) ([Paradis 2004](https://doi.org/10.1093/bioinformatics/btg412)) is an R package that serves as a multitool for basic phylogenetic analyses and handling of phylogenetic trees. To install it on Saga, use the following commands:
-
-		R
-		install.packages("ape", repos='http://cran.us.r-project.org')
-		quit(save="no")
-
 
 
 <a name="alignments"></a>
 ## Extraction of alignment blocks
 
-As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md) is stored in [HAL format](https://github.com/ComparativeGenomicsToolkit/hal/blob/master/README.md), and this format can not be read by programs for phylogenetic inference, we will need to convert the format of the dataset. At the same time, we are going to reduce the data that will go into the phylogenetic analyses, by extracting only the most suitable alignment blocks from across the whole-genome alignment rather than using the entire whole-genome alignment.
+As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md) is stored in MAF format, and this format can not be read by programs for phylogenetic inference, we will need to first extract sets of alignment blocks in a format such as Nexus before these can used for the analyses in this tutorial. We are going to combine this alignment extraction with some basic filtering to extract alignment blocks only from the most reliably aligned regions of the whole-genome alignment.
 
+
+<!--As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md) is stored in [HAL format](https://github.com/ComparativeGenomicsToolkit/hal/blob/master/README.md), and this format can not be read by programs for phylogenetic inference, we will need to convert the format of the dataset. At the same time, we are going to reduce the data that will go into the phylogenetic analyses, by extracting only the most suitable alignment blocks from across the whole-genome alignment rather than using the entire whole-genome alignment.
+-->
 <!--XXX Polish the start, perhaps move the hal2maf conversion to the whole-genome alignment tutorial XXX-->
-
+<!--
 * As a first step, we will need to convert the whole-genome alignment from HAL format to MAF format, which is human-readable and more accessible for scripts. To do so, write a new Slurm script named `convert_hal_to_maf.slurm` on Saga with the following content:
 
 		#!/bin/bash
@@ -118,7 +116,7 @@ As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../w
 		hal2maf --refGenome orenil --onlyOrthologs --noAncestors --maxBlockLen 1000000 --maxRefGap 1000 cichlids_chr5.hal cichlids_chr5.maf #XXX hal2maf is not installed yet! Running hal/bin/hal2maf so far! XXX
 
 <!--Run time: 2:40 hours-->
-
+-->
 
 
 * Add the script `make_alignments_from_maf.py` to your current directory on Saga, by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two commands:
@@ -174,22 +172,12 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		# Make an xml file with babette.
 		create_beast2_input_file(fasta, xml, site_model = site_model, mcmc = mcmc)
 
-* While you're at it, also write a second R script, named `convert_to_newick.r`. We will need this R script to convert the MCC trees produced by BEAST2 for each alignment into Newick format, because this will allow us to combine them into a single input file for PhyloNet more easily. This R script named `convert_to_newick.r` should have the following content:
+* Make sure that you still have the script named `convert_to_newick.r` in your current directory on Saga:
 
-		# Load the ape library.
-		library("ape")
+		ls convert_to_newick.r
 		
-		# Get the command-line arguments.
-		args <- commandArgs(trailingOnly = TRUE)
-		nexus <- args[1]
-		nwk <- args[2]
-		
-		# Read the file with a tree in nexus format.
-		tree <- read.nexus(nexus)
-		
-		# Write a new file with a tree in newick format.
-		write.tree(tree, nwk)
-		
+	If the script should be missing, find the instructions for how to write it in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md). We will need this R script to convert the MCC trees produced by BEAST2 for each alignment into Newick format, because this will allow us to combine them into a single input file for PhyloNet more easily.
+
 * To write an XML file for each alignment with script `make_xml.r`, analyze this XML file with BEAST2, summarize the posterior tree distribution in the form of an MCC tree, and then convert that MCC tree to Newick format with script `convert_to_newick.r`, we'll additionally need to write a Slurm script. This Slurm script should be named `prepare_phylonet.slurm` and have the following content:
 
 		#!/bin/bash
@@ -363,7 +351,9 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 
 		sbatch run_phylonet.slurm
 
-* When the PhyloNet analysis has finished, have a look at the screen output that was sent to the file named `run_phylonet.out`:
+	This PhyloNet analysis should take no longer than a few minutes.
+
+* When the PhyloNet analysis has finished, have a look at the screen output that was sent by `sbatch` to the file named `run_phylonet.out`:
 
 		less run_phylonet.out
 	
@@ -385,7 +375,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 <a name="icytree"></a>
 ### Visualizing species networks with IcyTree
 
-* To see how species networks in extended Newick format are visualized with IcyTree, write the following text to a new file on your local computer that you could for example name `tmp.tre`:
+* To see how species networks in extended Newick format are visualized with IcyTree, write the following text to a new file on your local computer, that you could for example name `tmp.tre`:
 
 		#nexus
 		begin trees;
@@ -408,7 +398,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 
 * If PhyloNet inferred a reticulation edge, note the log-likelihood of the species network and repeat the inference without allowing any reticulation, and with a maximum of two allowed reticulation edges. To do that, open `phylonet.nex` in a text editor, and replace the line `InferNetwork_ML (all) 1 -bl;` with either `InferNetwork_ML (all) 0 -bl;` or `InferNetwork_ML (all) 2 -bl;`. Then, resubmit the Slurm script `run_phylonet.slurm` and wait for it to finish. The new output should then be appended to the existing file `run_phylonet.out`. Again note the log-likelihoods found for the network without reticulation edges (actually not a network but a tree) and the network with two reticulation edges (if such two edges were supported by the alignments).
 
-* Compare the log-likelihoods for the networks with zero, one, and two reticulation edges. Assuming that the networks with more reticulation edges are identical to those with less reticulation edges except for the added reticulation edge, we can use a likelihood-ratio test to assess whether or not the additional reticulation edge significantly improved the likelihood. The table below may be helpful for this comparison.
+* Compare the log-likelihoods for the networks with zero, one, and two reticulation edges if PhyloNet should have found support for reticulation edges. Assuming that the networks with more reticulation edges are identical to those with less reticulation edges except for the added reticulation edge, we can use a likelihood-ratio test to assess whether or not the additional reticulation edge significantly improved the likelihood. The table below may be helpful for this comparison.
  
 	| Difference between log-likelihoods | p-value |
 	|------------------------------------|---------|
@@ -419,20 +409,17 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 
 
 
-
-<!--XXX Why is there no reticulation??? Test with SpeciesNetwork XXX-->
-
 <a name="nobranches"></a>
 ### PhyloNet analysis without branch lengths
 
 If there is time left, you could repeat the PhyloNet analysis with gene trees without branch lengths. These trees can be inferred under maximum likelihood with IQ-TREE. The comparison of the results of this PhyloNet analysis with the previous one might then shed light on the effect that the types of gene trees and the inclusion of branch lengths have.
 
-* Write a script named `prepare_phylonet2.slurm` to run an IQ-TREE analysis for each Fasta file in the directory `alignments`. The script should have the following content:
+* Write a script named `prepare_phylonet_nobl.slurm` to run an IQ-TREE analysis for each Fasta file in the directory `alignments`. The script should have the following content:
 
 		#!/bin/bash
 
 		# Job name:
-		#SBATCH --job-name=prep_phylonet2
+		#SBATCH --job-name=prep_phylonet_nobl
 		#
 		# Wall clock limit:
 		#SBATCH --time=1:00:00
@@ -445,7 +432,7 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 		#SBATCH --account=nn9458k
 		#
 		# Output:
-		#SBATCH --output=prepare_phylonet2.out
+		#SBATCH --output=prepare_phylonet_nobl.out
 
 		# Set up job environment.
 		set -o errexit  # Exit the script on any error
@@ -474,21 +461,21 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 
 * Submit this script with `sbatch`:
 
-		sbatch prepare_phylonet2.slurm`
+		sbatch prepare_phylonet_nobl.slurm`
 		
 	This script should take around 5 minutes to complete.
 	
-* To prepare the new PhyloNet input file, first copy file `prepare_phylonet.sh` to a new file named `prepare_phylonet2.sh`:
+* To prepare the new PhyloNet input file, first copy file `prepare_phylonet.sh` to a new file named `prepare_phylonet_nobl.sh`:
 
-		cp prepare_phylonet.sh prepare_phylonet2.sh
+		cp prepare_phylonet.sh prepare_phylonet_nobl.sh
 
-* Edit the new file `prepare_phylonet2.sh` so that it has the following content:
+* Edit the new file `prepare_phylonet_nobl.sh` so that it has the following content:
 
 		# Set the directory with alignments.
 		dir=alignments
 
 		# Set the name of the nexus file.
-		nex=phylonet2.nex
+		nex=phylonet_nobl.nex
 
 		# Write a nexus file with all trees.
 		echo -e "#NEXUS\n\nBEGIN TREES;\n" > ${nex}
@@ -505,22 +492,22 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 		echo -e "BEGIN PHYLONET;\n" >> ${nex}		echo -e "InferNetwork_ML (all) 1;" >> ${nex}
 		echo -e "\nEND;" >> ${nex}
 
-	Note the changes on lines 5, 10, and the second-last line: The output Nexus file is now called `phylonet2.nex` (on line 5), the input tree files on now have the ending `.treefile` (on line 10), and the `InferNetwork_ML` command is now called without the option `-bl` (on the second-last line).
+	Note the changes on lines 5, 10, and the second-last line: The output Nexus file is now called `phylonet_nobl.nex` (on line 5), the input tree files on now have the ending `.treefile` (on line 10), and the `InferNetwork_ML` command is now called without the option `-bl` (on the second-last line).
 	
-* Execute the new script `prepare_phylonet2.sh` with `srun`:
+* Execute the new script `prepare_phylonet_nobl.sh` with `srun`:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty bash prepare_phylonet2.sh
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty bash prepare_phylonet_nobl.sh
 
-* Prepare a new Slurm script for this new PhyloNet analysis, by copying file the first Slurm script `run_phylonet.slurm` to a new file named `run_phylonet2.slurm`:
+* Prepare a new Slurm script for this new PhyloNet analysis, by copying file the first Slurm script `run_phylonet.slurm` to a new file named `run_phylonet_nobl.slurm`:
 
-		cp run_phylonet.slurm run_phylonet2.slurm
+		cp run_phylonet.slurm run_phylonet_nobl.slurm
 
-* Change the job name to `phylonet2` (on line 4), the screen output file name to `run_phylonet2.out` (on line 17), and the input file name for PhyloNet to `phylonet2.nex` (on the last line), so that the Slurm script has the following content:
+* Change the job name to `phylonet_nobl` (on line 4), the screen output file name to `run_phylonet_nobl.out` (on line 17), and the input file name for PhyloNet to `phylonet_nobl.nex` (on the last line), so that the Slurm script has the following content:
 
 		#!/bin/bash
 
 		# Job name:
-		#SBATCH --job-name=phylonet2
+		#SBATCH --job-name=phylonet_nobl
 		#
 		# Wall clock limit:
 		#SBATCH --time=3:00:00
@@ -533,7 +520,7 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 		#SBATCH --account=nn9458k
 		#
 		# Output:
-		#SBATCH --output=run_phylonet2.out
+		#SBATCH --output=run_phylonet_nobl.out
 
 		# Set up job environment.
 		set -o errexit  # Exit the script on any error
@@ -544,17 +531,120 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 		module load Java/11.0.2
 
 		# Run phylonet.
-		java -jar PhyloNet_3.8.2.jar phylonet2.nex
+		java -jar PhyloNet_3.8.2.jar phylonet_nobl.nex
 
 * Then, submit this Slurm script with `sbatch`:
 
-		sbatch run_phylonet2.slurm
+		sbatch run_phylonet_nobl.slurm
 
-	This analysis might take longer than the previous one, perhaps over an hour. You could move on to the next tutorial and come back to this one later to check the results of this second PhyloNet analysis.
+	This analysis might take longer than the previous one, perhaps over an hour. You could therefore move on to the next part of this tutorial and complete the next step afterwards.
 
-* When this second PhyloNet analysis has finished, copy once again the string with the network from the screen output file `run_phylonet2.out` to a new file on your local computer, save this file under any name, and load it from the IcyTree website.
+* When this second PhyloNet analysis has finished, copy once again the string with the network from the screen output file `run_phylonet_nobl.out` to a new file on your local computer, save this file under any name, and load it from the IcyTree website.
 
 	**Question 2:** How is the resulting network affected by the different trees used as input and the fact that branch lengths were not used this time? [(see answer)](#q2)
+
+
+
+<a name="hypotheses"></a>
+## Testing hypotheses of introgression with PhyloNet
+
+If we had *a priori* hypotheses for how the species within the dataset could be related to each other and how they might be connected by introgression, but the "InferNetwork\_ML" method of PhyloNet did not infer species networks matching our hypotheses, we might still be interested in whether the data support one of our hypotheses more strongly than the other. For example we might want to compare the support for one hypothesis that completely excludes introgression with another that allows introgression between a certain species pair. This is possible with a second method implemented in PhyloNet, which is called "CalGTProb". Like the "InferNetwork\_ML" method, this method also uses a set of gene trees as input, but unlike "InferNetwork\_ML", it does not infer a species network from these. Instead it uses the set of gene trees together with a specified species network to calculate only the likelihood of that network. The Nexus file used by the command `CalGTProb` therefore includes three blocks: One in which the species network is specified in extended Newick format, one in which the gene trees are listed, and finally the one with the command for PhyloNet.
+
+* Have a look at the [website](https://wiki.rice.edu/confluence/display/PHYLONET/CalGTProb+Command) for the command `CalGTProb` to see the examples for Nexus files that are given at the end of the website.
+
+We'll use the `CalGTProb` command to assess the relative support of two hypotheses: The null hypothesis that assumes no introgression, and the alternative hypothesis in which introgression occurred between *Neolamprologus brichardi* ("neobri") and *Neolamprologus pulcher* ("neopul"). In both cases, the species relationship is assumed to be according to the most strongly supported phylogeny found for these species by [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). The corresponding strings in extended Newick format are the listed below.
+
+null_hypothesis: "(orenil,((neomar,neogra),(neobri,(neooli,neopul))));"
+		
+alt_hypothesis: "(orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1))));"
+
+* To visualize both hypotheses, write a new file on your local computer with the following two lines:
+
+		(orenil,((neomar,neogra),(neobri,(neooli,neopul))));
+		(orenil,((neomar,neogra),((neobri,X#H1),(neooli,(neopul)X#H1))));
+		
+* Then, open IcyTree in a browser on your local computer and load the file with these two lines. After adjusting font sizes and edge widths, the first hypothesis should be visualized as shown in the below screenshot:<p align="center"><img src="img/safari4.png" alt="Safari" width="700"></p> When you then click on the arrow in the bottom left, the second hypothesis should be visualized as shown below.<p align="center"><img src="img/safari5.png" alt="Safari" width="700"></p>
+		
+* On Saga, copy the existing file `phylonet.nex` to two new files named `phylonet_null.nex` and `phylonet_alt.nex`:
+
+		cp phylonet.nex phylonet_null.nex
+		cp phylonet.nex phylonet_alt.nex
+
+* Then open file `phylonet_null.nex` in a text editor on Saga and add the following block after the keyword "#NEXUS" on the first line and before the line with "BEGIN TREES;":
+
+		BEGIN NETWORKS;
+		
+		Network null_hypothesis = (orenil,((neomar,neogra),(neobri,(neooli,neopul))));
+		
+		END;
+
+* Also replace the line with the `InferNetwork_ML` command with the following line:
+
+		CalGTProb null_hypothesis (all) -o;
+		
+	The option `-o` on this line specifies that the network provided by us consists only of a topology, without branch lengths.
+	
+* Edit the file `phylonet_alt.nex` in the same way. Add the following block after the keyword "#NEXUS" on the first line and before the line with "BEGIN TREES;":
+
+		BEGIN NETWORKS;
+
+		Network alt_hypothesis = (orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1))));
+		
+		END;
+		
+* Replace the line with the `InferNetwork_ML` command with the following line:
+
+		CalGTProb alt_hypothesis (all) -o;
+
+* Also copy the Slurm script `run_phylonet.slurm` to two new files named `run_phylonet_null.slurm` and `run_phylonet_alt.slurm`:
+
+		cp run_phylonet.slurm run_phylonet_null.slurm
+		cp run_phylonet.slurm run_phylonet_alt.slurm
+		
+* Open the Slurm script `run_phylonet_null.slurm` and replace `phylonet` with `phylonet_null` on lines 4 and 17, and the last line, so that the script has the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=phylonet_null
+		#
+		# Wall clock limit:
+		#SBATCH --time=3:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --ntasks=1
+		#SBATCH --mem-per-cpu=10G
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=run_phylonet_null.out
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load the java module.
+		module load Java/11.0.2
+
+		# Run phylonet.
+		java -jar PhyloNet_3.8.2.jar phylonet_null.nex
+
+* Do the same for file `run_phylonet_alt.slurm`, except that you replace the three occurrences of `phylonet` with `phylonet_alt`.
+
+* Submit both Slurm script with `sbatch`:
+
+		sbatch run_phylonet_null.slurm
+		sbatch run_phylonet_alt.slurm
+
+	Both analyses should not take longer than a minute.
+
+* Compare the log-likelihood values reported in the two output files `run_phylonet_null.out` and `run_phylonet_alt.out`
+
+	**Question 3:** Is the likelihood difference sufficient to conclude that introgression occurred between *Neolamprologus brichardi* ("neobri") and *Neolamprologus pulcher* ("neopul")? [(see answer)](#q3)
+
 
 
 
@@ -575,6 +665,12 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 
 <a name="q2"></a>
 
-* **Question 2:** The result might be quite different from the one obtained in the first PhyloNet analysis. In my case, XXX Update with screenshot XXX, as shown in the next screenshot:
+* **Question 2:** The result might be quite different from the one obtained in the first PhyloNet analysis. In my case, the first analysis with PhyloNet that included branch lengths did not find support for a reticulation edge, while the second analysis without branch lengths in the gene trees produced a species network in which *Neolamprologus brichardi* ("neopul") appeared - rather unconventionally – as the sister to *Neolamprologus gracilis* ("neogra") and was connected to *Neolamprologus pulcher* ("neopul") with a reticulation edge.<p align="center"><img src="img/safari6.png" alt="Safari" width="700"></p>
+
 
 	In my view, these differences illustrate how the likelihood surface can be highly complex when species networks are inferred, and that maximum-likelihood approaches can therefore often produce results that are not particularly robust to minor changes in the model, or even to re-analyses with the same model. Species networks obtained with maximum-likelihood approaches should therefore be corroborated with other approaches, such as Bayesian inference (see tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)) or tests of introgression based on tree-topology comparisons (see tutorial `XXX Update name XXX`) or SNPs (see tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)), before drawing conclusions about introgression.
+
+
+<a name="q3"></a>
+
+* **Question 3:** This seems to be the case. In my analysis, the log-likelihood of the null hypothesis no introgression was -2154.4, while the log-likelihood of the alternative hypothesis, with introgression between *Neolamprologus brichardi* ("neobri") and *Neolamprologus pulcher* ("neopul"), was -2134.3. The likelihood difference was thus over 20 log units, which translates to a *p*-value below 0.0001, allowing us to reject the null hypothesis without introgression. Note, however, that this comparison was made under the assumption that the true tree topology is the one that we specified, and if that should have been incorrect, the support for introgression from the likelihood comparison could be misleading.

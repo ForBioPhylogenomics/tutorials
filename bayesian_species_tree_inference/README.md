@@ -63,6 +63,13 @@ The following tools are required additionally:
 		
 	On your local computer, use BEAST2's PackageManager to install the StarBEAST2 package, as described in tutorial [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md) for the bModelTest package.
 
+* **ape:** [ape](http://ape-package.ird.fr) ([Paradis 2004](https://doi.org/10.1093/bioinformatics/btg412)) is an R package that serves as a multitool for basic phylogenetic analyses and handling of phylogenetic trees. To install it on Saga, use the following commands:
+
+		R
+		install.packages("ape", repos='http://cran.us.r-project.org')
+		quit(save="no")
+
+
 
 <a name="starbeast2"></a>
 ## Bayesian species-tree inference with StarBEAST2
@@ -285,30 +292,46 @@ To visualize the variation among the gene trees, we'll also generate maximum-cla
 
 		ls starbeast_ENSDARG*.tre | wc -l
 		
-To visualize the summary trees for all genes jointly with the species tree from the analysis with the multi-species-coalescent model, we can use the program Densitree ([Bouckaert 2010](https://academic.oup.com/bioinformatics/article/26/10/1372/192963)) that is distributed as part of the BEAST2 package. Thus, you will find it in the same directory as BEAST2, BEAUti, and TreeAnnotator. However, before we can open all summary trees jointly in Densitree, we'll need to prepare a single file containing all of them. The easiest way to do so is to use the Python script `logcombiner.py` on Saga. This script accepts a list with the names of tree files as input and produces a single tree file with these trees as output.
+To visualize the summary trees for all genes jointly with the species tree from the analysis with the multi-species-coalescent model, we can use the program Densitree ([Bouckaert 2010](https://academic.oup.com/bioinformatics/article/26/10/1372/192963)) that is distributed as part of the BEAST2 package. Thus, you will find it in the same directory as BEAST2, BEAUti, and TreeAnnotator. However, before we can open all summary trees jointly in Densitree, we'll need to prepare a single file containing all of them. The easiest way to do so is to convert the tree files to Newick format with commands from the R library [ape](http://ape-package.ird.fr) ([Paradis 2004](https://doi.org/10.1093/bioinformatics/btg412)) and to then concatenate these Newick-format files into a single tree file.
 
-* Generate a file on Saga with a list of the names of the summary-tree files for the species tree as well as the gene trees from the analysis with the multi-species-coalescent mode:
+* To use commands from the ape R library, we'll need to write a short R script on Saga that should be named `convert_to_newick.r` and have the following content:
 
-		ls starbeast_species.tre starbeast_ENSDARG*.tre > starbeast_trees.txt
-
-* Get the script `logcombiner.py` either by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two commands on Saga:
-
-		cp /cluster/projects/nn9458k/phylogenomics/week2/src/logcombiner.py .
-
-	or
-
-		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/logcombiner.py
-
-* Before running the Python script, the Biopython library for Python needs to be installed. Do so with `pip`:
-
-		module load Python/3.8.2-GCCcore-9.3.0
-		pip install --user Bio
-
-* Use the file with a list of tree file names as input for the script `logcombiner.py` and specify `starbeast.trees` as the name of the output file:
-	
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:05:00 --account=nn9458k --pty python3 logcombiner.py starbeast_trees.txt starbeast.trees
+		# Load the ape library.
+		library("ape")
 		
-	(there will be a warning message but you can ignore it).
+		# Get the command-line arguments.
+		args <- commandArgs(trailingOnly = TRUE)
+		nexus <- args[1]
+		nwk <- args[2]
+		
+		# Read the file with a tree in nexus format.
+		tree <- read.nexus(nexus)
+		
+		# Write a new file with a tree in newick format.
+		write.tree(tree, nwk)
+		
+	When called with a command like `Rscript convert_to_newick.r input.tre output.nwk`, this script will do nothing more than reading the tree in Nexus format from one file and write it again in Newick format to another file.
+
+* Additionally, write a short script named `convert_to_newick.sh` to call the R script `convert_to_newick.r` for each individual MCC tree file. This script should have the following content:
+
+		module load R/4.0.0-foss-2020a
+		for tre in starbeast_ENSDARG*.tre
+		do
+			nwk=${tre%.tre}.nwk
+			Rscript convert_to_newick.r ${tre} ${nwk}
+		done
+
+* Execute the script `convert_to_newick.sh` with `srun`:
+
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty bash convert_to_newick.sh
+
+* Make sure that the last step has produced twelve files with the ending `.nwk`:
+
+		ls starbeast_ENSDARG*.nwk | wc -l
+
+* Combine all of the trees in Newick format into a single file named `starbeast.trees`:
+
+		cat starbeast_ENSDARG*.nwk > starbeast.trees
 
 * Download file `starbeast.trees` to your local computer using `scp`.
 
