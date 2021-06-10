@@ -27,7 +27,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	sbatch sbatch_BaCoCa.sh
 	```
 	
-4. Download the following files to your own computer using scp
+4. Download the following files to your own computer using _scp_
 	
 	* Correlation_Results/Correlation_Slope_Summary.txt
 	* BaCoCa_Results/summarized_frequencies.txt
