@@ -10,11 +10,11 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	cd Day5Afternoon
 	```
 	
-2. For the calculation of the saturation indices based on slope we will need the treefiles and phylip alignment files for each orthologous loci included in the original dataset
+2. For the calculation of the LB scores we will need the treefiles of the original supermatrix and the individual loci. Additionally, we need the fasta alignment file for the original dataset of 100 loci:
 
-	* Copy the _.treefile_ and _.phy_ files you used in the excerise of the morning of Day 4 to this folder
+	* Copy the _.treefile_ files you used in the excerise of the morning of Day 4 to this folder
 	
-	* Do the same for the _.treefile_ and the _.fas_ files from the exercise of this morning for the original supermatrix
+	* Do the same for the _.treefile_ file and the _.fas_ file from the exercise of this morning for the original supermatrix
 	
 	```
 	sbatch sbatch_TreSpEx_LBscores.sh
