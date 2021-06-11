@@ -4,6 +4,10 @@ The folder "_data_" contains the smaller data files for the morning session of d
 # [SCRIPTS](scripts)
 The folder "_scripts_" contains all the scripts to be run on SAGA. However, we would advice you that you transfer them from SAGA as described in the exercise below.
 
+# [LECTURE](Lecture)
+The folder "_Lecture_" contains the lecture from this session.
+* [Branch length heterogeneity](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day5_morning/Lecture/Day5_01_BranchLengthHeterogeneity.pdf)
+
 # EXERCISE
 1. Go to SAGA, copy all data from the folder "_Day5Morning_" to your folder in the project area in SAGA
 	
