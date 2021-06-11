@@ -24,3 +24,6 @@ The folder "_Lecture_" contains the lecture from this session.
 	```
 	
 3. Download the _.svg_ files to computer to look at them
+
+# [RESULTS](Results)
+The folder "_Results_" contains the most important results from this session.
