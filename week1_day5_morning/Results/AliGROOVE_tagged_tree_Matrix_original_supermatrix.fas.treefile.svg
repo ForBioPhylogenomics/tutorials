@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<svg height="600" width="800" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <style type="text/css"><![CDATA[
+	polyline { fill: none; stroke: black; stroke-width: 2 }
+	path { fill: none; stroke: black; stroke-width: 2 }
+	line { fill: none; stroke: black; stroke-width: 2 }
+	circle.node_circle  {}
+	circle.taxon_circle {}
+	text.node_text      {}
+	text.taxon_text     {}
+	line.scale_bar      {}
+	text.scale_label    {}
+	line.scale_major    {}
+	line.scale_minor    {}
+]]>
+    </style>
+    <polyline points="137,68 137,75 186,75" style="stroke: #FFAAAA; stroke-width: 2" />    <text class="taxon_text" x="192" y="79">Teleost Euteleost Zeiogadaria Gadiformes Gadidae Gadus morhua
+    
+</text>
+    <polyline points="137,68 137,62 291,62" style="stroke: #FF0000; stroke-width: 2" />    <text class="taxon_text" x="297" y="66">Teleost Euteleost Zeiogadaria Gadiformes Bregmacerotidae Bregmaceros cantori
+    
+</text>
+    <polyline points="108,78 108,87 150,87" style="stroke-width: 2; stroke: #FF2A2A" />    <text class="taxon_text" x="156" y="91">Teleost Euteleost Zeiogadaria Stylephoriformes Stylephoridae Stylephorus chordatus
+    
+</text>
+    <polyline points="108,78 108,68 137,68" style="stroke: #FF5555; stroke-width: 2" />    <text class="node_text" x="143" y="72">100
+    
+</text>
+    <polyline points="92,89 92,100 143,100" style="stroke-width: 2; stroke: #acf" />    <text class="taxon_text" x="149" y="104">Teleost Euteleost Zeiogadaria Zeiformes Zeidae Zeus faber
+    
+</text>
+    <polyline points="92,89 92,78 108,78" style="stroke: #FF5555; stroke-width: 2" />    <text class="node_text" x="114" y="82">100
+    
+</text>
+    <polyline points="77,100 77,112 133,112" style="stroke: #FFAAAA; stroke-width: 2" />    <text class="taxon_text" x="139" y="116">Teleost Euteleost Percopsaria Percopsiformes Percopsidae Percopsis transmontana
+    
+</text>
+    <polyline points="77,100 77,89 92,89" style="stroke-width: 2; stroke: #FF8080" />    <text class="node_text" x="98" y="93">100
+    
+</text>
+    <polyline points="73,112 73,125 102,125" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="108" y="129">Teleost Euteleost Polymixiiformes Polymixiidae Polymixia japonica
+    
+</text>
+    <polyline points="73,112 73,100 77,100" style="stroke: #FF8080; stroke-width: 2" />    <text class="node_text" x="83" y="104">70
+    
+</text>
+    <polyline points="387,156 387,162 600,162" style="stroke: #FF0000; stroke-width: 2" />    <text class="taxon_text" x="606" y="166">Xenopus tropicalis
+    
+</text>
+    <polyline points="387,156 387,150 487,150" style="stroke-width: 2; stroke: #FF5555" />    <text class="taxon_text" x="493" y="154">Coelacanthiformes Coelacanthiformes Latimeriidae Latimeria chalumnae
+    
+</text>
+    <polyline points="306,165 306,175 433,175" style="stroke-width: 2; stroke: #FF0000" />    <text class="taxon_text" x="439" y="179">Polypteriformes Polypteriformes Polypteridae Polypterus bichir
+    
+</text>
+    <polyline points="306,165 306,156 387,156" style="stroke-width: 2; stroke: #FF2A2A" />    <text class="node_text" x="393" y="160">100
+    
+</text>
+    <polyline points="280,176 280,187 341,187" style="stroke-width: 2; stroke: #FF8080" />    <text class="taxon_text" x="347" y="191">Acipenseriformes Polyodontidae Polyodon spathula
+    
+</text>
+    <polyline points="280,176 280,165 306,165" style="stroke: #FF2A2A; stroke-width: 2" />    <text class="node_text" x="312" y="169">100
+    
+</text>
+    <polyline points="236,188 236,200 289,200" style="stroke-width: 2; stroke: #FFAAAA" />    <text class="taxon_text" x="295" y="204">Lepisosteiformes Lepisosteiformes Lepisosteidae Lepisosteus oculatus
+    
+</text>
+    <polyline points="236,188 236,176 280,176" style="stroke-width: 2; stroke: #FF2A2A" />    <text class="node_text" x="286" y="180">100
+    
+</text>
+    <polyline points="226,200 226,212 272,212" style="stroke-width: 2; stroke: #FF0000" />    <text class="taxon_text" x="278" y="216">Amiiformes Amiidae Amia calva gill
+    
+</text>
+    <polyline points="226,200 226,188 236,188" style="stroke-width: 2; stroke: #FF5555" />    <text class="node_text" x="242" y="192">96
+    
+</text>
+    <polyline points="174,212 174,225 276,225" style="stroke: #acf; stroke-width: 2" />    <text class="taxon_text" x="282" y="229">Teleost Osteoglossiformes Osteoglossiformes Osteoglossidae Scleropages formosus
+    
+</text>
+    <polyline points="174,212 174,200 226,200" style="stroke: #FF5555; stroke-width: 2" />    <text class="node_text" x="232" y="204">100
+    
+</text>
+    <polyline points="167,225 167,237 236,237" style="stroke: #FF8080; stroke-width: 2" />    <text class="taxon_text" x="242" y="241">Teleost Anguilliformes Anguillidae Anguilla anguilla
+    
+</text>
+    <polyline points="167,225 167,212 174,212" style="stroke-width: 2; stroke: #FF5555" />    <text class="node_text" x="180" y="216">92
+    
+</text>
+    <polyline points="202,256 202,262 300,262" style="stroke-width: 2; stroke: #FFAAAA" />    <text class="taxon_text" x="306" y="266">Teleost Otophysa Cypriniformes Danionidae Danio rerio
+    
+</text>
+    <polyline points="202,256 202,250 283,250" style="stroke-width: 2; stroke: #FFAAAA" />    <text class="taxon_text" x="289" y="254">Teleost Otophysa Characiformes Characidae Astyanax mexicanus
+    
+</text>
+    <polyline points="164,265 164,275 256,275" style="stroke-width: 2; stroke: #acf" />    <text class="taxon_text" x="262" y="279">Teleost Clupeiformes Clupeiformes Clupeidae Clupea harengus
+    
+</text>
+    <polyline points="164,265 164,256 202,256" style="stroke-width: 2; stroke: #FFAAAA" />    <text class="node_text" x="208" y="260">100
+    
+</text>
+    <polyline points="147,245 147,265 164,265" style="stroke-width: 2; stroke: #FFAAAA" />    <text class="node_text" x="170" y="269">100
+    
+</text>
+    <polyline points="147,245 147,225 167,225" style="stroke-width: 2; stroke: #FF5555" />    <text class="node_text" x="173" y="229">100
+    
+</text>
+    <polyline points="138,266 138,287 222,287" style="stroke-width: 2; stroke: #FF0000" />    <text class="taxon_text" x="228" y="291">Teleost Euteleost Lepidogalaxiiformes Lepidogalaxiidae Lepidogalaxias salamandroides
+    
+</text>
+    <polyline points="138,266 138,245 147,245" style="stroke-width: 2; stroke: #FF8080" />    <text class="node_text" x="153" y="249">100
+    
+</text>
+    <polyline points="149,306 149,312 177,312" style="stroke-width: 2; stroke: #80b3ff" />    <text class="taxon_text" x="183" y="316">Teleost Euteleost Salmoniformes Salmonidae Salmo salar
+    
+</text>
+    <polyline points="149,306 149,300 192,300" style="stroke-width: 2; stroke: #acf" />    <text class="taxon_text" x="198" y="304">Teleost Euteleost Esociformes Esocidae Esox lucius
+    
+</text>
+    <polyline points="117,286 117,306 149,306" style="stroke-width: 2; stroke: #acf" />    <text class="node_text" x="155" y="310">100
+    
+</text>
+    <polyline points="117,286 117,266 138,266" style="stroke: #FF8080; stroke-width: 2" />    <text class="node_text" x="144" y="270">100
+    
+</text>
+    <polyline points="112,211 112,286 117,286" style="stroke-width: 2; stroke: #FF8080" />    <text class="node_text" x="123" y="290">66
+    
+</text>
+    <polyline points="112,211 112,137 157,137" style="stroke: #FF5555; stroke-width: 2" />    <text class="taxon_text" x="163" y="141">Teleost Euteleost Argentiniformes Argentinidae Argentina sp
+    
+</text>
+    <polyline points="120,331 120,337 172,337" style="stroke-width: 2; stroke: #acf" />    <text class="taxon_text" x="178" y="341">Teleost Euteleost Osmeriformes Osmeridae Osmerus eperlanus
+    
+</text>
+    <polyline points="120,331 120,325 161,325" style="stroke: #D40000; stroke-width: 2" />    <text class="taxon_text" x="167" y="329">Teleost Euteleost Stomiatiformes Stomiidae Borostomias antarcticus
+    
+</text>
+    <polyline points="105,271 105,331 120,331" style="stroke: #FF5555; stroke-width: 2" />    <text class="node_text" x="126" y="335">100
+    
+</text>
+    <polyline points="105,271 105,211 112,211" style="stroke-width: 2; stroke: #FF8080" />    <text class="node_text" x="118" y="215">100
+    
+</text>
+    <polyline points="80,310 80,350 111,350" style="stroke-width: 2; stroke: #FFAAAA" />    <text class="taxon_text" x="117" y="354">Teleost Euteleost Aulopiformes Chlorophthalmidae Parasudis fraserbrunneri
+    
+</text>
+    <polyline points="80,310 80,271 105,271" style="stroke: #FF8080; stroke-width: 2" />    <text class="node_text" x="111" y="275">100
+    
+</text>
+    <polyline points="78,336 78,362 146,362" style="stroke-width: 2; stroke: #FF8080" />    <text class="taxon_text" x="152" y="366">Teleost Euteleost Ateleopodiformes Ateleopodidae Guentherus altivela
+    
+</text>
+    <polyline points="78,336 78,310 80,310" style="stroke-width: 2; stroke: #FF8080" />    <text class="node_text" x="86" y="314">72
+    
+</text>
+    <polyline points="74,355 74,375 147,375" style="stroke: #FF5555; stroke-width: 2" />    <text class="taxon_text" x="153" y="379">Teleost Euteleost Myctophiformes Myctophidae Benthosema glaciale
+    
+</text>
+    <polyline points="74,355 74,336 78,336" style="stroke-width: 2; stroke: #FF8080" />    <text class="node_text" x="84" y="340">100
+    
+</text>
+    <polyline points="68,234 68,355 74,355" style="stroke: #FFAAAA; stroke-width: 2" />    <text class="node_text" x="80" y="359">100
+    
+</text>
+    <polyline points="68,234 68,112 73,112" style="stroke: #FFAAAA; stroke-width: 2" />    <text class="node_text" x="79" y="116">95
+    
+</text>
+    <polyline points="65,310 65,387 118,387" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="124" y="391">Teleost Euteleost Lampriformes Lampridae Lampris guttatus
+    
+</text>
+    <polyline points="65,310 65,234 68,234" style="stroke: #FFAAAA; stroke-width: 2" />    <text class="node_text" x="74" y="238">100
+    
+</text>
+    <polyline points="55,355 55,400 76,400" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="82" y="404">Teleost Euteleost Trachichthyformes Monocentridae Monocentris japonica
+    
+</text>
+    <polyline points="55,355 55,310 65,310" style="stroke: #FFAAAA; stroke-width: 2" />    <text class="node_text" x="71" y="314">100
+    
+</text>
+    <polyline points="123,431 123,437 126,437" style="stroke: #59f; stroke-width: 2" />    <text class="taxon_text" x="132" y="441">Teleost Euteleost Ovalentaria Cichliformes Cichlidae Oreochromis niloticus
+    
+</text>
+    <polyline points="123,431 123,425 127,425" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="133" y="429">Teleost Euteleost Ovalentaria Cichliformes Cichlidae Haplochromis burtoni
+    
+</text>
+    <polyline points="109,421 109,431 123,431" style="stroke-width: 2; stroke: #80b3ff" />    <text class="node_text" x="129" y="435">100
+    
+</text>
+    <polyline points="109,421 109,412 122,412" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="128" y="416">Teleost Euteleost Ovalentaria Cichliformes Cichlidae Amphilophus citrinellus
+    
+</text>
+    <polyline points="84,435 84,450 161,450" style="stroke-width: 2; stroke: #80b3ff" />    <text class="taxon_text" x="167" y="454">Teleost Euteleost Carangaria Pleuronectiformes Cynoglossidae Cynoglossus semilaevis
+    
+</text>
+    <polyline points="84,435 84,421 109,421" style="stroke-width: 2; stroke: #80b3ff" />    <text class="node_text" x="115" y="425">100
+    
+</text>
+    <polyline points="89,468 89,475 132,475" style="stroke-width: 2; stroke: #80b3ff" />    <text class="taxon_text" x="138" y="479">Teleost Euteleost Eupercaria Perciformes Gasterosteidae Gasterosteus aculeatus
+    
+</text>
+    <polyline points="89,468 89,462 103,462" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="109" y="466">Teleost Euteleost Eupercaria Perciformes Percidae Perca fluviatilis
+    
+</text>
+    <polyline points="84,478 84,487 159,487" style="stroke-width: 2; stroke: #80b3ff" />    <text class="taxon_text" x="165" y="491">Teleost Euteleost Eupercaria Tetraodontiformes Tetraodontidae Takifugu rubripes
+    
+</text>
+    <polyline points="84,478 84,468 89,468" style="stroke: #80b3ff; stroke-width: 2" />    <text class="node_text" x="95" y="472">100
+    
+</text>
+    <polyline points="80,457 80,478 84,478" style="stroke: #80b3ff; stroke-width: 2" />    <text class="node_text" x="90" y="482">71
+    
+</text>
+    <polyline points="80,457 80,435 84,435" style="stroke-width: 2; stroke: #80b3ff" />    <text class="node_text" x="90" y="439">69
+    
+</text>
+    <polyline points="78,478 78,500 100,500" style="stroke-width: 2; stroke: #80b3ff" />    <text class="taxon_text" x="106" y="504">Teleost Euteleost Pelagiaria Scombriformes Scombridae Thunnus albacares
+    
+</text>
+    <polyline points="78,478 78,457 80,457" style="stroke: #acf; stroke-width: 2" />    <text class="node_text" x="86" y="461">99
+    
+</text>
+    <polyline points="71,495 71,512 123,512" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="129" y="516">Teleost Euteleost Batrachoidaria Batrachoidiformes Batrachoididae Chatrabus melanurus
+    
+</text>
+    <polyline points="71,495 71,478 78,478" style="stroke-width: 2; stroke: #acf" />    <text class="node_text" x="84" y="482">100
+    
+</text>
+    <polyline points="66,510 66,525 116,525" style="stroke-width: 2; stroke: #80b3ff" />    <text class="taxon_text" x="122" y="529">Teleost Euteleost Ophidiaria Ophidiiformes Ophidiidae Brotula barbata
+    
+</text>
+    <polyline points="66,510 66,495 71,495" style="stroke-width: 2; stroke: #acf" />    <text class="node_text" x="77" y="499">100
+    
+</text>
+    <polyline points="52,432 52,510 66,510" style="stroke-width: 2; stroke: #acf" />    <text class="node_text" x="72" y="514">100
+    
+</text>
+    <polyline points="52,432 52,355 55,355" style="stroke-width: 2; stroke: #acf" />    <text class="node_text" x="61" y="359">100
+    
+</text>
+    <polyline points="50,340 50,537 73,537" style="stroke-width: 2; stroke: #FF8080" />    <text class="taxon_text" x="79" y="541">Teleost Euteleost Beryciformes Berycidae Beryx splendens
+    
+</text>
+    <polyline points="50,340 50,432 52,432" style="stroke: #acf; stroke-width: 2" />    <text class="node_text" x="58" y="436">88
+    
+</text>
+    <polyline points="50,340 50,50 78,50" style="stroke: #80b3ff; stroke-width: 2" />    <text class="taxon_text" x="84" y="54">Teleost Euteleost Holocentriformes Holocentridae Myripristis jacobus
+    
+</text>
+    <line class="scale_bar" style="stroke-width: 1; stroke: black" x1="50" x2="600" y1="595" y2="595" />    <text class="scale_label" x="606" y="595"> 
+    
+</text>
+    <line class="scale_major" style="stroke: black; stroke-width: 1" x1="50" x2="50" y1="595" y2="575" />    <text class="major_label" x="50" y="565">0
+    
+</text>
+    <line class="scale_major" style="stroke: black; stroke-width: 1" x1="600" x2="600" y1="595" y2="575" />    <text class="major_label" x="600" y="565">1.5317693851
+    
+</text>
+    <line class="scale_minor" style="stroke-width: 1; stroke: black" x1="50" x2="50" y1="595" y2="585" />
+    <line class="scale_minor" style="stroke-width: 1; stroke: black" x1="600" x2="600" y1="595" y2="585" />
+</svg>
