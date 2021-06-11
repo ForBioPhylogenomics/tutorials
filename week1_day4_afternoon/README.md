@@ -70,3 +70,5 @@ The folder "_Lecture_" contains the lecture from this session.
 	
 9. When it is done, run a tree reconstruction again on the supermatrix as done before
 
+# [RESULTS](Results)
+The folder "_Results_" contains the most important results from this session.
