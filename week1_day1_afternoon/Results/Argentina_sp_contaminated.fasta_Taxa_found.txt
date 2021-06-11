@@ -1,0 +1,5 @@
+AF508125	cellular organisms;Eukaryota;Opisthokonta;Metazoa;Eumetazoa;Bilateria;Protostomia;Spiralia;Lophotrochozoa;Annelida;Polychaeta;Polychaeta incertae sedis;Protodrilidae;Protodriloides;Protodriloides symbioticus;
+FM946130	cellular organisms;Eukaryota;Opisthokonta;Metazoa;Porifera;Hexactinellida;Amphidiscophora;Amphidiscosida;Hyalonematidae;Hyalonema;unclassified Hyalonema;Hyalonema sp. MD-2008;
+FN690609	cellular organisms;Eukaryota;Sar;Stramenopiles;environmental samples;uncultured stramenopile;
+KR048747	cellular organisms;Eukaryota;Opisthokonta;Metazoa;Eumetazoa;Bilateria;Protostomia;Ecdysozoa;Panarthropoda;Arthropoda;Mandibulata;Pancrustacea;Crustacea;Multicrustacea;Hexanauplia;Copepoda;Neocopepoda;Podoplea;Poecilostomatoida;Bomolochidae;Nothobomolochus;Nothobomolochus thambus;
+LR584437	cellular organisms;Eukaryota;Opisthokonta;Metazoa;Eumetazoa;Bilateria;Deuterostomia;Chordata;Craniata;Vertebrata;Gnathostomata;Teleostomi;Euteleostomi;Actinopterygii;Actinopteri;Neopterygii;Teleostei;Osteoglossocephalai;Clupeocephala;Euteleosteomorpha;Protacanthopterygii;Salmoniformes;Salmonidae;Salmoninae;Salmo;Salmo trutta;

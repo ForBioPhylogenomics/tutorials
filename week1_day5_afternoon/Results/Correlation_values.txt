@@ -1,0 +1,51 @@
+> cor.test (LB_scores_summary_perPartition$LB_score_Heterogeneity, LB_scores_summary_perPartition$LB_score_upper_quartile)
+
+	Pearson's product-moment correlation
+
+data:  LB_scores_summary_perPartition$LB_score_Heterogeneity and LB_scores_summary_perPartition$LB_score_upper_quartile
+t = 18.363, df = 99, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.8256680 0.9170802
+sample estimates:
+     cor 
+0.879228 
+
+> cor.test (LB_scores_summary_perPartition$LB_score_Heterogeneity, LB_scores_summary_perPartition$Tip_to_Root_upper_quartile)
+
+	Pearson's product-moment correlation
+
+data:  LB_scores_summary_perPartition$LB_score_Heterogeneity and LB_scores_summary_perPartition$Tip_to_Root_upper_quartile
+t = 6.4811, df = 99, p-value = 3.574e-09
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.3921969 0.6697922
+sample estimates:
+      cor 
+0.5458002 
+
+> cor.test (LB_scores_summary_perPartition$LB_score_Heterogeneity, LB_scores_summary_perPartition$Tip_to_Root_Heterogeneity)
+
+	Pearson's product-moment correlation
+
+data:  LB_scores_summary_perPartition$LB_score_Heterogeneity and LB_scores_summary_perPartition$Tip_to_Root_Heterogeneity
+t = 15.004, df = 99, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.7620842 0.8847320
+sample estimates:
+      cor 
+0.8333964 
+
+> cor.test (LB_scores_summary_perPartition$LB_score_Heterogeneity, LB_scores_summary_perPartition$Average_PD)
+
+	Pearson's product-moment correlation
+
+data:  LB_scores_summary_perPartition$LB_score_Heterogeneity and LB_scores_summary_perPartition$Average_PD
+t = 2.8128, df = 99, p-value = 0.005923
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.08089944 0.44387726
+sample estimates:
+      cor 
+0.2720375 

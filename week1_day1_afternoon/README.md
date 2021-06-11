@@ -62,3 +62,5 @@ The folder "_Lectures_" contains all the lectures from this session.
 	
 9. Now you have a final tree (ending on _.treefile_) and compare it with the tree including the contaminated sequences. You can find this tree in the folder "_Day1Morning_". Are there any differences between the trees? Have in mind Argentina was the taxon with deliberate contamintion in this example and two loci were affected by this.<br>
 	
+# [RESULTS](Results)
+The folder "_Results_" contains the most important results from this session.

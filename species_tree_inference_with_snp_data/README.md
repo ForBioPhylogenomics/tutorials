@@ -1,6 +1,6 @@
 # Species-Tree Inference with SNP Data
 
-A tutorial on the inference of species trees from SNP data based on quartets<br/>
+A tutorial on the inference of species trees from SNP data based on quartets<br>
 By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner)
 
 ## Summary

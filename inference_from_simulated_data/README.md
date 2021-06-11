@@ -43,21 +43,8 @@ To also test the effect of population-size variation on the inference methods, a
 <a name="requirements"></a>
 ## Requirements
 
-This tutorial requires **BEAST2**, **bModelTest**, **Tracer**, **FigTree**, **ASTRAL**, **PAUP\***, **SNAPP**, **SNAPPER**, **babette**, **ape**, **PhyloNet**, and **SpeciesNetwork** to be installed. Details about the installation of these tools can be found in tutorials [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md), [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md).
+This tutorial requires **BEAST2**, **bModelTest**, **Tracer**, **FigTree**, **ASTRAL**, **PAUP\***, **SNAPP**, **SNAPPER**, **babette**, **ape**, **PhyloNet**, **SpeciesNetwork**, and **Msprime** to be installed. Details about the installation of these tools can be found in tutorials [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md), [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Maximum-Likelihood Inference of Species Networks](../ml_inference_of_species_networks/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md), and [Analysis of Introgression with Tree Topologies](../analysis_of_introgression_with_tree_topologies/README.md).
 
-The following tool is required additionally:
-
-* **Msprime:** The Python library [msprime](https://tskit.dev/msprime/docs/stable/intro.html) ([Kelleher et al. 2016](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842)) will be required for all simulations. The library can be installed with pip for Python, using the following commands:
-
-		module purge
-		module load Python/3.8.2-GCCcore-9.3.0
-		pip install --user msprime
-		
-	The installation can be tested with this command:
-	
-		python -c 'import msprime'
-		
-	If this does not produce an error message, the installation was successful.
 
 <a name="msprime"></a>
 ## Coalescent simulations with Msprime
@@ -317,7 +304,7 @@ Finally, it is time to run a more realistic simulation that mimicks the diversif
 
 For the species tree, we'll use the following Newick string that encodes the phylogeny of the six species that received the strongest support in [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650): "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)". To verify that this Newick string encodes the phylogeny correctly, you could copy it and paste it into a new FigTree window. This should show the following tree:<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p> In contrast to the Newick string that we had used in the first demographic model for species "A" and "B", the branch lengths of this Newick string are now not in units of generations, but in units of millions of years, according to how the species tree was inferred in Bouckaert et al. (2019). However, we can still use the Newick string as it is; we just need to provide a generation time to Msprime so that Msprime can convert the branch lengths internally.
 
-Reasonable parameters for our simulations may be a generation time of 3 years ([Malinsky et al. 2018](https://doi.org/10.1038/s41559-018-0717-x)), a population size of 9.3 &times; 10<sup>4</sup> (as inferred with SNAPP in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md)), a sequence length of 5 million bp (a longer one would be unnecessarily computationally demanding), a recombination rate of 3 &times; 10<sup>-8</sup> per bp per generation (corresponding to one recombination event per generation on a chromosome that is 33 Mbp long –- a length compararable to those of cichlids), and a mutation rate of 3.5 &times; 10<sup>-9</sup> per bp per generation ([Malinsky et al. 2018](https://doi.org/10.1038/s41559-018-0717-x)).
+Reasonable parameters for our simulations may be a generation time of 3 years ([Malinsky et al. 2018](https://doi.org/10.1038/s41559-018-0717-x)), a population size of 1.1 &times; 10<sup>5</sup> (as inferred with SNAPP in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md)), a sequence length of 5 million bp (a longer one would be unnecessarily computationally demanding), a recombination rate of 3 &times; 10<sup>-8</sup> per bp per generation (corresponding to one recombination event per generation on a chromosome that is 33 Mbp long –- a length compararable to those of cichlids), and a mutation rate of 3.5 &times; 10<sup>-9</sup> per bp per generation ([Malinsky et al. 2018](https://doi.org/10.1038/s41559-018-0717-x)).
 
 * Set up the demographic model with these parameter values using the following commands, which include calling the `DemographyDebugger` once again to verify the model:
 
@@ -327,7 +314,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		# Set parameter values:
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
-		population_size = 9.3E4
+		population_size = 1.1E5
 		sequence_length = 5E6
 		recombination_rate = 3E-8
 		mutation_rate = 3.5E-9
@@ -354,7 +341,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		# Set parameter values:
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
-		population_size = 9.3E4
+		population_size = 1.1E5
 		sequence_length = 5E6
 		recombination_rate = 3E-8
 		mutation_rate = 3.5E-9
@@ -438,7 +425,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		# Set parameter values:
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
-		population_size = 9.3E4
+		population_size = 1.1E5
 		sequence_length = 5E6
 		recombination_rate = 3E-8
 		mutation_rate = 3.5E-9
@@ -470,7 +457,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		# Set parameter values:
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
-		population_size = 9.3E4
+		population_size = 1.1E5
 		sequence_length = 5E6
 		recombination_rate = 3E-8
 		mutation_rate = 3.5E-9
@@ -616,7 +603,7 @@ There are a number of options to simulate changes in population sizes with Mspri
 		# Set parameter values:
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
-		population_size = 9.3E4
+		population_size = 1.1E5
 		sequence_length = 1E7
 		recombination_rate = 1E-7
 		mutation_rate = 3.5E-9
@@ -649,7 +636,7 @@ There are a number of options to simulate changes in population sizes with Mspri
 		# Set parameter values:
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
-		population_size = 9.3E4
+		population_size = 1.1E5
 		sequence_length = 1E7
 		recombination_rate = 1E-7
 		mutation_rate = 3.5E-9

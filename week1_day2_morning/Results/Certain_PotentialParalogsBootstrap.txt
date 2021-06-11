@@ -1,0 +1,1 @@
+locus_0099.fas.treefile 100 0.4558353539 Xenopus_tropicalis Coelacanthiformes_Coelacanthiformes_Latimeriidae_Latimeria_chalumnae Lepisosteiformes_Lepisosteiformes_Lepisosteidae_Lepisosteus_oculatus 
