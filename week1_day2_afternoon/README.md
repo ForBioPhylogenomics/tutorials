@@ -85,3 +85,5 @@ The folder "_Lecture_" contains the lecture from this session.
 	
 10. When it is done, run a tree reconstruction again on the supermatrix as explained above in point 5 (the concatenated files should be in the folder "_Supermatrix_"); I would suggest to rename "_sbatch_Supermatrix_MARE_tree.sh_" to "_sbatch_Supermatrix_AveBoot_tree.sh_"
 
+# [RESULTS](Results)
+The folder "_Results_" contains the most important results from this session.
