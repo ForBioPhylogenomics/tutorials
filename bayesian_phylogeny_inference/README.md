@@ -459,7 +459,7 @@ Thus, both the calculation of ESS values as well as the visual inspection of tra
 	**Question 3:** Besides the prior and posterior probabilities, which parameter has the lowest ESS value? [(see answer)](#q3)
 	**Question 4:** Could this parameter be responsible for the low ESS value of the prior probability? [(see answer)](#q4)
 
-* To find out why the estimation of the A &arr; T substitution rate seems to be difficult for the second partition, we can use a Ruby script to calculate the number of sites in an alignment at which each pair of nucleotides co-occur. Download this script to Saga:
+* To find out why the estimation of the A &rarr; T substitution rate seems to be difficult for the second partition, we can use a Ruby script to calculate the number of sites in an alignment at which each pair of nucleotides co-occur. Download this script to Saga:
 
 		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/count_substitutions.rb
 
@@ -514,7 +514,7 @@ Even though both chains are clearly not stationary yet, their comparison indicat
 
 	**Question 10:** Which models are most frequently used for the ten partitions? [(see answer)](#q10)<p align="center"><img src="img/bmodelanalyser2.png" alt="Tracer" width="600"></p>As you'll see, the BModelAnalyser App will also have opened ten browser tabs with graphs of the used models. The nodes in these graphs illustrate the frequencies with which the models are used during the analysis, and the edges show the ways in which the different models are nested within each other (those above an edge are special cases of those below it).
 
-	**Question 11:** Do you have any idea why the estimation of the A &arr; T substitution rate parameter for the second partition may have been improved in the analysis with the bModelTest model?[(see answer)](#q11)
+	**Question 11:** Do you have any idea why the estimation of the A &rarr; T substitution rate parameter for the second partition may have been improved in the analysis with the bModelTest model?[(see answer)](#q11)
 	
 * Have a look whether for one of the partitions you find a pattern in the traces of the substitution rates like the one shown in the next screenshot.<p align="center"><img src="img/tracer12.png" alt="Tracer" width="700"></p>
 
@@ -600,7 +600,7 @@ According to the BEAST2 analyses of this tutorial, African and Neotrocial cichli
 
 <a name="q6"></a>
 
-* **Question 6:** The two replicate analyses should have reached a comparable degree of stationarity. Of my two replicates, the second one appears slightly more stationary as its lowest ESS is 22 while that of the first replicate was only 8. This is likely because the estimate for the A &arr; T substitution rate of the second partition did not get stuck as often at values very close to zero as in the first replicate; the ESS value for that parameter is 96. In any case, both analyses are far from stationarity and should ideally run five or ten times longer before conclusions are drawn (but we'll ignore this in this tutorial).
+* **Question 6:** The two replicate analyses should have reached a comparable degree of stationarity. Of my two replicates, the second one appears slightly more stationary as its lowest ESS is 22 while that of the first replicate was only 8. This is likely because the estimate for the A &rarr; T substitution rate of the second partition did not get stuck as often at values very close to zero as in the first replicate; the ESS value for that parameter is 96. In any case, both analyses are far from stationarity and should ideally run five or ten times longer before conclusions are drawn (but we'll ignore this in this tutorial).
 
 <a name="q7"></a>
 
@@ -612,7 +612,7 @@ According to the BEAST2 analyses of this tutorial, African and Neotrocial cichli
 
 <a name="q9"></a>
 
-* **Question 9:** The estimate for the A &arr; T substitution rate parameter for the second partition (named "rateAT.02") appears to be much more stationary in my analysis with the bModelTest model, with an ESS value of 690, and a trace plot that in fact looks like a hairy caterpillar, as shown in the next screenshot.<p align="center"><img src="img/tracer11.png" alt="Tracer" width="700"></p>
+* **Question 9:** The estimate for the A &rarr; T substitution rate parameter for the second partition (named "rateAT.02") appears to be much more stationary in my analysis with the bModelTest model, with an ESS value of 690, and a trace plot that in fact looks like a hairy caterpillar, as shown in the next screenshot.<p align="center"><img src="img/tracer11.png" alt="Tracer" width="700"></p>
 
 <a name="q10"></a>
 
@@ -627,7 +627,7 @@ According to the BEAST2 analyses of this tutorial, African and Neotrocial cichli
 	* 11.94%: "123345"
 	* 7.55%: "123341"
 
-	Except for the first of these four models, which is the GTR model, all other models link the third and the fourth of the six substitution rate, namely the A &arr; T and C &arr; G substitution rates. As the GTR model is used with a frequency of around 64%, this means that with a frequency of around 36%, a model is used that links the A &arr; T substitution rate with another one. This may have helped to improve the problematic estimation of this rate from the second partition, which has only four sites at which an A &arr; T substitution rate has occurred.
+	Except for the first of these four models, which is the GTR model, all other models link the third and the fourth of the six substitution rate, namely the A &rarr; T and C &rarr; G substitution rates. As the GTR model is used with a frequency of around 64%, this means that with a frequency of around 36%, a model is used that links the A &rarr; T substitution rate with another one. This may have helped to improve the problematic estimation of this rate from the second partition, which has only four sites at which an A &rarr; T substitution rate has occurred.
 	
 
 <a name="q12"></a>
