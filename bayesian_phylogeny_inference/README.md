@@ -125,7 +125,7 @@ This part of the tutorial is easiest done on Saga. The dataset of 100 alignments
 		
 	You'll see that this script is primarily for conversion between alignment formats. However, option `-p` allows the specification of certain IDs that should be included in the output. We are going to use this option to specify that only sequences from the 20 target species should be written to new output files.
 
-* Open a new file named `convert_alignments.sh` on Saga, using a text editor available on Saga, such as Emacs, Vim, or Nano. You could also write the file with a GUI text editor on a local computer, but then the file would need to be copied to Saga afterwards, e.g. with `scp`. When using Emacs to open the new file, type the following command (for other text editors, simply replace "emacs" with "vim" or "nano"):
+* Open a new file named `reduce_alignments.sh ` on Saga, using a text editor available on Saga, such as Emacs, Vim, or Nano. You could also write the file with a GUI text editor on a local computer, but then the file would need to be copied to Saga afterwards, e.g. with `scp`. When using Emacs to open the new file, type the following command (for other text editors, simply replace "emacs" with "vim" or "nano"):
 
 		emacs reduce_alignments.sh
 		
