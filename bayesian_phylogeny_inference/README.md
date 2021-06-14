@@ -411,8 +411,8 @@ In the above phylogenetic inference, we assumed that the GTR substitution model 
 				
 * While the BEAST2 are running for the files `beast2.xml` and `bmodeltest.xml`, have a look at the output that these analyses write to files `r01/run_beast.out`, `r02/run_beast.out`, and `run_bmodeltest.out`:
 
-		less r01/run_beast.out
-		less r02/run_beast.out
+		less r01/run_beast2.out
+		less r02/run_beast2.out
 		less run_bmodeltest.out
 
 	When you scroll to the end any of these output files, you'll find a table written by BEAST2, with information for "Sample", "posterior", "likelihood", "prior", and an estimate of the run time per million samples. Here "sample" refers to the iteration of the MCMC, and the "posterior", "likelihood", and "prior" are the log values of the posterior probability, the likelihood, and the prior probability, respectively, for the corresponding MCMC iteration. These values should initially change rapidly but become stationary after a while. Note that to track the progress of BEAST2, you may have to repeatedly close and open these files, so that you can see the lines that have been added to the end of it since you last opened the file.
