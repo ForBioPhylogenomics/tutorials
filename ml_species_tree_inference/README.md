@@ -65,7 +65,7 @@ The following tool is required additionally:
 		
 	The installation can be tested with this command, which should output the help text of ASTRAL:
 	
-			java -jar Astral/astral.5.7.7.jar
+		java -jar Astral/astral.5.7.7.jar
 
 
 <a name="iqtree"></a>
