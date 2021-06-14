@@ -79,3 +79,6 @@ The folder "_Lecture_" contains the lecture from this session.
 	```
 	sbatch sbatch_Supermatrix_Cleaned_tree.sh
 	```
+
+# [RESULTS](Results)
+The folder "_Results_" contains the most important results from this session.

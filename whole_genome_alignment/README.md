@@ -57,7 +57,7 @@ A detailed exposition of alignment is outside the scope of this tutorial (and I 
 
 Repetitive sequences are sequences that are identical or very similar that occur multiple places in a genome. For instance the short tandem repeat ACT repeated both in tandem (ACTACTACTACT), but also multiple places, or different transposable elements that have copied themselves across the genome. These repetitive sequences will lead to large numbers of comparisons unless they are taken out of the picture in some way. The usual approach is to mask them, either hard mask (replace the repeats with Ns) or soft mask (lower case letters; standard fasta sequence is upper case). If a sequence is hard masked, it is basically gone from the analysis, so the recommendation is to soft mask. Alignments will not be initiated in soft masked regions, but alignments might extend into soft mask regions and therefore lead to less fragmented alignments.
 
-Maybe most common today is to use [RepeatModeler](http://www.repeatmasker.org/RepeatModeler/) [Flynn et al (2020)](https://doi.org/10.1073/pnas.1921046117) to create a species specific repeat library, and use that in [RepeatMasker](https://www.repeatmasker.org/) to mask the genome. That process is a bit circumstantial so we'll take a short cut here (but feel free to use it in your own analysis).
+Maybe most common today is to use [RepeatModeler](http://www.repeatmasker.org/RepeatModeler/) [Flynn et al (2020)](https://doi.org/10.1073/pnas.1921046117) to create a species specific repeat library, and use that in [RepeatMasker](https://www.repeatmasker.org/) to mask the genome. That process is a bit circumstantial so we'll take a short cut here (but feel free to use it in your own analysis). Running these two on a bird genome (about 1 Gbp) took around 20 hours with 40 CPUs for RepeatModeler and 2 hours with 40 CPUs for RepeatMasker, compared to 15 to 60 minutes with 1 CPU for the genomes here. RepeatModeler/RepeatMasker might be better, but it is hard to evaluate. If you are interested in the actual repeats themselves (which transposable element occurs where, for instance), running RepeatModeler/RepeatMasker is needed, but for just masking the repeats, Red is likely sufficient.
 
 Red [Giris (2015)](https://doi.org/10.1186/s12859-015-0654-5) can do the softmasking in one step instead of two, and is faster. We'll run it via the Python script [redmask](https://github.com/nextgenusfs/redmask) to get readily softmasked genomes.
 
@@ -206,9 +206,9 @@ The second is that Cactus uses /tmp quite a bit (unless specifying --workDir, bu
 
 In the future it is likely that Toil will change their code to not hard link or to handle those cases better at least, or if you run on a different system than Saga, you might not have these limitations. However, I think it is good to point out that your and our analyses might stop or be delayed by such choices as which filesystem is used on our computation cluster.
 
-As you might understand, Cactus is a beast and therefore is quite computing hungry. When I ran the dataset, I used 30 hours using 32 CPUs on a bigmem node. We have been given a reservation for nodes on Saga, 128 CPUs from 13:15:00 and for 26 hours. All of the participants cannot run the full dataset, nothing will finish in time then. We'll have 2 people running the full dataset, with the rest running a reduced one.
+As you might understand, Cactus is a beast and therefore is quite computing hungry. When I ran the dataset, I used 30 hours using 32 CPUs on a bigmem node. We have been given a reservation for nodes on Saga, 128 CPUs from 13:15:00 and for 26 hours. All of the participants cannot run the full dataset, nothing will finish in time then. We'll have 2 people running the full dataset, with the rest running a reduced one, using only chromosome 5 from Nile tilapia and the corresponding sequences from the other species (see [Getting only chr5](#chr5) below if you'll like to see how I did that).
 
-All cannot run this in the course folder, that is, in /cluster/projects/nn9458k/phylogenomics/$USERNAME, because that might exceed the limiations of what the course have been given. So we need to run this in $USERWORK. I have set this up in the scripts, and hopefully it will work fine.
+All cannot run this in the course folder, that is, in /cluster/projects/nn9458k/phylogenomics/$USERNAME, because that might exceed the limitations of what the course have been given. So we need to run this in $USERWORK. I have set this up in the scripts, and hopefully it will work fine.
 
 To start, we need to grab the container. You don't have to do this, I put it into the work scripts, but this is basically the command:
 ```
@@ -221,7 +221,7 @@ If you copied the scrips in the first part, it is basically to just do:
 sbatch run_cactus_chr5.sh
 ```
 
-And everything should work fine. In the end you'll get cichlids_chr5.hal and cichlids_chr5.maf files in your /cluster/projects/nn9458k/phylogenomics/$USERNAME folder, in addition to halValidation.chr5.txt and halStats.chr5.txt, a validation and a statistics file of the HAL file.
+And everything should work fine. In the end you'll get cichlids_chr5.hal and cichlids_chr5.maf files in your /cluster/projects/nn9458k/phylogenomics/$USERNAME folder, in addition to halValidation.chr5.txt and halStats.chr5.txt, a validation and a statistics file of the HAL file. The whole process took about 5 hours when I tried it.
 
 halValidation.chr5.txt should basically just contain:
 ```
@@ -272,3 +272,41 @@ orenil, 0, 1005681550, 2460, 22880110, 0
 You'll work further with the cichlids_chr5.maf file tomorrow.
 
 One of the main advantages of having a multiple whole genome alignment is that you can pinpoint conserved sequences across the species. In many cases that will be exons, and a HAL file can be use for [comparative annotation](https://github.com/ComparativeGenomicsToolkit/Comparative-Annotation-Toolkit). This is outside the scope of this tutorial.
+
+You have come to the end and are done with the tutorial. Congratulations!
+
+<a name="chr5"></a>
+## Getting only chr5
+This is for information purposes only, and to get this kinda complete.
+
+To create a reduced dataset we'll only use chromosome 5 from Nile tilapia and the corresponding sequences from the other species. For each species I did this:
+```
+module load StdEnv minimap2/2.17-GCC-8.3.0
+
+mkdir -p paf_alignments
+
+cd paf_alignments
+
+if [ ${1} != 'orenil' ]; then
+	minimap2 -t 10  -cx asm20 ../../data/orenil.fasta ../../data/${1}.fasta > $1_orenil.asm20.paf
+fi
+```
+That is, mapped all against Nile tilapia. Chromosome 5 is called NC_031970.2 in Nile tilapia, so we extract all sequences that map to it at a quality higher than 50 and with an alignment length longer than 5000 bp:
+```
+module load StdEnv seqtk/1.3-foss-2018b
+
+for i in $(ls ../data/*fasta); do
+	j=${i%.fasta}
+	l=${j##*/}
+	echo $l
+	#>NC_031970.2 is LG5/chromosome 5
+	#quality of more than 50 and longer than 5000 bp alignmentx
+	grep NC_031970.2 paf_alignments/${l}_orenil.asm20.paf |awk '$12 > 50' |awk '$10 > 5000'| cut -f 1 | sort -u > paf_alignments/${l}_maps_to_chr5
+	seqtk subseq masked_assemblies/${l}.softmasked.fa paf_alignments/${l}_maps_to_chr5 > masked_assemblies/${l}.softmasked.chr5.fa
+done
+
+samtools faidx  masked_assemblies/orenil.softmasked.fa NC_031970.2 > masked_assemblies/orenil.softmasked.chr5.fa
+```
+In the end the *softmasked.chr5.fa files were created.
+
+If you are reading this and thinking "Didn't you basically do what we did above in a fraction of the time?", then yes, you are correct. There might be some more alignments done inside Cactus, but it is clearly not the quickest whole genome aligner out there. Minimap2 is much faster, but it is only pairwise, and there are presently no way of using Minimap2 instead of LastZ (which is in Cactus) now. However, [Cactus does have a pangenome pipeline implemented](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md), which actually uses Minimap2 but assumes genomes from one species and they need to do some tricks (splitting up into chromosomes) to get it to work.
