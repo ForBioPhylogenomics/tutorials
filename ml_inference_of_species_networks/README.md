@@ -209,6 +209,8 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 
 		# Set a variable for the directory.
 		dir=alignments
+		
+		# Get the command-line argument.
 		last_char=${1}
 
 		# Make an xml file for beast for every fasta file.

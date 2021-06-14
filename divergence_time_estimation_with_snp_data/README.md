@@ -5,7 +5,7 @@ By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner
 
 ## Summary
 
-Besides [SVDQuartets](https://www.asc.ohio-state.edu/kubatko.2/software/SVDquartets/) ([Chifman and Kubatko 2014](https://doi.org/10.1093/bioinformatics/btu530)), other methods for phylogenetic inference with the multi-species-coalescent model based on SNP data are implemented in [SNAPP (SNP and AFLP Package for Phylogenetic analysis)](https://www.beast2.org/snapp/) ([Bryant et al. 2012](https://doi.org/10.1093/molbev/mss086)) and [SNAPPER](https://github.com/rbouckaert/snapper) ([Stoltz et al. 2021](https://doi.org/10.1093/sysbio/syaa051)), two add-on packages for the program BEAST2. SNAPP is in principle similar to the approach of StarBEAST2, only that each single SNP is considered as its own marker and gene trees are not separately inferred for each of these markers. Instead, SNAPP calculates the probability of the species tree without inferring gene trees, by mathematically integrating over all possible gene trees. This approach reduces the parameter space of the model tremendously and might thus be expected to also reduce the computational demand of the analysis. Unfortunately, however, the mathematical integration over all possible gene trees is computationally very demanding and SNAPP analyses are therefore only feasible for a relatively small number of species. This problem of SNAPP's high computational demand has recently been addressed with the release of SNAPPER, an approach that is similar to SNAPP except that a so-called diffusion model is used to calculate the likelihood of the species tree instead of mathematically integrating over all possible gene trees.
+Besides [SVDQuartets](https://www.asc.ohio-state.edu/kubatko.2/software/SVDquartets/) ([Chifman and Kubatko 2014](https://doi.org/10.1093/bioinformatics/btu530)), other methods for phylogenetic inference with the multi-species-coalescent model based on SNP data are implemented in [SNAPP (SNP and AFLP Package for Phylogenetic analysis)](https://www.beast2.org/snapp/) ([Bryant et al. 2012](https://doi.org/10.1093/molbev/mss086)) and [SNAPPER](https://github.com/rbouckaert/snapper) ([Stoltz et al. 2021](https://doi.org/10.1093/sysbio/syaa051)), two add-on packages for the program BEAST2. SNAPP is in principle similar to the approach of StarBEAST2, only that each single SNP is considered as its own marker and gene trees are not separately inferred for each of these markers. Instead, SNAPP calculates the probability of the species tree without inferring gene trees, by mathematically integrating over all possible gene trees. This approach reduces the parameter space of the model tremendously and might thus be expected to also reduce the computational demand of the analysis. Unfortunately, however, the mathematical integration over all possible gene trees is computationally very demanding and SNAPP analyses are therefore only feasible for a relatively small number of individuals per species. This problem of SNAPP's high computational demand has recently been addressed with the release of SNAPPER, an approach that is similar to SNAPP except that a so-called diffusion model is used to calculate the likelihood of the species tree instead of mathematically integrating over all possible gene trees.
 
 Another limitation of SNAPP has long been that the reported branch lengths were in coalescent units rather than in units of time, and that these could not easily be converted into time due to ascertainment bias in the SNP data. To address this, we tweaked the settings of SNAPP in our study [Stange et al. (2018)](https://doi.org/10.1093/sysbio/syy006) so that they include a strict-clock model that can be time calibrated based on the fossil record or on information from other phylogenies.
 
@@ -259,7 +259,7 @@ While the SNAPP analysis is running, we will in parallel set up an analysis with
 
 		sbatch run_snapper.slurm
 	
-While the SNAPPER analysis (and probably also still the SNAPP analysis) are running, we can set up a second SNAPPER analysis to test how SNAPPER analyses are influenced by the use of additional individuals. As described above, the run time of SNAPPER should not increase with additional individuals due to the implemented diffusion model. On the other hand, the precision of the results might be expected to increase. To run SNAPPER with additional samples, we'll use the original dataset in file `NC_031969.f5.sub4.vcf`, which contains SNP data for two individuals per species.
+While the SNAPPER analysis (and probably also still the SNAPP analysis) are running, we can set up a second SNAPPER analysis to test how SNAPPER analyses are influenced by the use of additional individuals. As described above, the run time of SNAPPER should not increase substantially with additional individuals due to the implemented diffusion model. On the other hand, the precision of the results might be expected to increase. To run SNAPPER with additional samples, we'll use the original dataset in file `NC_031969.f5.sub4.vcf`, which contains SNP data for two individuals per species.
 
 * Because the set of individuals is now larger, we need to prepare a second table file assigning individuals to species. Open a new file named `individuals2.txt` with Emacs or another text editor:
 
@@ -311,6 +311,13 @@ While the SNAPPER analysis (and probably also still the SNAPP analysis) are runn
 
 		sbatch run_snapper2.slurm
 
+* While the two SNAPPER analyses are running, monitor their output files `run_snapper.out` and `run_snapper2.out` by repeating the following commands a few times:
+
+		tail run_snapper*.out
+
+	An estimate of the required run time per million iterations should be included in the output table after the first 6,200 iterations.
+	
+	**Question 6:** How do the run times compare between the two analyses with SNAPPER? [(see answer)](#q6)
 
 
 <a name="interpretation"></a>
@@ -336,12 +343,13 @@ While the SNAPPER analysis (and probably also still the SNAPP analysis) are runn
 
 * Select "population_size" from the list of parameters and click on the "Estimates" tab to see summary information and a histogram for the population-size estimate, as shown in the next screenshot.<p align="center"><img src="img/tracer4.png" alt="Tracer" width="700"></p>
 	
-	**Question 6:** How does this estimate of the population size of Lake Tanganyika cichlid fishes compare to that assumed in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md)? [(see answer)](#q6)
+	**Question 7:** How does this estimate of the population size of Lake Tanganyika cichlid fishes compare to that assumed in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md)? [(see answer)](#q7)
 
 * Next, download the file `snapp.trees` from Saga to your local computer and open it in the software Densitree from the BEAST2 package (it can be found in the same directory as the GUI versions of BEAST2 and BEAUti) to visualize the full set of posterior trees sampled by SNAPP, as shown in the next screenshot.<p align="center"><img src="img/densitree1.png" alt="DensiTree" width="700"></p> You should see that not all posterior trees share the same topology, indicating remaining uncertainty in the relationships of the 13 cichlid species. In particular, the relationships of *Telmatochromis vittatus* ("telvit") appear ambiguous, as this species is placed next to *Neolamprologus walteri* ("neowal") and *Neolamprologus chitamwebwai* ("neochi") in some of the posterior trees, but apparently closer to the remaining *Neolamprologus* species or ancestral to all of them in the other posterior trees. The relationships among the five species *Neolamprologus brichardi* ("neobri"), *Neolamprologus olivaceous* ("neooli"), *Neolamprologus pulcher* ("neopul"), *Neolamprologus helianthus* ("neohel"), and *Neolamprologus gracilis* ("neogra") also appear uncertain.
 
 * Also quantify the posterior probabilities of clades as node support in a maximum-clade-credibility tree using TreeAnnotator on Saga. Set the burnin percentage to 10, choose mean heights as node heights, select `snapp.trees` as the input file, and name the output file "snapp.tre":
 
+		module load Beast/2.6.4-GCC-9.3.0
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty treeannotator -burnin 10 -heights mean snapp.trees snapp.tre
 
 
@@ -349,9 +357,9 @@ While the SNAPPER analysis (and probably also still the SNAPP analysis) are runn
 
 * Display the "posterior" node support values as node labels, as shown in the screenshot below.<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p>The posterior probabilities for the different clades support the interpretation based on the Densitree plot made above: The position of *Telmatochromis vittatus* ("telvit") is uncertain, and the placement of *Neolamprologus brichardi* ("neobri") as the sister to a clade comprising *Neolamprologus olivaceous* ("neooli") and *Neolamprologus pulcher* ("neopul") is also poorly supported. However, the visualization in FigTree also shows that a clade comprising the three species *Neolamprologus brichardi* ("neobri"), *Neolamprologus olivaceous* ("neooli"), and *Neolamprologus pulcher* ("neopul") is actually well supported; this has not been apparent in DensiTree.
 	
-	**Question 7:** Is the species-tree topology estimated with SNAPP concordant with that estimated with SVDQuartets in tutorial [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md)? [(see answer)](#q7)
+	**Question 8:** Is the species-tree topology estimated with SNAPP concordant with that estimated with SVDQuartets in tutorial [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md)? [(see answer)](#q8)
 	
-	**Question 8:** How does the divergence-time estimate for *Neolamprologus marunguensis* ("neomar"), *Neolamprologus gracilis* ("neogra"), *Neolamprologus brichardi* ("neobri"), and *Neolamprologus olivaceous* ("neooli") compare to that obtained with StarBEAST2 in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md)? [(see answer)](#q8)
+	**Question 9:** How does the divergence-time estimate for *Neolamprologus marunguensis* ("neomar"), *Neolamprologus gracilis* ("neogra"), *Neolamprologus brichardi* ("neobri"), and *Neolamprologus olivaceous* ("neooli") compare to that obtained with StarBEAST2 in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md)? [(see answer)](#q9)
 
 Despite the remaining uncertainty in the relationships among the *Neolamprologus* species, the SNAPP analysis has been valuable as it allowed us to estimate an average population size for species of the tribe Lamprologini, and improved the estimates of divergence times within the group.
 
@@ -359,21 +367,34 @@ Despite the remaining uncertainty in the relationships among the *Neolamprologus
 <a name="comparison"></a>
 ## Comparison of results obtained with SNAPP and SNAPPER
 
-<!--XXX This needs to be continued when the SNAPPER bugs are solved XXX-->
+Because the models used with SNAPP and SNAPPER, the likelihood, the prior probability, and the posterior probability are all not expected to be identical between the two analyses. However, the estimates for the speciation rate (lambda), the tree topology, and the divergence times should be similar with both tools. Additionally, we could expect that the estimates obtained by SNAPPER from the dataset with two individuals per species are more precise (have shorter confidence intervals) than those obtained with a single individual per species.
 
-* When the SNAPPER analyses have finished on Saga, add the population size to files `snapper.log` and `snapper2.log`, as before for `snapp.log`:
+* When the SNAPPER analyses have finished on Saga, generate maximum-clade-credibility trees with TreeAnnotator for both analyses:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby add_theta_to_log.rb -l snapper.log -t snapper.trees -g 3 -o snapper_w_popsize.log
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby add_theta_to_log.rb -l snapper2.log -t snapper2.trees -g 3 -o snapper2_w_popsize.log
-
-* Also generate maximum-clade-credibility trees with TreeAnnotator for both analyses:
-
+		module load Beast/2.6.4-GCC-9.3.0
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty treeannotator -burnin 10 -heights mean snapper.trees snapper.tre
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty treeannotator -burnin 10 -heights mean snapper2.trees snapper2.tre
 
-* Then download the files `snapper_w_popsize.log`, `snapper2_w_popsize.log`, `snapper.tre` and `snapper2.tre` to your local computer.
+* Then, download the files `snapper.log`, `snapper2.log`, `snapper.tre`, and `snapper2.tre` to your local computer.
 
-* Open file `snapper_w_popsize.log` and `snapper2_w_popsize.log` together with `snapper.log` in Tracer. <!-- XXX Tracer screenshot XXX <p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>-->
+* Open files `snapper.log` and `snapper2.log` in Tracer together with file `snapp.log`. Compare the ESS values for the parameters in the three files.
+
+	 **Question 10:** Does the MCMC chain from one of the three analyses appear more stationary than the others? [(see answer)](#q10)
+
+* Select all three trace files in the top left part of the Tracer window and the parameter "lambda" in the bottom left part. This should show a bar plot for the speciation-rate estimates from the three different analyses.<p align="center"><img src="img/tracer5.png" alt="Tracer" width="700"></p>
+
+	**Question 11:** Are the speciation-rate estimates comparable? And are those obtained with two individuals per species more precise than those with a single individual per species? [(see answer)](#q11)
+
+* Open the summary tree files `snapper.tre` and `snapper2.tre` in FigTree, together with `snapp.tre`. Compare the age estimates between the three phylogenies. These might be as shown in the below three screenshots:<p align="center"><img src="img/figtree3.png" alt="Tracer" width="700"></p><p align="center"><img src="img/figtree4.png" alt="Tracer" width="700"></p><p align="center"><img src="img/figtree5.png" alt="Tracer" width="700"></p>
+
+	**Question 12:** Which differences do you notice in the age estimates? [(see answer)](#q12)
+	
+	**Question 13:** Are there differences in the supported tree topology? [(see answer)](#q13)
+
+
+
+
+
 
 
 <br><hr>
@@ -405,7 +426,7 @@ Despite the remaining uncertainty in the relationships among the *Neolamprologus
 
 <a name="q4"></a>
 
-* **Question 4:** You should be able to estimate the time required for the analysis by comparing the first column of the output in file `run_snapp.out`, which reports the current MCMC iteration, with the time that the analysis has already been running. After a minute, the MCMC should have reached around iteration 3,000, which means that about half an hour will be required to complete the 100,000 iterations that we specified as the length of the MCMC. After about 6,000 iterations, the last column of the output in file `run_snapp.out` should also give an estimate of the run time required for 1 million generations. Dividing this by ten should also result in a projected run time of around half an hour.
+* **Question 4:** You should be able to estimate the time required for the analysis by comparing the first column of the output in file `run_snapp.out`, which reports the current MCMC iteration, with the time that the analysis has already been running. After a minute, the MCMC should have reached around iteration 3,000, which means that about half an hour will be required to complete the 100,000 iterations that we specified as the length of the MCMC. After about 6,000 iterations, the last column of the output in file `run_snapp.out` should also give an estimate of the run time required for 1 million iterations. Dividing this by ten should also result in a projected run time of around half an hour.
 
 
 <a name="q5"></a>
@@ -415,14 +436,38 @@ Despite the remaining uncertainty in the relationships among the *Neolamprologus
 
 <a name="q6"></a>
 
-* **Question 6:** Recall that in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), the population-size parameter was fixed in the analysis with the multi-species coalescent model according to an estimate published by [Meyer et al. (2017)](https://doi.org/10.1093/sysbio/syw069). In this study, Meyer et al. (2017) reported that "effective population sizes (<i>N</i><sub>e</sub>) estimated with the multispecies coalescent model ranged between 3.6 &times; 10<sup>4</sup> and 8.1 &times; 10<sup>5</sup>, assuming a mean generation times of 3 years for cichlid fishes". Most of these population-size estimates in Meyer et al. (2017) were around 3.3 &times; 10<sup>5</sup>, therefore this value was used in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md). In comparison to this population size assumed in the other tutorial, the current population-size estimate based on the SNAPP analysis, with a mean of 1.1 &times; 10<sup>5</sup> and a 95% HPD interval ranging from 8.4 &times; 10<sup>4</sup> to 1.5 &times; 10<sup>5</sup>, is much smaller.
+* **Question 6:** The output of the two analyses should show that the SNAPPER analysis of file `snapper.xml` (thus, with a single individual per species) requires around 9 hours per million iterations, and that the analysis of file `snapper2.xml` (with two individuals per species) requires around 14 hours per million iterations. Thus, while the dataset has doubled, the run time has only increased by a factor of around 50%. Adding further individuals per species to the dataset would probably not increase the run time much further. For comparison, the SNAPP analysis required around 5 hours per million iterations and is thus faster than both SNAPPER analyses. But while we are not able to test this with our current dataset, it can be expected that with larger datasets including more individuals per species, the run times required for SNAPPER analyses should remain largely unchanged whereas those for SNAPP analyses grow more than linearly with the number of individuals ([Stoltz et al. 2021](https://doi.org/10.1093/sysbio/syaa051)).
 
 
 <a name="q7"></a>
 
-* **Question 7:** The topology of the species tree estimated with SNAPP that is shown here is in fact fully concordant with the species tree estimated by SVDQuartets. In both cases *Telmatochromis vittatus* ("telvit") is placed outside of a monophyletic clade comprising all representatives of the genus *Neolamprologus*, and *Neolamprologus brichardi* ("neobri") appears as the sister of *Neolamprologus olivaceous* ("neooli") and *Neolamprologus pulcher* ("neopul"). However, these relationships are both poorly supported and might not be recovered in your SNAPP analysis due to stochastic differences in the sites sampled for the SNAPP input file as well as SNAPP's MCMC. The lower support values in the SNAPP analysis compared to the SVDQuartets analysis are not surprising, though, given that only a small fraction of the data used with SVDQuartets (over 63,000 SNPs) has been used in the analysis with SNAPP (1,000 SNPs). It may be expected that using a larger number of SNPs with SNAPP would increase the reliability of the resulting species tree.
+* **Question 7:** Recall that in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), the population-size parameter was fixed in the analysis with the multi-species coalescent model according to an estimate published by [Meyer et al. (2017)](https://doi.org/10.1093/sysbio/syw069). In this study, Meyer et al. (2017) reported that "effective population sizes (<i>N</i><sub>e</sub>) estimated with the multispecies coalescent model ranged between 3.6 &times; 10<sup>4</sup> and 8.1 &times; 10<sup>5</sup>, assuming a mean generation times of 3 years for cichlid fishes". Most of these population-size estimates in Meyer et al. (2017) were around 3.3 &times; 10<sup>5</sup>, therefore this value was used in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md). In comparison to this population size assumed in the other tutorial, the current population-size estimate based on the SNAPP analysis, with a mean of 1.1 &times; 10<sup>5</sup> and a 95% HPD interval ranging from 8.4 &times; 10<sup>4</sup> to 1.5 &times; 10<sup>5</sup>, is much smaller.
 
 
 <a name="q8"></a>
 
-* **Question 8:** Recall that the divergence time of the four species *Neolamprologus marunguensis* ("neomar"), *Neolamprologus gracilis* ("neogra"), *Neolamprologus brichardi* ("neobri"), and *Neolamprologus olivaceous* ("neooli") was estimated around 1.22 Ma in the analysis with StarBEAST2 in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md). In contrast, the first divergence of the clade comprising these four species was estimated with SNAPP at a slightly more recent time, around 0.70 Ma, as shown in the screenshot below. The 95% HPD interval for this age estimate ranges from 0.50 to 0.91 Ma (select "height\_95%\_HPD" instead of "Node ages" from the drop-down menu to see these). In contrast, the 95% HPD interval for this divergence time in the StarBEAST2 analysis was wider and ranged from 0.54 to 1.86 Ma, which thus includes almost the entire 95% HPD interval of the SNAPP analysis. This indicates that the two analyses do not disagree with each other regarding this divergence time but that the StarBEAST2 analysis was not able to estimate it as precisely as the SNAPP analysis.<p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>
+* **Question 8:** The topology of the species tree estimated with SNAPP that is shown here is in fact fully concordant with the species tree estimated by SVDQuartets. In both cases *Telmatochromis vittatus* ("telvit") is placed outside of a monophyletic clade comprising all representatives of the genus *Neolamprologus*, and *Neolamprologus brichardi* ("neobri") appears as the sister of *Neolamprologus olivaceous* ("neooli") and *Neolamprologus pulcher* ("neopul"). However, these relationships are both poorly supported and might not be recovered in your SNAPP analysis due to stochastic differences in the sites sampled for the SNAPP input file as well as SNAPP's MCMC. The lower support values in the SNAPP analysis compared to the SVDQuartets analysis are not surprising, though, given that only a small fraction of the data used with SVDQuartets (over 63,000 SNPs) has been used in the analysis with SNAPP (1,000 SNPs). It may be expected that using a larger number of SNPs with SNAPP would increase the reliability of the resulting species tree.
+
+
+<a name="q9"></a>
+
+* **Question 9:** Recall that the divergence time of the four species *Neolamprologus marunguensis* ("neomar"), *Neolamprologus gracilis* ("neogra"), *Neolamprologus brichardi* ("neobri"), and *Neolamprologus olivaceous* ("neooli") was estimated around 1.22 Ma in the analysis with StarBEAST2 in tutorial [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md). In contrast, the first divergence of the clade comprising these four species was estimated with SNAPP at a slightly more recent time, around 0.70 Ma, as shown in the screenshot below. The 95% HPD interval for this age estimate ranges from 0.50 to 0.91 Ma (select "height\_95%\_HPD" instead of "Node ages" from the drop-down menu to see these). In contrast, the 95% HPD interval for this divergence time in the StarBEAST2 analysis was wider and ranged from 0.54 to 1.86 Ma, which thus includes almost the entire 95% HPD interval of the SNAPP analysis. This indicates that the two analyses do not disagree with each other regarding this divergence time but that the StarBEAST2 analysis was not able to estimate it as precisely as the SNAPP analysis.<p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>
+
+<a name="q10"></a>
+
+* **Question 10:** In my analyses, this did not seem to be the case. The lowest ESS values were around 70 in each case, and the highest around 400.
+
+
+<a name="q11"></a>
+
+* **Question 11:** At least in my analyses, the estimates for the speciation rate were all comparable, slightly lower in the SNAPP analysis and as expected more precise in the SNAPPER analysis with two individuals per species.
+
+
+<a name="q12"></a>
+
+* **Question 12:** In the results of my analyses, some nodes appeared to be quite a bit younger in the tree from the SNAPPER analysis with a single individual per species (`snapper.tre`) than in the other two trees. The effect was strongest for the divergence of *Altolamprologus fasciatus* ("altfas") from the *Neolamprologus* species and *Telmatochromis vittatus* ("telvit"): In the SNAPPER analysis with a single individual per species, this divergence was estimated to have occurred around 1.71 Ma, but in the other two analyses it was estimated at around 2.65-2.69 Ma. The youngest of all divergence events was also estimated very differently; at around 0.18 Ma in the SNAPPER analysis with a single individual per species, but around 0.27 and 0.36 in the other two analyses.
+
+
+<a name="q13"></a>
+
+* **Question 13:** Somewhat surprisingly, the SNAPPER analysis with two individuals per species did not recover the sister-group relationship between *Neolamprologus crassus* ("neocra") and *Neolamprologus marunguensis* ("neomar"), which was otherwise supported consistently in the two other analyses. Moreover, *Neolamprologus marunguensis* ("neomar") was even confidently placed outside of a clade comprising seven species including *Neolamprologus crassus* ("neocra"), with a Bayesian posterior probability node support of 1.<p align="center"><img src="img/figtree6.png" alt="Tracer" width="700"></p>This suggests that the second individual of *Neolamprologus marunguensis* ("neomar"), which was used in the second SNAPPER analysis but not in the other two analyses, may have been in conflict with the first individual of *Neolamprologus marunguensis* ("neomar"). This would highlight the importance of the inclusion of more extensive population-level data for reliable species-tree inference.
