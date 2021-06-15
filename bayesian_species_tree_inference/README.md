@@ -338,8 +338,6 @@ To visualize the summary trees for all genes jointly with the species tree from 
 
 * Open file `starbeast.trees` in the software Densitree. After rotating some nodes to match the node order of the FigTree screenshots above (click "Show Edit Tree" in DensiTree's "Edit" menu to do this), the set of trees should look as shown in the next screenshot.<p align="center"><img src="img/densitree1.png" alt="DensiTree" width="700"></p>
 
-	**Question 6:** Can you tell which of the trees shown in DensiTree is the species tree? [(see answer)](#q6)
-
 	As you'll see from the DensiTree visualization, there is much variation in the topologies of the gene trees. This could either only appear to be so due to a lack of phylogenetic signal or it could reflect real gene-tree discordance due to incomplete lineage sorting. To find out which of the two possibilities is responsible for the displayed variation, we can check if discordant relationships are strongly supported in different gene trees.
 
 * Download the MCC trees for the genes ENSDARG00000058676 and ENSDARG00000062267 (files `starbeast_ENSDARG00000058676.tre` and `starbeast_ENSDARG00000062267.tre` from Saga to your local computer using `scp`.
@@ -379,8 +377,3 @@ By accounting for incomplete lineage sorting, our analysis with the multi-specie
 <a name="q5"></a>
 
 * **Question 5:** It is well known that concatenation can lead to inflated node support (e.g. [Kubatko and Degnan 2007](https://doi.org/10.1080/10635150601146041); [Degnan and Rosenberg 2009](https://doi.org/10.1016/j.tree.2009.01.009)), so the higher node-support values based on concatenation are not unexpected and they should not be trusted. In addition, the divergence-time estimates based on concatenation should also be seen with caution, as simulations have shown in several studies (e.g. [Ogilvie et al. 2017](https://doi.org/10.1093/molbev/msx126); [Stange et al. 2018](https://doi.org/10.1093/sysbio/syy006)) that these can be overestimated. The multi-species-coalescent model, on the other hand, accounts for variation in gene trees due to incomplete lineage sorting and recombination, and thus should be robust to one of the most important sources of potential bias. However, it should be noted that the multi-species-coalescent model also does not account for other processes that might influence the reliability of the phylogenetic estimates, such as within-gene recombination, hybridization and gene flow, or ancestral population structure.
-
-
-<a name="q6"></a>
-
-* **Question 6:** Even though it is difficult to see, one can tell that the species tree is shown in dark green. This is because necessarily all divergences in the species tree are younger than the corresponding divergences in the gene tree, and this is the case for the tree shown in dark green. The opposite, gene tree divergences younger than species tree divergences, could only be possible through hybridization and gene flow; however, since hybridization is not included in the the multi-species-coalescent model used for this analysis, gene trees must be older than the species tree.
