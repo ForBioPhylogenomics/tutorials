@@ -57,13 +57,13 @@ Each day we will begin at 9 am and end at around 5:30 pm. In between, we will ha
 
 * [Bayesian Species-Tree Inference](bayesian_species_tree_inference/README.md)<br>A tutorial on Bayesian inference of time-calibrated species trees
 
-* [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md)<br>A tutorial on the inference of species trees from SNP data based on quartets
-
-* [Divergence-Time Estimation with SNP Data](divergence_time_estimation_with_snp_data/README.md)<br>A tutorial on Bayesian divergence-time estimation with SNP data
+* [Whole-Genome Alignment](whole_genome_alignment/README.md)<br>A tutorial on repeat masking and whole-genome alignment of assembled genomes
 
 #### Wednesday
 
-* [Whole-Genome Alignment](whole_genome_alignment/README.md)<br>A tutorial on repeat masking and whole-genome alignment of assembled genomes
+* [Species-Tree Inference with SNP Data](species_tree_inference_with_snp_data/README.md)<br>A tutorial on the inference of species trees from SNP data based on quartets
+
+* [Divergence-Time Estimation with SNP Data](divergence_time_estimation_with_snp_data/README.md)<br>A tutorial on Bayesian divergence-time estimation with SNP data
 
 * [Maximum-Likelihood Inference of Species Networks](ml_inference_of_species_networks/README.md)<br>A tutorial on maximum-likelihood phylogenetic inference of species networks
 
