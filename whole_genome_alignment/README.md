@@ -181,7 +181,7 @@ Then we'll run [rapidNJ](https://github.com/somme89/rapidNJ) on the full distanc
 ```
 module purge
 module load rapidNJ/210609-foss-2020b
-rapidnj full_distance_matrix -i pd |sed "s/'//g"  nj_tree
+rapidnj full_distance_matrix -i pd |sed "s/'//g" > nj_tree
 ```
 We're removing the single quote sign because it would confuse Cactus later on.
 
