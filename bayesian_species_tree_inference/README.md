@@ -65,6 +65,7 @@ The following tools are required additionally:
 
 * **ape:** [ape](http://ape-package.ird.fr) ([Paradis 2004](https://doi.org/10.1093/bioinformatics/btg412)) is an R package that serves as a multitool for basic phylogenetic analyses and handling of phylogenetic trees. To install it on Saga, use the following commands:
 
+		module load R/4.0.0-foss-2020a
 		R
 		install.packages("ape", repos='http://cran.us.r-project.org')
 		quit(save="no")
