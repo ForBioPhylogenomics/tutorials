@@ -73,6 +73,8 @@ cp ../../week2/data/cichlids/scripts/* .
 
 ```
 
+You can also look at the scripts in the folder [scripts](scripts), but it is easiest to get them on Saga.
+
 The redmask command itself is quite straight forward:
 ```
 redmask.py -i genome.fa -o mygenome
