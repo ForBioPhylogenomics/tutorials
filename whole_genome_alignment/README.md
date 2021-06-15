@@ -23,6 +23,7 @@ However, to actually understand these genomes, we need some way of analysing the
 
 In this tutorial we will run six genome assemblies of varying quality through this pipeline. This requires masking repeats in the genomes and a guide tree of the species involved. Unfortunately, most of these processes take longer than the time we have available in this session, but all intermediate and final files are available on Saga.
 
+A short presentation of these concepts are [available here](whole_genome_alignment.pdf).
 
 <a name="dataset"></a>
 ## Dataset
