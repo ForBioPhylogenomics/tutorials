@@ -268,7 +268,7 @@ We are now going to compare the time-calibrated species trees estimated with the
 
 * Open both files in FigTree, select "Node ages" to be displayed as node labels, and compare these between the two trees. The two summary trees should look similar to those shown in the next two screenshots.
 
-	**Question 4:** What do you notice? [(see answer)](#q4)<p align="center"><img src="img/figtree1.png" alt="FigTree" width="600"></p><p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>
+	**Question 4:** What do you notice? [(see answer)](#q4)<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p><p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>
 
 * If you display the "posterior" instead of the node ages as the node labels in both trees, you'll see that generally the support values are higher when based on concatenation.
 
