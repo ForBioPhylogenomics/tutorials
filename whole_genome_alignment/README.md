@@ -61,7 +61,7 @@ Maybe most common today is to use [RepeatModeler](http://www.repeatmasker.org/Re
 
 Red ([Giris (2015)](https://doi.org/10.1186/s12859-015-0654-5)) can do the softmasking in one step instead of two, and is faster. We'll run it via the Python script [redmask](https://github.com/nextgenusfs/redmask) to get readily softmasked genomes.
 
-First, go to your user folder on Saga and copy the needed scripts:
+First, go to your user folder on Saga and copy the needed scripts (you might have done part of this before):
 
 ```
 cd /cluster/projects/nn9458k/phylogenomics/
@@ -69,9 +69,11 @@ mkdir $YOURNAME
 cd $YOURNAME
 mkdir -p cichlids
 cd cichlids
-cp ../..//week2/data/cichlids/scripts/* .
+cp ../../week2/data/cichlids/scripts/* .
 
 ```
+
+You can also look at the scripts in the folder [scripts](scripts), but it is easiest to get them on Saga.
 
 The redmask command itself is quite straight forward:
 ```
