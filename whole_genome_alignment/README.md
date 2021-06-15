@@ -83,6 +83,7 @@ redmask.py -i genome.fa -o mygenome
 
 But we'll wrap in an SBATCH script and run it for all genomes. Unfortunately, redmask requires a Python module not readily available on Saga. To set install it locally (for you as a user), do this:
 ```
+module purge
 module load Biopython/1.72-foss-2018b-Python-3.6.6
 pip3 install natsort --user
 ```
