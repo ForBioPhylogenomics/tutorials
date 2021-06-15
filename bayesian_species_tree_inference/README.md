@@ -59,7 +59,7 @@ The following tools are required additionally:
 	
 		module purge
 		module load Beast/2.6.4-GCC-9.3.0
-		packagemanager -add starbeast2
+		packagemanager -add StarBEAST2
 		
 	On your local computer, use BEAST2's PackageManager to install the StarBEAST2 package, as described in tutorial [Bayesian Phylogenetic Inference](../bayesian_phylogeny_inference/README.md) for the bModelTest package.
 
