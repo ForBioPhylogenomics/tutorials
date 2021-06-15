@@ -206,7 +206,9 @@ ASTRAL infers the species tree by searching for the topology that agrees with th
 		
 * Download the file `species.trees` to your local computer with `scp` and open it in FigTree. When prompted that "The node/branches of the tree are labelled", justclick "OK". This will mean that the  node support values are referred to as "label" in FigTree. Click on "Decreasing Node Order" in the "Tree" menu to orient the tree, set a tick next to "Node Labels", click the triangle next to "Node Labels", and then select "label" from the drop-down menu next to "Display:" to display support values as node labels. The FigTree window should then appear more or less as shown in the next screenshot. Note that depending on the randomly chosen starting points of the IQ-TREE analyses, slightly different gene trees may have been generated in your analysis and may also have led to a species tree that is not exactly identical to the one shown here.<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p>
 
-* As you can see in the top left of the window next to "Current Tree:", the displayed tree is the first out of two. The one shown in the screenshot above is the tree with node-support values based on bootstrapping. To see the next tree, click on the "Next" button near the top right of the window. This should display the tree with node-support values based only on the maximum-likelihood gene trees, as shown in the next screenshot.<p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>Unsurprisingly, the phylogeny itself is identical between the two trees, because the species tree is in both cases inferred from the maximum-likelihood gene trees. Perhaps more surprisingly, the node-support values correlate very strongly between the two trees, indicating that ASTRAL in fact does not require bootstrapping to estimate node support. **Question 2:** Do the taxonomic groups of cichlids, as listed in the table at the beginning of this tutorial, appear monophyletic in the species tree estimated by ASTRAL? [(see answer)](#q2)
+* As you can see in the top left of the window next to "Current Tree:", the displayed tree is the first out of two. The one shown in the screenshot above is the tree with node-support values based on bootstrapping. To see the next tree, click on the "Next" button near the top right of the window. This should display the tree with node-support values based only on the maximum-likelihood gene trees, as shown in the next screenshot.<p align="center"><img src="img/figtree2.png" alt="FigTree" width="700"></p>Unsurprisingly, the phylogeny itself is identical between the two trees, because the species tree is in both cases inferred from the maximum-likelihood gene trees. Perhaps more surprisingly, the node-support values correlate very strongly between the two trees, indicating that ASTRAL in fact does not require bootstrapping to estimate node support.
+
+	**Question 2:** Do the taxonomic groups of cichlids, as listed in the table at the beginning of this tutorial, appear monophyletic in the species tree estimated by ASTRAL? [(see answer)](#q2)
 
 
 <a name="concordance"></a>
@@ -247,7 +249,9 @@ Recent versions of IQ-TREE (from v.1.7) ([Minh et al. 2020](https://doi.org/10.1
 
 * Download file `gene_and_site_concordance.cf.tree` and open it in FigTree. Again orient the tree and select "label" to display as node labels. The tree should then appear as shown in the next screenshot.<p align="center"><img src="img/figtree4.png" alt="FigTree" width="700"></p>
 
-	You'll see that three different support values are now shown for each node, these are the posterior probabilities from ASTRAL, the gene-concordance factors, and the site-concordance factors.  **Question 4:** Which proportion of sites supports the monophyly of Lamprologini? [(see answer)](#q4)
+	You'll see that three different support values are now shown for each node, these are the posterior probabilities from ASTRAL, the gene-concordance factors, and the site-concordance factors.  
+	
+	**Question 4:** Which proportion of sites supports the monophyly of Lamprologini? [(see answer)](#q4)
 
 <br><hr>
 
