@@ -79,46 +79,6 @@ The following tools are required additionally:
 
 As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md) is stored in MAF format, and this format can not be read by programs for phylogenetic inference, we will need to first extract sets of alignment blocks in a format such as Nexus before these can used for the analyses in this tutorial. We are going to combine this alignment extraction with some basic filtering to extract alignment blocks only from the most reliably aligned regions of the whole-genome alignment.
 
-
-<!--As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md) is stored in [HAL format](https://github.com/ComparativeGenomicsToolkit/hal/blob/master/README.md), and this format can not be read by programs for phylogenetic inference, we will need to convert the format of the dataset. At the same time, we are going to reduce the data that will go into the phylogenetic analyses, by extracting only the most suitable alignment blocks from across the whole-genome alignment rather than using the entire whole-genome alignment.
--->
-<!--XXX Polish the start, perhaps move the hal2maf conversion to the whole-genome alignment tutorial XXX-->
-<!--
-* As a first step, we will need to convert the whole-genome alignment from HAL format to MAF format, which is human-readable and more accessible for scripts. To do so, write a new Slurm script named `convert_hal_to_maf.slurm` on Saga with the following content:
-
-		#!/bin/bash
-
-		# Job name:
-		#SBATCH --job-name=convert_hal_to_maf
-		#
-		# Wall clock limit:
-		#SBATCH --time=5:00:00
-		#
-		# Processor and memory usage:
-		#SBATCH --ntasks=1
-		#SBATCH --mem-per-cpu=2G
-		#
-		# Accounting:
-		#SBATCH --account=nn9458k
-		#
-		# Output:
-		#SBATCH --output=convert_hal_to_maf.out
-
-		# Set up job environment.
-		set -o errexit  # Exit the script on any error
-		set -o nounset  # Treat any unset variables as an error
-		module --quiet purge  # Reset the modules to the system default
-
-		# Load the hdf5 module
-		module load HDF5/1.10.7-iimpi-2020b
-
-		# Convert from hal to maf format.
-		hal2maf --refGenome orenil --onlyOrthologs --noAncestors --maxBlockLen 1000000 --maxRefGap 1000 cichlids_chr5.hal cichlids_chr5.maf #XXX hal2maf is not installed yet! Running hal/bin/hal2maf so far! XXX
-
-<!--Run time: 2:40 hours-->
--->
-
-
 * Add the script `make_alignments_from_maf.py` to your current directory on Saga, by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two commands:
 
 		cp /cluster/projects/nn9458k/phylogenomics/week2/src/make_alignments_from_maf.py .
@@ -670,7 +630,7 @@ alt_hypothesis: "(orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1)))
 * **Question 2:** The result might be quite different from the one obtained in the first PhyloNet analysis. In my case, the first analysis with PhyloNet that included branch lengths did not find support for a reticulation edge, while the second analysis without branch lengths in the gene trees produced a species network in which *Neolamprologus brichardi* ("neopul") appeared - rather unconventionally – as the sister to *Neolamprologus gracilis* ("neogra") and was connected to *Neolamprologus pulcher* ("neopul") with a reticulation edge.<p align="center"><img src="img/safari6.png" alt="Safari" width="700"></p>
 
 
-	In my view, these differences illustrate how the likelihood surface can be highly complex when species networks are inferred, and that maximum-likelihood approaches can therefore often produce results that are not particularly robust to minor changes in the model, or even to re-analyses with the same model. Species networks obtained with maximum-likelihood approaches should therefore be corroborated with other approaches, such as Bayesian inference (see tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)) or tests of introgression based on tree-topology comparisons (see tutorial `XXX Update name XXX`) or SNPs (see tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)), before drawing conclusions about introgression.
+	In my view, these differences illustrate how the likelihood surface can be highly complex when species networks are inferred, and that maximum-likelihood approaches can therefore often produce results that are not particularly robust to minor changes in the model, or even to re-analyses with the same model. Species networks obtained with maximum-likelihood approaches should therefore be corroborated with other approaches, such as Bayesian inference (see tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)) or tests of introgression based on tree-topology comparisons (see tutorial [Analyses of Introgression with Tree Topologies](../analysis_of_introgression_with_tree_topologies/README.md)) or SNPs (see tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)), before drawing conclusions about introgression.
 
 
 <a name="q3"></a>
