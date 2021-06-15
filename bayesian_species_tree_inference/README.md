@@ -93,7 +93,7 @@ As analyses with StarBEAST2 are relatively computationally demanding, we are goi
 
 * Get the script `filter_genes_by_missing_data.rb` either by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two commands:
 
-		cp /cluster/projects/nn9458k/phylogenomics/week2/src/filter_genes_by_missing_data.rb
+		cp /cluster/projects/nn9458k/phylogenomics/week2/src/filter_genes_by_missing_data.rb .
 		
 	or
 	
