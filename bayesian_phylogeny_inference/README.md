@@ -530,7 +530,7 @@ From the above comparison of the log files resulting from BEAST2 analyses with a
 
 So far, we have only used the log files produced by the two BEAST2 analyses to assess run completeness, but we have not yet looked into the results that are usually of greater interest: the phylogenetic trees inferred by BEAST2. We will do so in this part of the tutorial.
 
-* Download the tree file resulting from the analysis with the bModelTest model, file `bmodeltest.trees`, from Saga to your local computer.
+* Download the tree file resulting from the analysis with the bModelTest model, file `bmodeltest.trees`, from Saga to your local computer using `scp`.
 
 * Open the file `bmodeltest.trees` in the program FigTree. Once the tree file is opened (it might take a short while to load), the FigTree window should look more or less as shown in the next screenshot.<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p>Note that in contrast to the trees inferred in other tutorials, this tree now is ultrametric, meaning that all tips are lined up and equally distant from the root. This is because the branch lengths in this tree represent time and all samples were taken (nearly) at the same time.
 
