@@ -314,7 +314,7 @@ It is likely that the numbers of variable sites and hemiplasies correlate with e
 
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty bash filter_alignments.sh
 
-	**Question 3:** How many alignments have been moved to directory `short_alignments_filtered`? [(see answer)](#q3)
+	**Question 2:** How many alignments have been moved to directory `short_alignments_filtered`? [(see answer)](#q2)
 
 <a name="iqtree"></a>
 ## Phylogenetic inference with IQ-TREE
@@ -356,7 +356,11 @@ As in tutorials [Maximum-Likelihood Phylogenetic Inference](../ml_phylogeny_infe
 			iqtree2 -s ${nex} -o orenil
 		done
 
-	IQ-TREE should require a few minutes to finish this set of analyses.
+* Submit the Slurm script `run_iqtree_filtered.slurm` with `sbatch`:
+
+		sbatch run_iqtree_filtered.slurm
+
+	IQ-TREE should require no more than a few minutes to finish this set of analyses.
 	
 * Combine all inferred phylogenies into a single file, using the following command:
 
@@ -428,7 +432,7 @@ To analyze the frequencies of alternative trio topologies in the set of block ph
 
 	The format of this file is similar to that written by the program Dsuite in tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md). Each row includes results for one species trio, with the frequencies of the three alternative topologies in columns 4 to 6, followed by the equivalent to the *D*-statistic in the seventh column and the *p*-value in the last. For the species trios that include *Oreochromis niloticus* ("orenil"), the frequencies *N*<sub>(P1,P3)</sub> and *N*<sub>(P2,P3)</sub> are all 0, which is not surprising because we had set this species to be the outgroup. The reason why in these trios only a proportion of the approximately 440 trees support *N*<sub>(P1,P2)</sub> is that, as in the screenshot of a phylogeny shown above, IQ-TREE places the outgroup with another species in a polytomy at the root, and the script `analyze_tree_asymmetry.rb` ignores trios connected by polytomies. But since the frequencies of topologies in species trios that include the outgroup are by definition never asymmetric, we can ignore these comparisons anyway. More conclusive results are given for species trios within the ingroup, for example for the trio of "neooli", "neobri", and "neogra", where (in my analysis) 174 trees pair "neooli" and "neobri" and 155 trees pair "neobri" and "neogra", but only 107 trees pair "neobri" and "neogra". As indicated by the high *D*-statistic around 0.18 and the *p*-value of 0.003, this asymmetry can not be explained by incomplete lineage sorting alone.
 
-	**Question 4:** Which species trio has the highest *D*-statistic in this table? [(see answer)](#q4)
+	**Question 3:** Which species trio has the highest *D*-statistic in this table? [(see answer)](#q3)
 
 A good way of plotting the asymmetry among alternative trio topologies, and the significance of this asymmetry, is in the form of a heatmap, just like the results of the Dsuite analyses were plotted in tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md). This heatmap plot can be generated with the Ruby script `plot_tree_asymmetry.rb` from [Ronco et al. (2021)](https://doi.org/10.1038/s41586-020-2930-4).
 
@@ -463,6 +467,131 @@ A good way of plotting the asymmetry among alternative trio topologies, and the 
 	The patterns of asymmetry in topology frequencies therefore strongly support introgression between *Neolamprologus brichardi* ("neobri") and *Neolamprologus pulcher* ("neopul"), as also identified by [Gante et al. (2016)](https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.13767) and [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650). However, considering that we only used data from a single chromosome and just a single sample per species, more definite conclusions could certainly be gained from more extensive analyses!
 
 
+<a name="interrogation"></a>
+## Genome-wide genealogy interrogation
+
+The use of short alignments for tree inference can help to reduce the impact of within-alignment recombination. Unfortunately, such short regions often do not have sufficient phylogenetic information; however, they can still be very useful to investigate phylogenetic relationships at one particular node, in a method termed genealogy interrogation by [Arcila et al. (2017)](https://www.nature.com/articles/s41559-016-0020). When using this method, each alignment is used repeatedly in maximum-likelihood phylogenetic analyses, each time with a different topological constraint for a particular relationship. The results of interest in these constrained analyses are then not the inferred phylogenies, but the likelihoods obtained with the different constraints. Even with alignments that are too short to resolve much of the phylogeny, those likelihoods can differ to the extent that it is possible to discriminate the support for the different topological hypotheses, as the hypothesis leading to the highest likelihoods for most alignments could then be considered to correspond to the species-tree topology. Moreover, asymmetry in the likelihood values supporting the two alternative topologies can again indicate whether these alternative topologies result from incomplete lineage sorting and low phylogenetic signal or whether introgression has influenced their frequencies.
+
+In this part of the tutorial, we are going to apply genealogy interrogation to investigate, in more detail than above, the relationship among the three species *Neolamprologus brichardi* ("neobri"), *Neolamprologus pulcher* ("neobri"), and *Neolamprologus olivaceous* ("neooli"). Among these species, introgression between *Neolamprologus brichardi* and *Neolamprologus pulcher* was inferred in the studies of [Gante et al. (2016)](https://onlinelibrary.wiley.com/doi/abs/10.1111/mec.13767) and [Bouckaert et al. (2019)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006650), and was supported in the above analysis of topology frequencies.
+
+As a first step, we'll need to specify the three topological hypotheses that we want to compare. For IQ-TREE to understand these hypotheses, we'll need to write them as constraints in Newick format. This is actually rather simple because we only need to write all species IDs, separated by commas, within parentheses and we need to use one additional pair of parentheses to group the IDs of the two species that form a pair in a given hypothesis. For example, the hypothesis that "neooli" and "neopul" form a pair can be encoded in Newick format as "(orenil,neomar,neogra,neobri,(neooli,neopul));". We call this hypothesis "T1" and label the two alternative hypotheses, in which either "neopul" and "neobri" or "neooli" and "neobri" form a pair, "T2" and "T3", resepectively.
+
+* Save three topological hypotheses to files in Newick format named `t1.tre`, `t2.tre`, and `t3.tre`, using the following three commands:
+
+		echo "(orenil,neomar,neogra,neobri,(neooli,neopul));" > t1.tre
+		echo "(orenil,neomar,neogra,neooli,(neopul,neobri));" > t2.tre
+		echo "(orenil,neomar,neogra,neopul,(neooli,neobri));" > t3.tre
+
+
+We are then ready to run IQ-TREE with each alignment and each topological constraint. To allow the resulting likelihoods to be comparable, we will ensure that the same substitution model is used in all analyses rather than using IQ-TREE's automatic model selection; therefore, we specify the GTR substitution model with the `-m` option in all analyses. In addition, we need to specify the topological constraint file with the `-g` option, and we turn off the verbose screen output of IQ-TREE with the `--quiet` option.
+
+* Write a new script named `run_iqtree_ggi.slurm` with the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=iqtree_ggi
+		#
+		# Wall clock limit:
+		#SBATCH --time=0:20:00
+		#
+		# Processor and memory usage:
+		#SBATCH --ntasks=1
+		#SBATCH --mem-per-cpu=1G
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=run_iqtree_ggi.out
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load the iqtree module.
+		module load IQ-TREE/2.1.2-foss-2020a
+		
+		# Get the constraint file.
+		constraint=${1}
+		constraint_id=${constraint%.tre}
+		
+		# Run iqtree for all alignments.                                                                                                                              
+		for nex in short_alignments_filtered/*.nex
+		do
+			nex_path_base=${nex%.nex}
+			for constraint in t1 t2 t3
+			do
+				# Run iqtree with a constraint.                                                                                                                       
+				iqtree2 -s ${nex} -m GTR -g ${constraint}.tre --quiet
+
+				# Rename the main output and remove unneeded output files.                                                                                            
+				mv ${nex}.iqtree ${nex_path_base%.iqtree}.${constraint}.log
+				rm ${nex}.*
+			done
+		done
+
+* Execute the script with `sbatch` to run IQ-TREE with all alignments and the three constraints constraints:
+
+		sbatch run_iqtree_ggi.slurm
+
+	These analyses should take a few minutes to finish. Once they're done, the `short_alignments_filtered` directory should contain for each alignment three files with endings `.t1.log`, `.t2.log`, and `.t3.log`.
+	
+* Have a look at the first of the files with ending `.t1.log`, using the `less` command:
+
+		file=`ls short_alignments_filtered/*.t1.log | head -n 1`
+		less ${file}
+		
+	When you scroll down to just below "MAXIMUM LIKELIHOOD TREE", you should see a line like the following:
+	
+		Log-likelihood of the tree: -1698.2755 (s.e. 33.8943)
+		
+	This number, the log-likelihood of -1698.2755, is the only result of this IQ-TREE analysis that we need for genealogy interrogation.
+	
+* Compare the log-likelihoods among the three different hypotheses, applied to the first alignment:
+	
+		Log-likelihood of the tree: -1698.2755 (s.e. 33.8943)
+		Log-likelihood of the tree: -1744.3624 (s.e. 43.5217)
+		Log-likelihood of the tree: -1744.3624 (s.e. 43.5218)
+		
+	So this means that the last two hypotheses, T2 and T3, had a very similar likelihood while the likelihood of the first hypothesis, T3, was about 46 log units higher and thus better.
+	
+To extract and compare the log-likelihood values from the output files of all IQ-TREE analyses, we can use the script `summarize_ggi.sh`.
+
+* Add the script `summarize_ggi.sh` to your current directory, either by copying it from `XXX` or by downloading it from GitHub, using one of the following two commands:
+
+		cp XXX
+		
+	or
+	
+		wget XXX
+
+	This script expects two arguments, namely the name of a directory in which it can find the files with endings `.t1.log`, `.t2.log`, and `.t3.log`, and the name of a new file to which its output will be written. We'll use `short_alignments_ggi.txt` as the name of this output file; thus, run the script with this command:
+	
+		bash summarize_ggi.sh short_alignments_filtered short_alignments_ggi.txt
+
+* Have a look at the output file `short_alignments_ggi.txt`. You'll see that each line reports the comparison of likelihoods for one alignment. The second column specifies the hypothesis that received the best likelihood, and the third column indicates the difference between this likelihood and the second-best likelihood, in log units. The last three columns show the log-likelihoods themselves.
+
+The output in file `short_alignments_ggi.txt` can be analyzed and plotted with the Ruby script `plot_ggi.rb`.
+
+* Add the script `plot_ggi.rb` to your current directory on Saga, either by copying it from XXX or by downloading it from GitHub, using one of the following two command:
+
+		cp XXX
+		
+	or
+	
+		wget XXX
+
+* Execute the script `plot_ggi.rb`, specifying `short_alignments_ggi.txt` as the name of the input file and `short_alignments_ggi.svg` as the name of the output file to which the plot will be written in SVG format:
+
+		ruby plot_ggi.rb short_alignments_ggi.txt short_alignments_ggi.svg
+
+* Download the output file `short_alignments_ggi.svg` from Saga to your local computer and open it with Firefox, Adobe Illustrator, or another program capable of reading SVG format. The plot should look similar to the one shown below:<p align="center"><img src="img/short_alignments_ggi.png" alt="Heatmap D" width="600"></p>XXX Update XXX In this plot, each dot represents one alignment, and the position of the dot indicates the difference in likelihood support among the three competing hypotheses. If a dot is directly on the dashed line leading towards T1 at the bottom-left, this alignment has the best likelihood when using the T1 hypothesis and identical likelihoods when the other two hypotheses are used as constraints. When the two alternative hypotheses have different likelihoods (but both are lower than the best likelihood), then the dot is not placed directly on a dashed line but in one of the regions between them. A dot in the very center of the plot would represent an alignment that has the exact same likelihood no matter which hypothesis is used; this alignment would therefore be entirely uninformative. The black triangle near the middle of the plot connects the mean likelihoods, drawn on the three axes, of alignments that support the hypothesis corresponding to those axes. Thus, the further the central black triangle points towards the three hypotheses, the more these are supported overall. In the above plot, this central black triangle mostly indicates support for hypotheses T1 and T2 but less for T3. Finally, the numbers outside the plot indicate how many alignments have better support with T1 than with T2 or vice versa (at the bottom), better support with T2 than with T3 or vice versa (at the right), and better support with T1 than with T3 or vice versa (at the left). For example, in the above plot, 690 alignments support T1 over T2, and 594 alignments support T2 over T1.
+
+	Overall, most alignments seem to support T1 XXX Update XXX, followed by T2. Genealogy interrogation therefore supports the hypothesis that *Neolamprologus olivaceous* and *Neolamprologus pulcher* form sister species in the species tree, in line with the results obtained in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md). However, genealogy interrogation further shows that the support for the two alternative topologies T2 and T3 is not balanced, instead 717 alignments support T2 over T3 and only 575 alignments support T3 over T2. This imbalance corroborates the conclusions of [Gante et al. (2016)](https://doi.org/10.1111/mec.13767) and [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650), according to which introgression occurred between *Neolamprologus pulcher* and *Neolamprologus brichardi*.
+
+As the analyses in this part of the tutorial have shown, genealogy interrogation can be useful to resolve relationships and identify introgression at one selected node of a phylogeny. The good thing about this type of analysis is that short and rather uninformative alignments can be used, which reduces the degree to which the analyses could be influenced by within-alignment recombination. Importantly, the fact that short alignments are sufficient also means that genealogy interrogation can be applied to datasets that consist exclusively of short alignments, such as RADseq data, opening up new possibilities for phylogenetic analyses and introgression tests in studies based on such datasets.
 
 
 
@@ -479,51 +608,13 @@ A good way of plotting the asymmetry among alternative trio topologies, and the 
 * **Question 1:** Unfortunately, the mean lengths of c-genes and single-topology tracts are extremely short: between 14 and 45 bp. Consequently, the probability that an  alignment with a length of 2,000 bp (and by extrapolation this also applies to alignments with lengths of 2,500 bp) contains just one c-gene or single-topology tract is 0. Instead, alignments of this length contain on average around 141 c-genes and about 45 single-topology tracts. This means that if our assumptions for the species tree, the recombination rate, and the population size were correct, phylogenies inferred for alignments with a lenth over 2,000 bp in fact would average over a large number of different topologies. Unsurprisingly, the expected numbers of c-genes and single-topology tracts per alignment are roughly halved when the alignment is 1,000 bp instead of 2,000 bp.
 
 
-
-
-
-
-
-
-
-<a name="q1"></a>
-
-* **Question 1:** You might have noticed that the file does not contain any missing data anymore, as shown in the text below. This is because the imputation that is part of phasing with BEAGLE does exactly that: it replaces missing data with "imputed" alleles that are estimated based on the alleles present in other samples. This approach may work well with population-level data for model species where a reference set of haplotypes is available (such a reference set can be passed to BEAGLE with the `ref=` option); however, the accuracy of the imputed alleles may be questioned when the imputation is applied to datasets comprising multiple species without a reference set.
-
-		##fileformat=VCFv4.2
-		##filedate=20180523
-		##source="beagle.16May18.771.jar"
-		##INFO=<ID=AF,Number=A,Type=Float,Description="Estimated ALT Allele Frequencies">
-		##INFO=<ID=DR2,Number=1,Type=Float,Description="Dosage R-Squared: estimated squared correlation between estimated REF dose [P(RA) + 2*P(RR)] and true REF dose">
-		##INFO=<ID=IMP,Number=0,Type=Flag,Description="Imputed marker">
-		##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-		##FORMAT=<ID=DS,Number=A,Type=Float,Description="estimated ALT dose [P(RA) + P(AA)]">
-		##FORMAT=<ID=GP,Number=G,Type=Float,Description="Estimated Genotype Probability">
-		#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  IZA1    IZC5    AUE7    AXD5    JBD5    JBD6    JUH9    JUI1    LJC9    LJD1    KHA7    KHA9    IVE8    IVF1    JWH1    JWH2    JWG8    JWG9    JWH3    JWH4    JWH5    JWH6    ISA6    ISB3    ISA8    IYA4    KFD2    KFD4
-		NC_031969       45158   .       A       C       .       PASS    .       GT      0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|1     0|0     0|1     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
-		NC_031969       58829   .       T       C       .       PASS    .       GT      1|1     1|1     1|1     1|1     1|0     1|1     1|1     1|1     1|1     1|1     1|0     1|0     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     0|1     1|1
-		NC_031969       88364   .       T       G       .       PASS    .       GT      1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1
-		NC_031969       88371   .       C       T       .       PASS    .       GT      1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1
-		NC_031969       98367   .       T       A       .       PASS    .       GT      1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1
-		NC_031969       98404   .       G       C       .       PASS    .       GT      0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     1|0     1|0     0|0     0|0     0|0     0|0     1|0     1|0     0|0     0|0     0|0     0|0     0|1     1|0     0|0     0|0
-		NC_031969       124768  .       A       C       .       PASS    .       GT      0|0     0|0     0|0     0|0     1|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
-		NC_031969       141856  .       G       A       .       PASS    .       GT      1|1     0|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1
-		NC_031969       141896  .       G       T       .       PASS    .       GT      0|0     0|0     1|0     1|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0     0|0
-		NC_031969       141908  .       G       A       .       PASS    .       GT      1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1     1|1
-
-
 <a name="q2"></a>
 
-* **Question 2:** The script `extract_blocks.rb` should report on the command line that 493 alignment blocks were written while 7,114 were excluded due to a high proportion of missing data. Thus, we could have obtained a larger number of alignments if we had allowed a greater proportion of missing data; however, these additional blocks would have been less suitable for phylogenetic analysis. Alternatively, less strict filters for quality and depth could have been chosen in variant calling, which would have led to an overall lower proportion of missing data. This, however, could also have compromised the reliability of the resulting alignments. Of course, if we wouldn't be limited to the use of a single chromosome as in this tutorial, but would use data from across the whole genome, the number of suitable block alignments could be much larger. Nevertheless, it may be worthwhile to aim for a higher coverage and better quality already at the sequencing stage (here, an Illumina read coverage around 10&times; was used) to increase the proportion of the dataset that can ultimately be used for phylogenetic analyses.
-
-
-<a name="q3"></a>
-
-* **Question 3:** Around 440 alignments should have passed the filtering and should therefore have been copied to directory `short_alignments_filtered`:
+* **Question 2:** Around 440 alignments should have passed the filtering and should therefore have been copied to directory `short_alignments_filtered`:
 
 		ls short_alignments_filtered/*.nex | wc -l
 
 
-<a name="q4"></a>
+<a name="q3"></a>
 
-* **Question 4:** The trio with the highest *D*-statistic is probably the one with "neooli", "neopul", and "neobri", in which 207 trees pair "neooli" and "neopul" and 142 trees pair "neopul" and "neobri" but only 87 trees pair "neooli" and "neobri". The *D*-statistic for this trio should be around 0.24 and the *p*-value should be around 0.0003.
+* **Question 3:** The trio with the highest *D*-statistic is probably the one with "neooli", "neopul", and "neobri", in which 207 trees pair "neooli" and "neopul" and 142 trees pair "neopul" and "neobri" but only 87 trees pair "neooli" and "neobri". The *D*-statistic for this trio should be around 0.24 and the *p*-value should be around 0.0003.
