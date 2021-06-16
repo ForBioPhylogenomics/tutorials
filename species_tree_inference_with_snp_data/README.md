@@ -143,6 +143,7 @@ The dataset is now sufficiently filtered for analysis with SVDQuartets. However,
 		
 * Use the script to convert the SNP dataset of `NC_031969.f5.sub4.vcf` to Nexus format:
 
+		module purge
 		module load Ruby/2.7.2-GCCcore-9.3.0
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby convert_vcf_to_nexus.rb NC_031969.f5.sub4.vcf NC_031969.f5.sub4.nex
 
