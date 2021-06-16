@@ -220,13 +220,16 @@ To use the `--tree` option of Dsuite, we will obviously need a tree file. As a b
 
 However, we need to prepare the tree file before we can use it with Dsuite. First, Dsuite requires tree files in Newick format, but the tree file `snapp.tre` is written in Nexus format. Second, as the tree generated in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) did not include *Neolamprologus cancellatus*, we will need to add this species to the tree manually.
 
-* To convert the file `snapp.tre` from Nexus to Newick format, download it to your local computer with `scp`, open it in FigTree, and select "Export Trees..." from FigTree's "File" menu. In the dialog window, select "Newick" from the drop-down menu next to "Tree file format:", as shown in the next screenshot.<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p> Name the new file `snapp.nwk`.
+* To convert the file `snapp.tre` from Nexus to Newick format, make sure that the R script `convert_to_newick.r` is still in your current directory on Saga:
 
-	The tree file `snapp.nwk` should now have a content similar to the following, with branch lengths encoded by numbers following colon symbols:
+		ls convert_to_newick.r
+		
+	If the file should be missing, have a look at tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) to see how they should be written.
+		
+* Then execute the script to convert the tree in Nexus format in file `snapp.tre` to a tree in Newick format that is written to a new file named `snapp.nwk`:
 
-		((altfas:2.6520367123213346,((((((neobri:0.5240051105707518,(neooli:0.3610385760756361,neopul:0.3610385760756361):0.16296653449511578):0.06084458117051339,neohel:0.5848496917412653):0.11293049810600309,((neocra:0.5011109162246027,neomar:0.5011109162246028):0.09226605826642365,neogra:0.5933769744910264):0.10440321535624186):0.14067115586556878,neosav:0.8384513457128372):0.28515609256191665,telvit:1.1236074382747534):0.060210462250667174,(neochi:0.06552780931213173,neowal:0.06552780931213173):1.1182900912132892):1.4682188117959136):4.311456556721317,astbur:6.963493269042651);
-
-* Copy file `snapp.nwk` back to your current directory on Saga, using `scp`.
+		module load R/4.0.0-foss-2020a
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty Rscript convert_to_newick.r snapp.tre snapp.nwk
 
 * To add *Neolamprologus cancellatus* ("neocan") to the tree, we need to make a decision about where to place it. Perhaps the best way to do this would be a separate phylogenetic analysis, but as we will see later, there is no single true position of *Neolamprologus cancellatus* ("neocan") in the species tree anyway. So for now it will be sufficient to use the counts of shared derived sites from file `individuals_dsuite_BBAA.txt` as an indicator for where best to place the species. Thus, we need to find the largest count of derived sites that *neocan* shares with any other species. To do this, use the following command on Saga:
 
