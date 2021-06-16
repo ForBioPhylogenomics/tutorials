@@ -269,6 +269,8 @@ The dataset is now sufficiently filtered for analysis with SVDQuartets. However,
 
 	* Quit the interactive PAUP\* session with `quit`.
 
+	* Download the tree file `NC_031969.f5.sub4.parts.tre` from Saga to your local computer using `scp`.
+
 	**Question 4:** Does the species tree inferred by SVDQuartets appear reliable? [(see answer)](#q4)
 	
 	**Question 5:** Is this species tree concordant with the tree generated based on the multi-species coalescent model in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md)? [(see answer)](#q5)
