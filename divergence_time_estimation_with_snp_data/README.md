@@ -157,7 +157,7 @@ As mentioned above and in tutorial [Species-Tree Inference with SNP Data](../spe
 
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby snapp_prep.rb -v NC_031969.f5.sub5.vcf -t individuals.txt -c constraints.txt -m 1000 -l 100000
 
-	**Question 3:** How many sites useful for SNAPP did the dataset contain after we had reduced it to a single individual per species? [(see answer)](#q3)
+	**Question 3:** How many sites useful for SNAPP did the dataset contain after we reduced it to a single individual per species? [(see answer)](#q3)
 		
 	You may notice that the chain length of 100,000 MCMC iterations is extremely short compared to those used in the BEAST2 analyses of other tutorials. Using much shorter chain lengths with SNAPP than BEAST2 is quite common, given that the SNAPP model has far fewer model parameters than most models used in other BEAST2 analyses, and that each individual iteration is much slower with SNAPP due to the high computational demand of the integration over all possible gene trees at each SNP.
 		
