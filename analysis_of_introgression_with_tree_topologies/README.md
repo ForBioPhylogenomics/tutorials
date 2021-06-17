@@ -512,11 +512,7 @@ We are then ready to run IQ-TREE with each alignment and each topological constr
 
 		# Load the iqtree module.
 		module load IQ-TREE/2.1.2-foss-2020a
-		
-		# Get the constraint file.
-		constraint=${1}
-		constraint_id=${constraint%.tre}
-		
+				
 		# Run iqtree for all alignments.                                                                                                                              
 		for nex in short_alignments_filtered/*.nex
 		do
