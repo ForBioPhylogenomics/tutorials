@@ -551,7 +551,7 @@ alt_hypothesis: "(orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1)))
 
 		BEGIN NETWORKS;
 
-		Network alt_hypothesis = (orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1))));
+		Network alt_hypothesis = (orenil,((neomar,neogra),((neobri,X#H1),(neooli,(neopul)X#H1))));
 		
 		END;
 		
