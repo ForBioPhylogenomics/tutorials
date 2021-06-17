@@ -242,7 +242,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		dir=alignments
 
 		# Set the name of the nexus file.
-		nex= phylonet.nex
+		nex=phylonet.nex
 
 		# Write a nexus file with all trees.
 		echo -e "#NEXUS\n\nBEGIN TREES;\n" > ${nex}
