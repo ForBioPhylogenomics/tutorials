@@ -366,6 +366,7 @@ The *f*-branch statistic can be quantified with Dsuite's `Fbranch` command.
 
 		module load Python/3.8.2-GCCcore-9.3.0
 		pip install --user pandas
+		pip install --user matplotlib
 
 * Then, run the Python script `dtools.py` to plot the *f*-branch statistic, using the files `fbranch` and `snapp_w_neocan.nwk` as input and specifying "astbur" as the outgroup:
 
