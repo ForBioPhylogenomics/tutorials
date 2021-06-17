@@ -559,17 +559,17 @@ We are then ready to run IQ-TREE with each alignment and each topological constr
 	
 To extract and compare the log-likelihood values from the output files of all IQ-TREE analyses, we can use the script `summarize_ggi.sh`.
 
-* Add the script `summarize_ggi.sh` to your current directory, either by copying it from `XXX` or by downloading it from GitHub, using one of the following two commands:
+* Add the script `summarize_ggi.sh` to your current directory, either by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two commands:
 
-		cp XXX
+		cp /cluster/projects/nn9458k/phylogenomics/week2/src/summarize_ggi.sh .
 		
 	or
 	
-		wget XXX
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/summarize_ggi.sh
 
 	This script expects two arguments, namely the name of a directory in which it can find the files with endings `.t1.log`, `.t2.log`, and `.t3.log`, and the name of a new file to which its output will be written. We'll use `short_alignments_ggi.txt` as the name of this output file; thus, run the script with this command:
 	
-		bash summarize_ggi.sh short_alignments_filtered short_alignments_ggi.txt
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:05:00 --account=nn9458k --pty bash summarize_ggi.sh short_alignments_filtered short_alignments_ggi.txt
 
 * Have a look at the output file `short_alignments_ggi.txt`. You'll see that each line reports the comparison of likelihoods for one alignment. The second column specifies the hypothesis that received the best likelihood, and the third column indicates the difference between this likelihood and the second-best likelihood, in log units. The last three columns show the log-likelihoods themselves.
 
@@ -577,19 +577,20 @@ The output in file `short_alignments_ggi.txt` can be analyzed and plotted with t
 
 * Add the script `plot_ggi.rb` to your current directory on Saga, either by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two command:
 
-		cp /cluster/projects/nn9458k/phylogenomics/week2/src/plot_ggi.rb
+		cp /cluster/projects/nn9458k/phylogenomics/week2/src/plot_ggi.rb .
 		
 	or
 	
-		wget XXX
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/plot_ggi.rb
 
 * Execute the script `plot_ggi.rb`, specifying `short_alignments_ggi.txt` as the name of the input file and `short_alignments_ggi.svg` as the name of the output file to which the plot will be written in SVG format:
 
-		ruby plot_ggi.rb short_alignments_ggi.txt short_alignments_ggi.svg
+		module load Ruby/2.7.2-GCCcore-9.3.0
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_ggi.rb short_alignments_ggi.txt short_alignments_ggi.svg
 
-* Download the output file `short_alignments_ggi.svg` from Saga to your local computer and open it with Firefox, Adobe Illustrator, or another program capable of reading SVG format. The plot should look similar to the one shown below:<p align="center"><img src="img/short_alignments_ggi.png" alt="Heatmap D" width="600"></p>XXX Update XXX In this plot, each dot represents one alignment, and the position of the dot indicates the difference in likelihood support among the three competing hypotheses. If a dot is directly on the dashed line leading towards T1 at the bottom-left, this alignment has the best likelihood when using the T1 hypothesis and identical likelihoods when the other two hypotheses are used as constraints. When the two alternative hypotheses have different likelihoods (but both are lower than the best likelihood), then the dot is not placed directly on a dashed line but in one of the regions between them. A dot in the very center of the plot would represent an alignment that has the exact same likelihood no matter which hypothesis is used; this alignment would therefore be entirely uninformative. The black triangle near the middle of the plot connects the mean likelihoods, drawn on the three axes, of alignments that support the hypothesis corresponding to those axes. Thus, the further the central black triangle points towards the three hypotheses, the more these are supported overall. In the above plot, this central black triangle mostly indicates support for hypotheses T1 and T2 but less for T3. Finally, the numbers outside the plot indicate how many alignments have better support with T1 than with T2 or vice versa (at the bottom), better support with T2 than with T3 or vice versa (at the right), and better support with T1 than with T3 or vice versa (at the left). For example, in the above plot, 690 alignments support T1 over T2, and 594 alignments support T2 over T1.
+* Download the output file `short_alignments_ggi.svg` from Saga to your local computer and open it with Firefox, Adobe Illustrator, or another program capable of reading SVG format. The plot should look similar to the one shown below:<p align="center"><img src="img/ggi.png" alt="Heatmap D" width="550"></p> In this plot, each dot represents one alignment, and the position of the dot indicates the difference in likelihood support among the three competing hypotheses. If a dot is directly on the dashed line leading towards T1 at the bottom-left, this alignment has the best likelihood when using the T1 hypothesis and identical likelihoods when the other two hypotheses are used as constraints. When the two alternative hypotheses have different likelihoods (but both are lower than the best likelihood), then the dot is not placed directly on a dashed line but in one of the regions between them. A dot in the very center of the plot would represent an alignment that has the exact same likelihood no matter which hypothesis is used; this alignment would therefore be entirely uninformative. The black triangle near the middle of the plot connects the mean likelihoods, drawn on the three axes, of alignments that support the hypothesis corresponding to those axes. Thus, the further the central black triangle points towards the three hypotheses, the more these are supported overall. In the above plot, this central black triangle mostly indicates support for hypotheses T1 and T2 but less for T3. Finally, the numbers outside the plot indicate how many alignments have better support with T1 than with T2 or vice versa (at the bottom), better support with T2 than with T3 or vice versa (at the right), and better support with T1 than with T3 or vice versa (at the left). For example, in the above plot, 690 alignments support T1 over T2, and 594 alignments support T2 over T1.
 
-	Overall, most alignments seem to support T1 XXX Update XXX, followed by T2. Genealogy interrogation therefore supports the hypothesis that *Neolamprologus olivaceous* and *Neolamprologus pulcher* form sister species in the species tree, in line with the results obtained in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md). However, genealogy interrogation further shows that the support for the two alternative topologies T2 and T3 is not balanced, instead 717 alignments support T2 over T3 and only 575 alignments support T3 over T2. This imbalance corroborates the conclusions of [Gante et al. (2016)](https://doi.org/10.1111/mec.13767) and [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650), according to which introgression occurred between *Neolamprologus pulcher* and *Neolamprologus brichardi*.
+	Overall, most alignments seem to support T1, followed by T2. Genealogy interrogation therefore supports the hypothesis that *Neolamprologus olivaceous* and *Neolamprologus pulcher* form sister species in the species tree, in line with the results obtained in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md). However, genealogy interrogation further shows that the support for the two alternative topologies T2 and T3 is not balanced, instead 137 alignments support T2 over T3 and only 75 alignments support T3 over T2. This imbalance corroborates the conclusions of [Gante et al. (2016)](https://doi.org/10.1111/mec.13767) and [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650), according to which introgression occurred between *Neolamprologus pulcher* and *Neolamprologus brichardi*.
 
 As the analyses in this part of the tutorial have shown, genealogy interrogation can be useful to resolve relationships and identify introgression at one selected node of a phylogeny. The good thing about this type of analysis is that short and rather uninformative alignments can be used, which reduces the degree to which the analyses could be influenced by within-alignment recombination. Importantly, the fact that short alignments are sufficient also means that genealogy interrogation can be applied to datasets that consist exclusively of short alignments, such as RADseq data, opening up new possibilities for phylogenetic analyses and introgression tests in studies based on such datasets.
 
