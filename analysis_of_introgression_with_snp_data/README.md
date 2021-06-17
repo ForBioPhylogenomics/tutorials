@@ -446,7 +446,7 @@ To visualize the variation of the *D* and *f*<sub>dM</sub> statistics across chr
 		
 * Download the file `altfas_neocan_telvit_localFstats__500_100.pdf` from Saga to your local computer with `scp`, and then open the file to see the plot.
 
-	The plot should show that the *D*-statistic (in gray) is almost in all windows substantially higher than the *f*<sub>d</sub>-statistic (in black), and that the *f*<sub>dM</sub>-statistic, which estimates the admixture proportion is mostly close 0.5:<p align="center"><img src="img/trio1.png" alt="Dinvestigate" width="600"></p> There also appears to be a dip in both statistics at around 5 Mbp; however, whether this is an artifact resulting from e.g. missing data or misassembly in the reference genome, or whether it shows a biological signal of reduced introgression is difficult to tell without further analyses.
+	The plot should show that the *D*-statistic (in gray) is almost in all windows substantially higher than the *f*<sub>dM</sub>-statistic (in black):<p align="center"><img src="img/trio1.png" alt="Dinvestigate" width="600"></p> There also appears to be a dip in both statistics at around 5 Mbp; however, whether this is an artifact resulting from e.g. missing data or misassembly in the reference genome, or whether it shows a biological signal of reduced introgression is difficult to tell without further analyses.
 
 * Repeat the same for a second trio that appeared to show signals of introgression, composed of *Neolamprologus olivaceous* ("neooli"), *N. pulcher* ("neopul), and *N. brichardi* ("neobri"). To do so, use these commands on Saga:
 
