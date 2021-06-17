@@ -575,9 +575,9 @@ To extract and compare the log-likelihood values from the output files of all IQ
 
 The output in file `short_alignments_ggi.txt` can be analyzed and plotted with the Ruby script `plot_ggi.rb`.
 
-* Add the script `plot_ggi.rb` to your current directory on Saga, either by copying it from XXX or by downloading it from GitHub, using one of the following two command:
+* Add the script `plot_ggi.rb` to your current directory on Saga, either by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two command:
 
-		cp XXX
+		cp /cluster/projects/nn9458k/phylogenomics/week2/src/plot_ggi.rb
 		
 	or
 	
