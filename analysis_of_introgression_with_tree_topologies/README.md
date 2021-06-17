@@ -458,9 +458,9 @@ A good way of plotting the asymmetry among alternative trio topologies, and the 
 		neopul
 		neooli
 
-* Execute script `plot_tree_asymmetry.rb` with files `short_alignments_filtered_topology_frequencies.txt` and `short_alignments_species_order.txt` as input, specify a maximum *D*-statistic of 0.7, and name the output file `short_alignments_filtered_topology_frequencies.svg`:
+* Execute script `plot_tree_asymmetry.rb` with files `short_alignments_filtered_topology_frequencies.txt` and `short_alignments_species_order.txt` as input, and name the output file `short_alignments_filtered_topology_frequencies.svg`:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty ruby plot_tree_asymmetry.rb short_alignments_filtered_topology_frequencies.txt short_alignments_species_order.txt 0.7 short_alignments_filtered_topology_frequencies.svg
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty ruby plot_tree_asymmetry.rb short_alignments_filtered_topology_frequencies.txt short_alignments_species_order.txt short_alignments_filtered_topology_frequencies.svg
 
 * Download the output file `short_alignments_filtered_topology_frequencies.svg` from Saga to your local computer, and open it with a program capable of reading files in SVG format, for example with a browser such as Firefox or with Adobe Illustrator. The heatmap plot should look as shown below:<p align="center"><img src="img/asymmetry.png" alt="Heatmap D" width="600"></p>
 
