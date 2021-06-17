@@ -333,7 +333,7 @@ Like the *D*-statistic, we can also plot the *f*<sub>4</sub>-ratio, quantifying 
 
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_f4ratio.rb individuals_dsuite_BBAA.txt species_order.txt 0.4 individuals_dsuite_BBAA_f4.svg
 
-* Download the plot file `individuals_dsuite_BBAA_f4.svg` to your local computer and open it in a program capable of reading files in SVG format. The heatmap should look as shown below:<img src="img/individuals_dsuite_BBAA_f4.png" alt="Heatmap BBAA f4" width="600"></p>
+* Download the plot file `individuals_dsuite_BBAA_f4.svg` to your local computer and open it in a program capable of reading files in SVG format. The heatmap should look as shown below:<p align="center"><img src="img/individuals_dsuite_BBAA_f4.png" alt="Heatmap BBAA f4" width="600"></p>
 
 
 
