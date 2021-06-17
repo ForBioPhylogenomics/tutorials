@@ -466,7 +466,7 @@ To visualize the variation of the *D* and *f*<sub>dM</sub> statistics across chr
 		lines(windowCenter, table$f_dM)
 		dev.off()
 		
-* Again, quit the R environment with `quit(save="no")`).
+* Again, quit the R environment with `quit(save="no")`.
 
 * Download the file `neooli_neopul_neobri_localFstats__500_100.pdf` from Saga to your local computer and open it.
 
