@@ -352,7 +352,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 
 * You could also to increase the font size for the tip labels, as shown below. click on "Font size" > "Increase" in the "Style" menu multiple times, the network will look as shown below.<p align="center"><img src="img/safari3.png" alt="Safari" width="700"></p>
 
-* Copy the string with the network in file `run_phylonet.out` (starting with the first opening parenthesis and ending with the semi-colon) and use it to replace the content of file `tmp.tre`, on your local computer.
+* Copy the extended Newick string with the network in file `run_phylonet.out` (just below "Inferred Network #1:") and use it to replace the content of file `tmp.tre`, on your local computer.
 
 * Load the file `tmp.tre` with its new content once again in IcyTree.
 
