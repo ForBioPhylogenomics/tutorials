@@ -694,7 +694,7 @@ To analyze the new VCF file with Dsuite, we still need a file with a table assig
 	
 	*D* = (*C*<sub>ABBA</sub> - *C*<sub>BABA</sub>) / (*C*<sub>ABBA</sub> + *C*<sub>BABA</sub>)
 	
-	As you can see from the equation, the *D*-statistic is low when the numbers of derived alleles shared between P2 and P3 (*C*<sub>ABBA</sub>) and those between P1 and P3 (*C*<sub>BABA</sub>) are similar, regardless of the number of derived alleles shared between P1 and P2. Thus, if for example, P1 and P2 share the derived allele at 10,000 sites (*C*<sub>BBAA</sub> = 10000) while P2 and P3 share the derived allele at 9,000 sites (*C*<sub>ABBA</sub> = 9000) and P1 and P3 share the derived allele at 1,000 sites, then the *D*-statistic would be calculated as
+	As you can see from the equation, the *D*-statistic is low when the numbers of derived alleles shared between P2 and P3 (*C*<sub>ABBA</sub>) and those between P1 and P3 (*C*<sub>BABA</sub>) are similar, regardless of the number of derived alleles shared between P1 and P2. Thus, if for example, P1 and P2 share the derived allele at 10,000 sites (*C*<sub>BBAA</sub> = 10000) while P2 and P3 share the derived allele at 9,000 sites (*C*<sub>ABBA</sub> = 9000) and P1 and P3 share the derived allele at 1,000 sites (*C*<sub>BABA</sub> = 1000), then the *D*-statistic would be calculated as
 	
 	*D* = (9000 - 1000) / (9000 + 1000) = 0.8
 
