@@ -331,7 +331,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		Inferred Network #1:
 		((neogra:3.724082696E-4,(neomar:3.156985884E-4,(neobri:1.811811478E-4,(neopul:1.322393568E-4,neooli:1.322393568E-4):4.8941791E-5):1.345174406E-4):5.67096812E-5):0.0076685959323999995,orenil:0.008041004202);
 
-	If PhyloNet in fact found support for a reticulation edge (we allowed maximally one), the network should contain two occurrences of the keyword "#H1", indicating the connection points of the reticulation edge. The specification is then not strictly in Newick format anymore, but instead in "extended Newick" format, which is described in Cardona et al. ([2008](https://doi.org/10.1186/1471-2105-9-532)). The format is extremely difficult to read, and FigTree is unable to read it. To visualize the network, other programs must be used. One tool capable of reading and visualizing extended Newick format is Dendroscope ([Huson et al. 2007](https://doi.org/10.1186/1471-2105-8-460)), but we'll here use an easier-to-use alternative, the browser-based tree viewer [IcyTree](https://icytree.org) ([Vaughan 2017](https://doi.org/10.1093/bioinformatics/btx155))
+	If PhyloNet in fact found support for a reticulation edge (we allowed maximally one), the network should contain two occurrences of the keyword "#H1", indicating the connection points of the reticulation edge. The specification is then not strictly in Newick format anymore, but instead in "extended Newick" format, which is described in Cardona et al. ([2008](https://doi.org/10.1186/1471-2105-9-532)). The format is extremely difficult to read, and FigTree is unable to read it. To visualize the network, other programs must be used. One tool capable of reading and visualizing extended Newick format is Dendroscope ([Huson et al. 2007](https://doi.org/10.1186/1471-2105-8-460)), but we'll here use an easier-to-use alternative, the browser-based tree viewer [IcyTree](https://icytree.org) ([Vaughan 2017](https://doi.org/10.1093/bioinformatics/btx155)).
 
 
 <a name="icytree"></a>
@@ -451,7 +451,8 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 		echo -e "\nEND;\n\n" >> ${nex}
 
 		# Add a phylonet block to the nexus file.
-		echo -e "BEGIN PHYLONET;\n" >> ${nex}		echo -e "InferNetwork_ML (all) 1;" >> ${nex}
+		echo -e "BEGIN PHYLONET;\n" >> ${nex}
+		echo -e "InferNetwork_ML (all) 1;" >> ${nex}
 		echo -e "\nEND;" >> ${nex}
 
 	Note the changes on lines 5, 10, and the second-last line: The output Nexus file is now called `phylonet_nobl.nex` (on line 5), the input tree files on now have the ending `.treefile` (on line 10), and the `InferNetwork_ML` command is now called without the option `-bl` (on the second-last line).
