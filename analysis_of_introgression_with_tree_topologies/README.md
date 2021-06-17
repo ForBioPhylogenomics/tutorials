@@ -31,7 +31,7 @@ In this tutorial I am going to demonstrate how comparisons of tree topologies, i
 <a name="dataset"></a>
 ## Dataset
 
-The dataset used in this tutorial is a set of alignments extracted from the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md). This whole-genome alignment contains sequences for five species of the cichlid genus *Neolamprologus* of Lake Tanganyika: *Neolamprologus brichardi* ("neobri"), *Neolamprologus gracilis* ("neogra") *Neolamprologus marunguensis* ("neomar"), *Neolamprologus olivaceous* ("neooli"), and *Neolamprologus pulcher* ("neopul"). Additionally, the whole-genome alignment contains sequences for Nile tilapia (*Oreochromis niloticus*; "orenil"), which will be used as an outgroup. The alignments will all have a length of 2,500 bp.
+The dataset used in this tutorial is a set of alignments extracted from the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md). This whole-genome alignment contains sequences for five species of the cichlid genus *Neolamprologus* of Lake Tanganyika: *Neolamprologus brichardi* ("neobri"), *Neolamprologus gracilis* ("neogra") *Neolamprologus marunguensis* ("neomar"), *Neolamprologus olivaceous* ("neooli"), and *Neolamprologus pulcher* ("neopul"). Additionally, the whole-genome alignment contains sequences for Nile tilapia (*Oreochromis niloticus*; "orenil"), which will be used as an outgroup. The alignments will all have a length of 1,000 bp.
 
 
 <a name="requirements"></a>
