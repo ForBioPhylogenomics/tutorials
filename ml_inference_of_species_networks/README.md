@@ -423,7 +423,7 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 
 * Submit this script with `sbatch`:
 
-		sbatch prepare_phylonet_nobl.slurm`
+		sbatch prepare_phylonet_nobl.slurm
 		
 	This script should take around 5 minutes to complete.
 	
