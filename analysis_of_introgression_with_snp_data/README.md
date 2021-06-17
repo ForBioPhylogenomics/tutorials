@@ -251,11 +251,11 @@ However, we need to prepare the tree file before we can use it with Dsuite. Firs
 
 * Run Dsuite again, this time adding the `-t` (or `--tree`) option to specify the newly prepared tree file `snapp_w_neocan.nwk`:
 
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty Dsuite Dtrios -t snapp_w_neocan.nwk NC_031969.f5.sub1.vcf.gz individuals_dsuite.txt
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty Dsuite Dtrios -t snapp_w_neocan.nwk NC_031969.f5.sub1.vcf.gz individuals_dsuite.txt
 
 	This Dsuite analysis should again take no longer than about a  minute. The output should be identical to the previously written output except that a file named `individuals_dsuite_tree.txt` should now also be written.
 
-	**Question 5:** Do the results differ when trios are rearranged either according to the numbers of derived sites shared between P1 and P2 (thus, the results in file `individuals_dsuite_BBAA.txt`) or according to the provided tree (in file `individuals_dsuite_tree.txt`)?
+	**Question 5:** Do the results differ when trios are rearranged either according to the numbers of derived sites shared between P1 and P2 (thus, the results in file `individuals_dsuite_BBAA.txt`) or according to the provided tree (in file `individuals_dsuite_tree.txt`)? [(see answer)](#q5)
 
 * To further explore differences among the output files based on different rules for trio rearrangement, find the highest *D*-statistic reported in each of the files `individuals_dsuite_BBAA.txt`, `individuals_dsuite_Dmin.txt`, and `individuals_dsuite_tree.txt`. One way to do this are the three following commands (with `sort -g -k 4`, we can sort by the values in the fourth column of each file, which are the *D*-statistics):
 
