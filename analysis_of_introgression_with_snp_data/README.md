@@ -364,11 +364,11 @@ The *f*-branch statistic can be quantified with Dsuite's `Fbranch` command.
 
 * To execute the script `dtools.py`, an additional Python library named `pandas` is required. Install this library in with `pip`:
 
+		module load Python/3.8.2-GCCcore-9.3.0
 		pip install --user pandas
 
 * Then, run the Python script `dtools.py` to plot the *f*-branch statistic, using the files `fbranch` and `snapp_w_neocan.nwk` as input and specifying "astbur" as the outgroup:
 
-		module load Python/3.8.2-GCCcore-9.3.0
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python dtools.py fbranch.txt snapp_w_neocan.nwk --outgroup=astbur
 	
 	This command should have written two new files named `fbranch.png` and `fbranch.svg` for the plot of the *f*-branch statistic.
