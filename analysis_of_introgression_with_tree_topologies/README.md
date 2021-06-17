@@ -565,7 +565,9 @@ To extract and compare the log-likelihood values from the output files of all IQ
 
 	This script expects two arguments, namely the name of a directory in which it can find the files with endings `.t1.log`, `.t2.log`, and `.t3.log`, and the name of a new file to which its output will be written. We'll use `short_alignments_ggi.txt` as the name of this output file; thus, run the script with this command:
 	
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:05:00 --account=nn9458k --pty bash summarize_ggi.sh short_alignments_filtered short_alignments_ggi.txt
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:20:00 --account=nn9458k --pty bash summarize_ggi.sh short_alignments_filtered short_alignments_ggi.txt
+
+	This script should finish within ten minutes.
 
 * Have a look at the output file `short_alignments_ggi.txt`. You'll see that each line reports the comparison of likelihoods for one alignment. The second column specifies the hypothesis that received the best likelihood, and the third column indicates the difference between this likelihood and the second-best likelihood, in log units. The last three columns show the log-likelihoods themselves.
 
