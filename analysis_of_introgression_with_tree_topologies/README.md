@@ -59,7 +59,7 @@ The following tools are required additionally:
 
 	The installation can be tested with this command:
 	
-			python -c 'import scipy'
+		python -c 'import scipy'
 
 
 
