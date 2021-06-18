@@ -709,7 +709,7 @@ As some of the inference methods require sequence alignments rather than variant
 
 * Download the script `make_alignments_from_vcf.py`:
 
-		https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/make_alignments_from_vcf.py
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/make_alignments_from_vcf.py
 
 * Have a look at the help text of the script:
 
