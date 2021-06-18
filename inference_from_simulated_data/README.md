@@ -404,7 +404,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 
 * Submit the Slurm script using `sbatch`:
 
-		sbatch simulate.slurm
+		sbatch simulate_data.slurm
 
 <!-- Run time: 30-40 min -->
 
