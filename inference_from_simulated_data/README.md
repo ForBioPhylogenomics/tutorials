@@ -1141,7 +1141,7 @@ As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subse
 
 <a name="q5"></a>
 
-* **Question 5:** The output of the `DemographyDebugger` should indicate that there are now five epochs in the model, of which the first lasted from 0 to 167,000 generations ("1.67e+05"), the second lasted from 167,000 to 400,000 generations, the third lasted from 400,000 to 533,000 generations, the fourth lasted from 533,000 to 633,000 generations, and the fifth lasted from 633,000 to infinite generations. This output indicates that the demographic model has been set up correctly.
+* **Question 5:** The output of the `DemographyDebugger` should indicate that there are now six epochs in the model, of which the first lasted from 0 to 167,000 generations ("1.67e+05"), the second lasted from 167,000 to 400,000 generations, the third lasted from 400,000 to 533,000 generations, the fourth lasted from 533,000 to 633,000 generations, the fifth lasted from 633,000 to 3.17 million generations, and the sixth lasted from 3.17 million generations to infinite generations. This output indicates that the demographic model has been set up correctly.
 
 
 <a name="q6"></a>
