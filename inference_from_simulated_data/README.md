@@ -1095,6 +1095,7 @@ As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subse
 
 		# Generate a tree sequence with lots of trees.
 		coalescence_times = []
+		region_lengths = []
 		ts = msprime.sim_ancestry(
 			samples=1,
 			sequence_length=10000000,
@@ -1102,9 +1103,10 @@ As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subse
 			population_size=100)
 		for tree in ts.trees():
 			coalescence_times.append(tree.tmrca(0,1))
+			region_lengths.append(tree.span)
 
 		# Plot the coalescence time versus the region length.
-		plt.scatter(region_lengths, times)
+		plt.scatter(region_lengths, coalescence_times)
 		plt.xlabel("Region length")
 		plt.ylabel("Coalescence time")
 		plt.savefig('simulation.pdf')
