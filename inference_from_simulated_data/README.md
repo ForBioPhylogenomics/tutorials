@@ -218,7 +218,7 @@ In order to use the simulated genomic data for inference, we will need to export
 			random_seed=1234)
 			
 		# Add mutations to the tree sequence.
-		mts = msprime.sim_mutations(ts, rate=0.0001, random_seed=5678)
+		mts = msprime.sim_mutations(ts, rate=0.00001, random_seed=5678)
 
 		# Export genomic data in vcf format.
 		with open("simulation.vcf", "w") as vcf:
@@ -234,10 +234,10 @@ In order to use the simulated genomic data for inference, we will need to export
 
 The default model for the simulation of mutations is the Jukes-Cantor model, according to which all substitutions occur with the same frequency. As alternatives, a number of other nucleotide subsitution models of are available, including the HKY and GTR models, which can be defined with the `msprime.HKY` and `msprime.GTR` functions, respectively. Each type of model requires the specification of additional parameters, such as the kappa parameter for the HKY model that specifies the relative rate of transitions over transversions. For the GTR model, relative rates are specified by providing a list of values with the `relative_rates` keyword. Thus, the HKY model could for example be defined as `msprime.HKY(kappa=2)` and the GTR model could be defined with `msprime.GTR(relative_rates=[0.3, 0.2, 1.6, 2.4, 0.6, 0.4])` (the order of these rates is described in the [Msprime API reference](https://tskit.dev/msprime/docs/stable/api.html#msprime.GTR)). Additionally, the equilibrium frequencies of the four nucleotides can be specified for both models with the `equilibrium_frequencies` keyword; if these are not specified, equal frequencies will be used by default.A list of the available models can be found in the [Msprime manual](https://tskit.dev/msprime/docs/stable/mutations.html).
 
-* To try out a simulation with the HKY model, replace `mts = msprime.sim_mutations(ts, rate=0.0001, random_seed=5678)` in the current version of the script with these two lines:
+* To try out a simulation with the HKY model, replace `mts = msprime.sim_mutations(ts, rate=0.00001, random_seed=5678)` in the current version of the script with these two lines:
 		
 		hky_model=msprime.HKY(kappa=2)
-		mts = msprime.sim_mutations(ts, rate=0.0001, model=hky_model, random_seed=5678)
+		mts = msprime.sim_mutations(ts, rate=0.00001, model=hky_model, random_seed=5678)
 
 	<!-- Run time: 4 s -->
 
@@ -245,7 +245,7 @@ The default model for the simulation of mutations is the Jukes-Cantor model, acc
 
 * To see how a substantially larger value kappa would affect the result, execute the script once again with `kappa=1000` and have a look again at the output file `simulation.vcf`. This time you should notice that nearly all substitutions that occurred were transitions: The sites in the VCF that have an "A" as the reference allele (column "REF") have an "T" as the alternate allele (column "ALT") and vice versa, and all those that have a "C" as the reference have a "G" as the alternate allele and vice versa.
 
-So far, all the simulations performed were for a single panmictic population from which between one and four diploid individuals were sampled. But since the goal of the simulations in this tutorial is to allow tests of the reliability of methods for the inference of species trees and introgression, we will need to simulate genomic data for multiple species (note that Msprime does not distinguish between species and populations). To do so, we need to set up a demographic model that describes the relationships among the simulated species, and we then need to pass that demographic model to the `msprime.sim_ancestry` command with the keyword `demography`, as in `msprime.sim_mutations(ts, rate=0.0001, demography=demography)`.
+So far, all the simulations performed were for a single panmictic population from which between one and four diploid individuals were sampled. But since the goal of the simulations in this tutorial is to allow tests of the reliability of methods for the inference of species trees and introgression, we will need to simulate genomic data for multiple species (note that Msprime does not distinguish between species and populations). To do so, we need to set up a demographic model that describes the relationships among the simulated species, and we then need to pass that demographic model to the `msprime.sim_ancestry` command with the keyword `demography`, as in `msprime.sim_mutations(ts, rate=0.00001, demography=demography)`.
 
 The demographic models can be set up very conveniently with the `msprime.Demography.from_species_tree` command that requires only two options, a phylogenetic tree in Newick format, and a value for the population size. We could thus set up a model with a command like this one:
 
@@ -285,7 +285,7 @@ This should specify a demographic model in which two species named "A" and "B" h
 			
 		# Add mutations to the tree sequence.
 		hky_model=msprime.HKY(kappa=2)
-		mts = msprime.sim_mutations(ts, rate=0.0001, model=hky_model)
+		mts = msprime.sim_mutations(ts, rate=0.00001, model=hky_model)
 
 		# Export genomic data in vcf format.
 		with open("simulation.vcf", "w") as vcf:
