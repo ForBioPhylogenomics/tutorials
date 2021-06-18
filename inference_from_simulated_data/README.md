@@ -1053,7 +1053,13 @@ As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subse
 		
 	With this command included in the script (replacing `msprime.sim_ancestry(2)`), the output should always report four trees in the TreeSequence object with a total of twelve edges and ten nodes.
 
+
+<a name="q2"></a>
+
 * **Question 2:** The second tree is identical to the first tree except that the branch leading to the sampled node 1 has been cut and reattached to the branch leading to sampled node 2. The remaining trees differ from each other only in the age of the root node; however, the fifth tree seems to be identical to the third one.
+
+
+<a name="q3"></a>
 
 * **Question 3:** Actually, while some coalescence times are younger than 200 generations, most are older, indicating that the mean coalescence time in the simulations is older than the expected 200 generations. Repeating the simulation with a much longer sequence length, to produce a very large number of trees in the TreeSequence, shows that the mean coalescence time across trees is around 370 generations. This can be tested with the following script (to run it, the numpy library may first need to be installed, which can be done with `pip install --user numpy`):
 
@@ -1125,8 +1131,17 @@ As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subse
 		
 	The reported value should be around 200.
 
+
+<a name="q4"></a>
+
 * **Question 4:** You should notice that besides the additional number of columns with genotype information, the VCF file also has many more rows, due to an increased number of variable sites. This is not surprising, however. Due to the addition of sampled nodes, each tree of the TreeSequence has more branches on which mutations can arise. Therefore, the total number of mutations has increased.
 
+
+<a name="q5"></a>
+
 * **Question 5:** The output of the `DemographyDebugger` should indicate that there are now five epochs in the model, of which the first lasted from 0 to 167,000 generations ("1.67e+05"), the second lasted from 167,000 to 400,000 generations, the third lasted from 400,000 to 533,000 generations, the fourth lasted from 533,000 to 633,000 generations, and the fifth lasted from 633,000 to infinite generations. This output indicates that the demographic model has been set up correctly.
+
+
+<a name="q6"></a>
 
 * **Question 6:** In the second table of the output of the `DemographyDebugger` you can see that in an event that occurred at generation 1.67e+05, an ancestral population with the ID "pop_7" split into the populations "neooli" and "neopul". Then, in the fourth table, an event that occurred at generation 4e+05 is reported in which an ancestral population labelled "pop_8" split into populations "pop_7" and "neobri". Thus, "pop_8" is the population ID of the common ancestor of the three species.
