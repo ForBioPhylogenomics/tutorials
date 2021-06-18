@@ -295,7 +295,7 @@ This should specify a demographic model in which two species named "A" and "B" h
 
 	As the error message indicates, we need to be more explicit about the sampled individuals when we simulate multiple populations. The error message also informs how this should be done, namely in the form "{pop_id: num_samples}".
 	
-* Retry running the above script after replacing "samples=1" in the `msprime.sim_ancestry` command with "samples={"A": 1, "B": 1},", indicating that we sample a single diploid individual from both populations. This time, the script should finish without errors. <!-- Run time: 4 s -->
+* Retry running the above script after replacing "samples=1," in the `msprime.sim_ancestry` command with "samples={"A": 1, "B": 1},", indicating that we sample a single diploid individual from both populations. This time, the script should finish without errors. <!-- Run time: 4 s -->
 
 
 <a name="real_simulations"></a>
