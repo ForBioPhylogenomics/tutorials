@@ -656,9 +656,9 @@ There are a number of options to simulate changes in population sizes with Mspri
 		# Generate a tree sequence.
 		ts = msprime.sim_ancestry(
 			samples={"neomar":1, "neogra":1, "neobri":1, "neooli":1, "neopul":1, "metzeb":1},
-		sequence_length=sequence_length,
-		recombination_rate=recombination_rate,
-		demography=demography)
+			sequence_length=sequence_length,
+			recombination_rate=recombination_rate,
+			demography=demography)
 
 		# Add mutations to the tree sequence.
 		hky_model=msprime.HKY(kappa=2)
