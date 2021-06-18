@@ -373,33 +373,33 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 
 * Write a Slurm script with the following content, and name it `simulate_data.slurm`:
 
-		#!/bin/bash                                                                                                                                                                             
+		#!/bin/bash
 		
-		# Job name:                                                                                                                                                                             
-		#SBATCH --job-name=simdat                                                                                                                                                               
-		#                                                                                                                                                                                       
-		# Wall clock limit:                                                                                                                                                                     
-		#SBATCH --time=2:00:00                                                                                                                                                                  
-		#                                                                                                                                                                                       
-		# Processor and memory usage:                                                                                                                                                           
-		#SBATCH --ntasks=1                                                                                                                                                                      
-		#SBATCH --mem-per-cpu=1G                                                                                                                                                                
-		#                                                                                                                                                                                       
-		# Accounting:                                                                                                                                                                           
-		#SBATCH --account=nn9458k                                                                                                                                                               
-		#                                                                                                                                                                                       
-		# Output:                                                                                                                                                                               
-		#SBATCH --output=simulate_data.out                                                                                                                                                      
+		# Job name:
+		#SBATCH --job-name=simdat
+		#
+		# Wall clock limit:
+		#SBATCH --time=2:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --ntasks=1
+		#SBATCH --mem-per-cpu=1G
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=simulate_data.out
 
-		# Set up job environment.                                                                                                                                                               
-		set -o errexit  # Exit the script on any error                                                                                                                                          
-		set -o nounset  # Treat any unset variables as an error                                                                                                                                 
-		module --quiet purge  # Reset the modules to the system default                                                                                                                         
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
 
-		# Load the python module.                                                                                                                                                              
+		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0
-
-		# Execute the script.                                                                                                                                                                   
+		
+		# Execute the script.
 		python simulate_data.py
 
 * Submit the Slurm script using `sbatch`:
