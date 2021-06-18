@@ -554,7 +554,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
 		#SBATCH --mem-per-cpu=1G
-		#                                                                                                                                                                                       
+		#
 		# Accounting:
 		#SBATCH --account=nn9458k
 		#
@@ -564,7 +564,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		# Set up job environment.
 		set -o errexit  # Exit the script on any error
 		set -o nounset  # Treat any unset variables as an error
-		module --quiet purge  # Reset the modules to the system default                                                                                                                         
+		module --quiet purge  # Reset the modules to the system default
 
 		# Load the python module.
 		module load Python/3.8.2-GCCcore-9.3.0
