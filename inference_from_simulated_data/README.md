@@ -189,7 +189,7 @@ To perform simulations with Msprime, we are going to write a script in Python, a
 			random_seed=1234)
 			
 		# Add mutations to the tree sequence.
-		mts = msprime.sim_mutations(ts, rate=0.0001, random_seed=5678)
+		mts = msprime.sim_mutations(ts, rate=0.00001, random_seed=5678)
 		
 		# Produce a figure in svg format for the tree sequence.
 		svg = mts.draw_svg(y_axis=True)
