@@ -993,9 +993,9 @@ As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subse
 
 	This should have produced 50 files in Nexus format in directory `simulation_alignments`, which you can verify with `ls simulation_alignments/*.nex | wc -l`.
 
-* Download these alignment files in Nexus format to your local computer, e.g. using `scp`. To download only the files in Nexus format from `simulation_alignments`, you could use a command similar to this one (on your local computer; replace "XXX" with the path to your current directory on Saga):
+* Download these alignment files in Nexus format to your local computer, e.g. using `scp`. To download only the files in Nexus format from `simulation_alignments`, you could use a command similar to this one (on your local computer; replace "XXX" with your username and "YYY" with the path to your alignment directory on Saga):
 
-		scp /XXX/simulation_alignments/*_red.nex .
+		scp XXX@saga.sigma2.no:YYY/simulation_alignments/*_red.nex .
 
 * Follow the instructions given in tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md) to infer species networks with SpeciesNetwork, with the following modifications:
 
