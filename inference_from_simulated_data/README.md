@@ -162,7 +162,8 @@ To perform simulations with Msprime, we are going to write a script in Python, a
 			population_size=100,
 			random_seed=1234)
 
-		# Produce a figure in svg format for the tree sequence.		svg = ts.draw_svg(y_axis=True)
+		# Produce a figure in svg format for the tree sequence.
+		svg = ts.draw_svg(y_axis=True)
 		
 		# Open a new file for writing.
 		f = open("ts.svg", "w")
