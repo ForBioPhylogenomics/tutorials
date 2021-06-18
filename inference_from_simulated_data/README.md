@@ -14,7 +14,7 @@ All methods used for phylogenomic inference have assumptions, and these are ofte
 * [Requirements](#requirements)
 * [Coalescent simulations with Msprime](#msprime)
 	* [Getting started with Msprime](#start)
-	* [Realistic simulations of genomic data](#real_simulations)
+	* [Realistic simulations of genomic data](#real_simulations)	* [Preparing alignments from simulated SNP data](#alignments)
 * [Inference from simulated data](#inference)
 	* [Inference with ASTRAL](#astral)
 	* [Inference with StarBEAST2](#starbeast2)
@@ -704,6 +704,14 @@ There are a number of options to simulate changes in population sizes with Mspri
 		sbatch simulate_data_bottleneck.slurm
 
 <!-- Run time: 30-40 min -->
+
+* Wait for the four Slurm scripts to finish. Before you move on to the next steps, make sure that the four VCF files `simulation.vcf`, `simulation_introgression1.vcf`, `simulation_introgression2.vcf`, and `simulation_bottleneck.vcf` are present in your current directory on Saga:
+
+		ls simulation*.vcf
+		
+
+<a name="alignments"></a>
+### Preparing alignments from simulated SNP data
 
 As some of the inference methods require sequence alignments rather than variant data in VCF format as input, we still need to prepare sequence alignments from the simulated genomic data. This can be done with the Python script `make_alignments_from_vcf.py`, which extracts all variants from a VCF file for a set of regions evenly sampled across the chromosome and adds randomly selected nucleotides for all invariant sites. The script assumes that all variants are phased and thus writes two sequences per sample to each alignment.
 
