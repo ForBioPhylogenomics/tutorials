@@ -70,7 +70,7 @@ To perform simulations with Msprime, we are going to write a script in Python, a
 		module purge
 		module load Python/3.8.2-GCCcore-9.3.0
 		
-* Use Python to execute the script. Normally, the command to do so would be `python simulate_data.py`, but to execute scripts on Saga, we either need to place them inside of Slurm scripts that are submitted with `sbatch`, or we need to use the command `srun` and specify computational requirements and an account number as arguments to that command. To execute the script `simulate_data.py`, use this command:
+* Execute the Python script `simulate_data.py` on Saga with `srun`:
 
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data.py
 		
