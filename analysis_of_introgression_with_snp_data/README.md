@@ -291,7 +291,7 @@ However, we need to prepare the tree file before we can use it with Dsuite. Firs
 		
 	(note that even though the outgroup "astbur" is included in the tree file, we here exclude it because it was never placed in the positions of P2 or P3 in the Dsuite analyses).
 
-* Add the script `plot_d.rb` to your current directory on Saga, either by copying it from `` or by downloading it from GitHub, using one of the following two commands:
+* Add the script `plot_d.rb` to your current directory on Saga by downloading it from GitHub, using one of the following two commands:
 
 		cp /cluster/projects/nn9458k/phylogenomics/week2/src/plot_d.rb .
 
@@ -299,10 +299,10 @@ However, we need to prepare the tree file before we can use it with Dsuite. Firs
 
 		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/plot_d.rb
 
-* When executing the script `plot_d.rb`, one of Dsuite's output files must be specified as input, together with a maximum *D* value that will limit the color scale used in the heatmap, and the name for the output file with the plot. Use `individuals_dsuite_BBAA.txt` as the input file, a maximum *D* of 0.7, and the output file name `individuals_dsuite_BBAA.svg`:
+* When executing the script `plot_d.rb`, one of Dsuite's output files must be specified as input, together with a maximum *D* value and a maximum p value (specified as the negative of the log of the *p*-value) that will limit the color scale used in the heatmap, and the name for the output file with the plot. Use `individuals_dsuite_BBAA.txt` as the input file, a maximum *D* of 0.7, a maximum negative log of the *p*-value of 8 (so that *p*-values of 10<sup>-8</sup> or lower are shown with full opacity), and the output file name `individuals_dsuite_BBAA.svg`:
 
 		module load Ruby/2.7.2-GCCcore-9.3.0
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_d.rb individuals_dsuite_BBAA.txt species_order.txt 0.7 individuals_dsuite_BBAA.svg
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_d.rb individuals_dsuite_BBAA.txt species_order.txt 0.7 8 individuals_dsuite_BBAA.svg
 		
 * The heatmap plot in file `individuals_dsuite_BBAA.svg` is written scalable vector graphic (SVG) format. Download this file to your local computer with `scp` and then open it with a program capable of reading files in SVG format, for example with a browser such as Safari, Chrome, or Firefox, or with Adobe Illustrator. The heatmap plot should look as shown below:<p align="center"><img src="img/individuals_dsuite_BBAA.png" alt="Heatmap BBAA" width="600"></p> As you can see from the color legend in the bottom right corner, the colors of this heatmap show two things at the same time, the *D*-statistic as well as its *p*-value. So red colors indicate higher *D*-statistics, and generally more saturated colors indicate greater significance. Thus, the strongest signals for introgression are shown with saturated red, as in the bottom right of the color legend. All cells in rows or columns for "neocan" should bo colored in red or purple corresponding to a highly significant values of the *D*-statistic of at least 0.3.
 

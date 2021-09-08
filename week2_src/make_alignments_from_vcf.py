@@ -175,7 +175,7 @@ ids = []
 with open(vcf_name) as vcf:
 	for line in vcf:
 		if line[0:2] == "##":
-			next
+			continue
 		elif line[0:1] == "#":
 			for sample_id in line.split()[9:]:
 				ids.append(sample_id + "_1")
@@ -185,10 +185,10 @@ with open(vcf_name) as vcf:
 			pos = int(line.split()[1])
 			# Skip if the current position is 0 (this can happen when the VCF is written with msprime, but not otherwise).
 			if pos == 0:
-				next
+				continue
 			# Quit if the current position is smaller than the previous one.
 			if pos <= prev_pos:
-				print("ERROR: Positions are not continuously increasing, " + pos + " followed " + prev_pos + "!")
+				print("ERROR: Positions are not continuously increasing, " + str(pos) + " followed " + str(prev_pos) + "!")
 				sys.exit(1)
 			# Quit if the chromosome has changed.
 			if chrom == None:
@@ -202,7 +202,7 @@ with open(vcf_name) as vcf:
 			# Check if the position is within an alignment window.
 			if align_count < n_align:
 				if pos-1 < align_starts[align_count]:
-					next
+					continue
 				elif pos-1 > align_ends[align_count]:
 					# Generate a new alignment.
 					window = Window(ids, align_length, align_poss, align_refs, align_alts, align_gts)
