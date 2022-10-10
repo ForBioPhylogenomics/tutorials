@@ -16,49 +16,56 @@ This document describes how the directory structure should be set up, how comman
 <a name="directory_structure"></a>
 ## Directory structure
 
-Following the tutorials in this collection may be easiest if you follow the instructions in each tutorial closely. Given that it is an online course this year we decided for a cookbook model of teaching. We go through each command and explain what it is doing.
-All data and scripts are available on SAGA and you should copy them for their to your working folder during the course. This will much faster than downloading them from here and uploading them to SAGA.
+Following the tutorials in this collection may be easiest if you follow the instructions closely. We go through each command and explain what it is doing. All required input data and scripts are available on Saga and you should copy them to your working directory on Saga during the course.
 
-The data and scripts for each session can be found in the folders
+The data and scripts for each exercise can be found in the directories
 
 _/cluster/projects/nn9458k/phylogenomics/week1_
 
 _/cluster/projects/nn9458k/phylogenomics/week2_
 
-Additionally, you find literature in the folder
+Additionally, you will find literature to which we refer in the tutorials in the directory
 
-_/cluster/projects/nn9458k/phylogenomics/Literature_
+_/cluster/projects/nn9458k/phylogenomics/literature_
 
-In the first exercise, we will ask you to generate your own working folder within the "_phylogenomics_" folder using your name
+In the first exercise, we will ask you to generate your own working directory within the "_phylogenomics_" directory using your name
 
-_/cluster/projects/nn9458k/phylogenomics/$YOURNAME_
+_/cluster/projects/nn9458k/phylogenomics/YOURNAME_
 
-Within each will ask then in each exercise to generate subfolder for each session to keep things orgainzed.
+We will then ask you to generate subfolder for each exercise to keep things orgainzed, such as
 
-The exercises are also on SAGA in the "_phylogenomics_" folder, but it is easiest if you follow them here in this GitHub repository. A link to each tutorial is provided at the [starting page](https://github.com/ForBioPhylogenomics/tutorials/blob/main/README.md).
+_/cluster/projects/nn9458k/phylogenomics/YOURNAME/bayesian\_phylogenetic\_inference_
 
-To work on SAGA you need a console program (like the program called Terminal on Mac OS X and Linux or the Windows Console on Windows). The console from Windows might work, but we would advise to use an emulgator like Cmder (see [Requirements](requirements.md)). The console program will be important to execute commands on SAGA and transfer data to your own computer, when we ant to look at results with a GUI program. You will recognize such commands in the tutorials by monospace font, gray background, and an outline, like for example this command:
+A link to each tutorial is provided at the [starting page](https://github.com/ForBioPhylogenomics/tutorials/blob/main/README.md).
+
+To work on Saga you will need a console program like the program called Terminal on Mac OS X and Linux or the Windows Console on Windows. On Windows, Windows Console might be sufficient for the course, but a more versatile option might be an emulator like [Cmder](https://cmder.app) (see [Requirements](requirements.md)). The console program will be important to execute commands on Saga and transfer data to your own computer, which will be required occasionally, for example to look at results with a GUI program. You will recognize console commands in the tutorials by monospace font, gray background, and an outline, like for example this command:
 
 		pwd
 		
-To execute commands like the above, the "Enter" key always needs to be hit after writing the command. BTW, the command means "_print working directory_".
+To execute commands like the above, the "Enter" key always needs to be hit after writing the command. The command `pwd` stands for "_print working directory_", which is exactly what it does.
 
-To access SAGA, you have to use the following command:
+To access Saga, you have to use the following command:
 
-		ssh $YOURUSERNAME@saga.sigma2.no
+		ssh YOURUSERNAME@saga.sigma2.no
 		
-To upload data to SAGA, you can use the following command:
+You will be asked for your password, which you will need to type to get access.
 
-		scp -R $YOURFILE(S) $YOURFOLDER(S) $YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/$YOURNAME/$PATH_TO_YOUR_FOLDER_ON_SAGA
+To upload data to Saga, you can use the following command:
 
-To download from SAGA, it is similar. However, we suggest that you first navigate to the folder you would like to download the data to in the console:
+		scp -R YOURFILE YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/YOURNAME/PATH_TO_YOUR_FOLDER_ON_SAGA
 
-		scp -R $YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/$YOURNAME/$PATH_TO_YOUR_FOLDER_ON_SAGA/$YOURFILE(or $YOURFOLDER) .
+Downloading from SAGA works very similar. However, we suggest that you first navigate to the directory on your own computer into which you would like to download the files. Then, you can use the following command for the download:
+
+		scp -R YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/YOURNAME/PATH_TO_YOUR_FOLDER_ON_SAGA/YOURFILE .
+		
+Note that instead of a file name in the above two commands (_YOURFILE_), you could also specify the name of a directory, or you could copy multiple files at once by using the asterisk symbol. For example, this command would download all files with the ending _.txt_:
+
+		scp -R YOURUSERNAME@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/YOURNAME/PATH_TO_YOUR_FOLDER_ON_SAGA/*.txt .
 
 <a name="copy_pasting"></a>
 ## Copying and pasting commands
 
-After you've navigated to the tutorial directory on SAGA, it should be possible to execute all commands that are mentioned in the tutorial instructions exactly as they are specified. All one-line commands can be copied from the instructions and pasted into the console window, but care should be taken not to include whitespace symbols before the first letter or after the last letter of the command. Sometimes, it is not evident from the text selection that is used for copying, but whitespace nevertheless appears after the last letter copied to the command line (recognizable as a space between the last letter and the cursor); in that case, the whitespace on the command line should be deleted before executing the command.
+After you've navigated to the tutorial directory on Saga, it should be possible to execute all commands that are mentioned in the tutorial instructions exactly as they are specified. All one-line commands can be copied from the instructions and pasted into the console window, but care should be taken not to include whitespace symbols before the first letter or after the last letter of the command. Sometimes, it is not evident from the text selection that is used for copying, but whitespace nevertheless appears after the last letter copied to the command line (recognizable as a space between the last letter and the cursor); in that case, the whitespace on the command line should be deleted before executing the command.
 
 For multi-line commands, however, it is safer to copy and paste each line individually, and hit the Enter key each time a line has been copied (again, whitespace before and after the first and last letters of the line should not be copied).
 	
@@ -78,7 +85,7 @@ In some cases, text files will need to be written or edited, and for this, a tex
 
 		bash script.sh
 		
-To write and edit text files, either a command-line text editor or one with a graphical user interface could be used. There are many suitable options in the latter category. Programs like TextEdit (on Mac OS X) or Notepad (on Windows) could be used, but only if the default settings are changed so that plain text instead of "rich text" is written. Using Microsoft Word would guarantee trouble sooner rather than later. More convenient than any of these, however, are those that include syntax highlighting, such as [BBEdit](https://www.barebones.com/products/textwrangler/) for Mac OS X, [Notepad++](https://notepad-plus-plus.org) for Windows, or [Geany](https://www.geany.org) and [Atom](https://atom.io) that run on all three platforms.
+To write and edit text files, either a command-line text editor or one with a graphical user interface could be used. There are many suitable options in the latter category. Programs like TextEdit (on Mac OS X) or Notepad (on Windows) could be used, but only if the default settings are changed so that plain text instead of "rich text" is written. Using Microsoft Word would guarantee trouble sooner rather than later. More convenient than any of these, however, are those that include syntax highlighting, such as [BBEdit](https://www.barebones.com/products/textwrangler/) for Mac OS X, [Notepad++](https://notepad-plus-plus.org) for Windows, or [Sublime Text](https://www.sublimetext.com), [Geany](https://www.geany.org), and [Atom](https://atom.io) that run on all three platforms.
 
 If you want to avoid installing any of these programs, you could also use one of the text editors that are usually available within the console, like Vim or Emacs. No installation should be required for these tools, but their use may not be as intuitive as that of text editors with graphical user interfaces. Short tutorials are available online for [Vim](https://www.howtoforge.com/vim-basics) and [Emacs](https://www.digitalocean.com/community/tutorials/how-to-use-the-emacs-editor-in-linux).
 
@@ -89,9 +96,9 @@ If you want to avoid installing any of these programs, you could also use one of
 			echo ${n}
 		done
 
-* Save the text to a new file named `script.sh` that is placed in the tutorial directory.
+* Save the text to a new file named `script.sh`, and then place this script in your working directory on Saga.
 
-* Execute the commands in file `script.sh` with this command:
+* Execute the commands in file `script.sh` with this command on Saga:
 
 		bash script.sh
 		
@@ -100,10 +107,10 @@ If you want to avoid installing any of these programs, you could also use one of
 <a name="downloading"></a>
 ## Downloading tutorial files
 
-Links to input files and scripts are included in all tutorials and to run a given tutorial, the linked files should be downloaded and placed in the tutorial directory. Most often, these files are hosted in the same GitHub repository, and will not automatically download when the link is clicked (assuming that the tutorial instructions are opened in a web browser).
+Links to input files and scripts are included in all tutorials and to run a given tutorial, the linked files should be downloaded and placed in your working directory. Most often, these files are hosted in the same GitHub repository, and will not automatically download when the link is clicked (assuming that the tutorial instructions are opened in a web browser).
 
-* To illustrate the point that linked files from the same GitHub repository are not directly downloaded when the link is clicked, click on this to an alignment file from the tutorial on substitution model selection:
-[`16s_filtered.nex`](substitution_model_selection/data/16s_filtered.nex)
+* To illustrate the point that linked files from the same GitHub repository are not directly downloaded when the link is clicked, click on this link to an alignment file from the tutorial on substitution model selection:
+[`locus_0001.fas`](week1_day1_afternoon/data/locus_0001.fas)
 
 	You should see that clicking this link opens another webpage in which the alignment file is merely embedded. The reason for this is simply the way in which GitHub repositories are organized.
 	
@@ -113,15 +120,19 @@ Links to input files and scripts are included in all tutorials and to run a give
 	
 	Perhaps a simpler way to download files is to use right-click when clicking on the "Raw" button; this should open a dialog that allows one to select the download location.
 	
-* Make sure that the file has been placed in the tutorial directory, either with the file manager program or the command line. To do so on the command line, you could use this command:
+	Instead of downloading the file through the browser (which would download it to your own computer), you could also just copy its URL, and then download it through the command line, for example with the `wget` command:
+	
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week1_day1_afternoon/data/locus_0001.fas
+	
+* Make sure that the file has been placed in the expected directory, either with the file manager program or the command line. To do so on the command line, you could use this command:
 
 		ls
 		
-	This command lists all files in the current directory, and if that list includes the name of the alignment file (`16s_filtered.nex`), the download worked fine. Also make sure that the web browser or your file system has not automatically added another file extension such as `.txt` to the file name. Depending on the settings of your file manager program, these file extensions may not be shown but nevertheless be there, so unless you are sure that your file manager is not hiding any file extensions, it may be safer to check the file name with on the command line.
+	This command lists all files in the current directory, and if that list includes the name of the alignment file (`locus_0001.fas`), the download worked fine. Also make sure that the web browser or your file system has not automatically added another file extension such as `.txt` to the file name. Depending on the settings of your file manager program, these file extensions may not be shown but nevertheless be there, so unless you are sure that your file manager is not hiding any file extensions, it may be safer to check the file name with on the command line.
 	
 * As a final test that the file has been downloaded correctly, you could also have a look at the content of the file with this command:
 
-		less 16s_filtered.nex
+		less locus_0001.fas
 		
 	This should present the file content in the console window. To return to the command line, type the letter `q`.
 	
