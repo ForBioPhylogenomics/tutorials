@@ -6,7 +6,11 @@ Most analyses of the tutorials of the ForBio Phylogenomics course will be conduc
 
 <!--* **AliView:** To visualize sequence alignments, the software [AliView](http://www.ormbunkar.se/aliview/) ([Larsson 2014](https://academic.oup.com/bioinformatics/article/30/22/3276/2391211)) is recommended. The installation of AliView is described at [http://www.ormbunkar.se/aliview/](http://www.ormbunkar.se/aliview/) and should be possible on all operating systems.
 -->
-* **A console program:** A console is essential for work on servers like Saga. Unless you have an old Windows computer, a console should already be installed on your computer, such as the Terminal program on MacOS or Linux or the Windows Console on Windows. All of these programs should be sufficient for the course; however, on the latter system, a more versatile alternative to Windows Console might be an emulator such as [Cmder](https://cmder.app).
+* **A console program:** A console is essential for work on servers like Saga. If you do not have a UNIX-based system (e.g., MacOSX or Linux), you should ensure that you can access the server via the command line. For Windows OS, you have the following options:
+	* Depending on your system, the internal "Command prompt" might work.
+	* You could install [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html), which is similar in its function to "Command prompt".
+	* You could install a "terminal emulator" such as [Cmder](https://cmder.net). For what you will be doing, it is sufficient.
+IMPORTANT: In all of the three cases above, we advise you to install [WinSCP](https://winscp.net/eng/download.php) on your computer as it will make data transfer much easier.
 
 * **SeaView:** The program [SeaView](http://evomics.org/resources/software/bioinformatics-software/seaview/) is a graphical multiple sequence alignment editor developed by Manolo Gouy. SeaView is able to read and write various alignment formats (NEXUS, MSF, CLUSTAL, FASTA, PHYLIP, MASE). It allows one to manually edit the alignment, and also to run DOT-PLOT or MSA programs to locally improve the alignment. Download the program [here](https://doua.prabi.fr/software/seaview).
 
