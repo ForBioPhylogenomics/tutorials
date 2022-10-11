@@ -82,4 +82,4 @@ Each day we will begin at 9 am and end at around 5:30 pm. In between, we will ha
 
 ## Exam
 
-* The [Inference from Simulated Data](inference_from_simulated_data/README.md) on Friday will also serve as our examination for this course as different analyses throughout the course have to be recapitulated by the student using simulated data instead of empirical ones. Hence, the different causes are known. The final part will be that the students have to present their results at the end for passing the course.
+* The [Inference from Simulated Data](inference_from_simulated_data/README.md) on Friday of the second week will also serve as our examination for this course as different analyses throughout the course have to be recapitulated by the student using simulated data instead of empirical ones. Hence, the different causes are known. The final part will be that the students have to present their results at the end for passing the course.
