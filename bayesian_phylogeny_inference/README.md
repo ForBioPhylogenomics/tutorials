@@ -70,10 +70,10 @@ Note that the last species, *Astatotilapia burtoni*, is named *Haplochromis burt
 
 * **bModelTest:** The [bModelTest](https://github.com/BEAST2-Dev/bModelTest) ([Bouckaert and Drummond 2017](https://bmcevolbiol.biomedcentral.com/articles/10.1186/s12862-017-0890-6)) add-on package enables automated substitution model selection as part of BEAST2 analyses. This package needs to be installed both on Saga and on your local computer, because it will be required during the BEAST2 analysis (which will be executed on Saga) and for the setup and the interpretation of BEAST2 results (which will be done on the local computer). In both cases, BEAST2's PackageManager tool is used for the installation, but the PackageManager is called differently; from the command line on Saga, and through BEAUti on the local computer.
 
-	To install bModelTest with BEAST2's PackageManager on Saga, use the following commands: <!-- XXX update with latest BEAST2 module! XXX -->
+	To install bModelTest with BEAST2's PackageManager on Saga, use the following commands:
 
 		module purge
-		module load Beast/2.6.4-GCC-9.3.0
+		module load Beast/2.7.0-GCC-11.3.0-CUDA-11.7.0
 		packagemanager -add bModelTest
 
 	On your local computer, BEAST2's PackageManager is accessible through BEAUti. To find it, open BEAUti, and click on "Manage Packages" in BEAUti's "File" menu, as shown in the next screenshot.<p align="center"><img src="img/beauti1.png" alt="BEAUti" width="700"></p>
@@ -264,7 +264,6 @@ In this part of the tutorial, we will run a basic Bayesian phylogenetic analysis
 		
 	Specify that all of these clades should be monophyletic, using the checkbox at the right of the row corresponding to each clade. The bottom part of the list in the "Prior" tab should then look as in the below screenshot.<p align="center"><img src="img/beauti16.png" alt="BEAUti" width="700"></p>
 
-<!-- XXX Check if the analysis really requires this many iterations! XXX -->
 * Continue to the "MCMC" tab, where you can specify the run length. This analysis will require around 50 to 100 million iterations before the analysis is fully complete, which would take several hours of run time. For the purpose of this tutorial, however, it will be sufficient to use 10 million iterations, so just keep the default value of "10000000" in the field to the right of "Chain Length".
 
 * Change the names of the output files: Click on the triangle to the left of "tracelog" and specify "beast2.log" as the name of the log file. In the next field for "Log Every", set the number to "5000" (instead of the default 1,000) so that only every 5,000th MCMC state is written to the log file. Click on the triangle again, then click on the black triangle to the left of "treelog". Specify "beast2.trees" as the name of the tree file and again use "5000" as the number in the field for "Log Every".
@@ -281,7 +280,6 @@ In this part of the tutorial, we will run a basic Bayesian phylogenetic analysis
 		
 * Write the following commands to the new file:
 
-<!-- XXX Update module name! XXX -->
 		#!/bin/bash
 
 		# Job name:
@@ -306,7 +304,7 @@ In this part of the tutorial, we will run a basic Bayesian phylogenetic analysis
 		module --quiet purge  # Reset the modules to the system default
 
 		# Load the beast2 module.
-		module load Beast/2.6.4-GCC-9.3.0
+		module load Beast/2.7.0-GCC-11.3.0-CUDA-11.7.0
 
 		# Run beast2.
 		beast beast2.xml
@@ -400,7 +398,7 @@ In the above phylogenetic inference, we assumed that the GTR substitution model 
 		module --quiet purge  # Reset the modules to the system default
 
 		# Load the beast2 module.
-		module load Beast/2.6.4-GCC-9.3.0
+		module load Beast/2.7.0-GCC-11.3.0-CUDA-11.7.0
 
 		# Run beast2.
 		beast bmodeltest.xml
@@ -506,7 +504,6 @@ Even though both chains are clearly not stationary yet, their comparison indicat
 	
 	**Question 9:** Does the A &rarr; T substitution rate parameter now have a better ESS value, compared to the analysis without the bModelTest model? [(see answer)](#q9)
 
-<!-- XXX Check if version 2.6 is still required XXX -->
 * To see which substitution models have been used in the analysis by bModelTest, we can use the BModelAnalyser App that comes with the bModelTest installation. This app can be launched with the program AppLauncher that should be located in the BEAST2 program directory. Double-clicking on the AppLauncher icon should open a window like the one shown below.<p align="center"><img src="img/applauncher1.png" alt="AppLauncher" width="350"></p>
 
 * Click "Launch" to start the BModelAnalyser App. A second window will open where you can specify the log file of the BEAST2 analysis with the bModelTest model. Select file `bmodeltest.log` as in the next screenshot. Don't resize this window, as there seems to be a bug and starting the analysis won't work after resizing.<p align="center"><img src="img/bmodelanalyser1.png" alt="BModelAnalyser" width="700"></p>
@@ -540,9 +537,8 @@ So far, we have only used the log files produced by the two BEAST2 analyses to a
 * Instead of clicking on this icon for "Next" 2,000 times to see the last phylogeny, click on the triangle to the left of "Current Tree: X / 2001" in the menu at the left. This will open a field where you can directly enter the number of the tree that you'ld like to see. Type "2001" and hit enter. You should then see a phylogeny that looks much more realistic than the very first sampled phylogeny. But note that this is only the last sampled phylogeny, it may not be representative for the entire collection of phylogenies sampled during the MCMC; the "posterior tree distribution". To generate a more representative phylogeny summarizing the information from the posterior tree distribution, the program TreeAnnotator can be used, which is part of the BEAST2 package. The summary trees produced by TreeAnnotator are called "Maximum-clade credibility (MCC) trees", a concept that is described in [Heled and Bouckaert (2013)](https://doi.org/10.1186/1471-2148-13-221).
 
 * On Saga, have a look at the help text of TreeAnnotator:
-<!-- XXX Update the module number XXX -->
 
-		module load Beast/2.6.4-GCC-9.3.0
+		module load Beast/2.7.0-GCC-11.3.0-CUDA-11.7.0
 		treeannotator -help
 		
 	You'll see that the program requires the specification of an input and an output file. In addition, the option `-heights` is important to specify whether the node ages in the summary tree should be according to mean or median ages across all trees from the posterior tree distribution (it is common to use the mean for that). The second important option is the one to specify the percentage of the MCMC that should be discarded as burnin before summarizing the posterior tree distribution, `-burnin`. Unless the inspection of the corresponding trace file with Tracer indicated a longer burnin, a burnin percentage of 10 is common and OK to use.
@@ -574,7 +570,7 @@ According to the BEAST2 analyses of this tutorial, African and Neotrocial cichli
 
 <a name="q1"></a>
 
-* **Question 1:** As you should be able to see from the fifth column of the output, the times required per one million iterations should be very comparable between the three analyses. About 5 minutes should be required in all cases, with the analysis of file `bmodeltest.xml` perhaps being slightly faster. Thus, to complete the 10 million iterations specified in both XML files, run times of about 50 minutes will be required.
+* **Question 1:** As you should be able to see from the fifth column of the output, the times required per one million iterations should be very comparable between the three analyses. About 6–8 minutes should be required in all cases, with the analysis of file `bmodeltest.xml` perhaps being slightly faster. Thus, to complete the 10 million iterations specified in both XML files, run times of 60–80 minutes will be required.
 
 <a name="q2"></a>
 
