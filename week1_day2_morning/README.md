@@ -9,7 +9,7 @@ The folder "_Lecture_" contains the lecture from this session.
 * [Paralogy](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_morning/Lecture/Day2_01_Paralogy.pdf)
 
 # EXERCISE
-1. For the TreSpEx analyses we first need to install some modules in your home directory as they are not included in the availables in SAGA<br>
+1. For the TreSpEx analyses we first need to install some modules in your home directory as they are not included in the availables ones on SAGA<br>
 
 	```
 	module load Perl/5.32.0-GCCcore-10.2.0
