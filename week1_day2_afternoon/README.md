@@ -7,6 +7,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 # [LECTURE](Lecture)
 The folder "_Lecture_" contains the lecture from this session.
 * [Missingness & Phylogenetic signal](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_afternoon/Lecture/Day2_02_Missingness_Signal.pdf)
+* [MARE manual](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_afternoon/Lecture/MARE_manual_v0.1.2-rc.pdf)
 
 # EXERCISE
 1. For getting started, copy all data from the folder "_Day2Afternon_" to your folder in the project area in SAGA
@@ -17,7 +18,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	cd Day2Afternoon
 	```
 	
-2. From the concatenation this morning we have a concatenated dataset in fasta format as well as a corresponding partition file. However, here we will proceed with the original orthologous files from the study, so that it is only a subset of the files they used and not something new. These files are already provided in the folder. However, the FASconCAT out is a bit different from the input format needed for MARE. Therefore, we first must change it.
+2. From the concatenation this morning we have a concatenated dataset in fasta format as well as a corresponding partition file. However, here we will proceed with the original orthologous files from the study, so that it is only a subset of the files they used and not something new. These files are already provided in the folder. However, the FASconCAT output fotmat is a bit different from the input format needed for MARE. Therefore, we first must change it.
 	
 	```
 	sed "s/DNA,/charset/" < Matrix_original_supermatrix_partition.txt | sed "s/$/ ;/" > Matrix_original_supermatrix_partition_MARE.txt
@@ -44,7 +45,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	
 	* Copy the file "_sbatch_Supermatrix_MARE_tree.sh_" to the three results folders
 	
-	* Change them so that they fit to appropriate fasta file (check the MARE manual on the Github folder for this; what name has the reduced supermatrix?)
+	* Change them so that they fit to appropriate fasta file (check the MARE manual in the Lecture folder or at the link above for this; what name has the reduced supermatrix?)
 	
 	* Submit the sbatch files
 

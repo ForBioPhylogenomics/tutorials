@@ -9,7 +9,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 	
 2. Navigate to the Roguenarok website at: https://rnr.h-its.org/about and click "_submit job_"
 	
-3. Upload your _.ufboot_ file in the 'bootstrap file' space, and your _.contree_ file in the 'maximum likelihood tree' space, and click _submit_.
+3. Upload your _.ufboot_ file in the 'Bootstrap Tree Set' space, and your _.contree_ file in the 'Best Known Tree' space, provide a brief 'Job description' (e.g., your name plus name of the matrix), add your e-mail address and click _upload_.
 		
 4. Once the page has loaded, select "_Strict Consensus_" as your threshold to configure your rogue taxon search on the left of the screen. Then select optimise for support, and use the Roguenarok algorithm.　Click '_Do it!_' to start the analysis
 
