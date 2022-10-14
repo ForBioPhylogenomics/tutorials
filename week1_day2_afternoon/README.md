@@ -17,7 +17,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	cd Day2Afternoon
 	```
 	
-2. From the concatenation this morning we have a concatenated dataset in fasta format as well as a corresponding partition file. However, here we will proceed with the original orthologous files from the study, so that it is only a subset of the files they used and not something new. These files are already provided in the folder. However, the FASconCAT out is a bit different from the input format needed for MARE. Therefore, we first must change it.
+2. From the concatenation this morning we have a concatenated dataset in fasta format as well as a corresponding partition file. However, here we will proceed with the original orthologous files from the study, so that it is only a subset of the files they used and not something new. These files are already provided in the folder. However, the FASconCAT output fotmat is a bit different from the input format needed for MARE. Therefore, we first must change it.
 	
 	```
 	sed "s/DNA,/charset/" < Matrix_original_supermatrix_partition.txt | sed "s/$/ ;/" > Matrix_original_supermatrix_partition_MARE.txt
