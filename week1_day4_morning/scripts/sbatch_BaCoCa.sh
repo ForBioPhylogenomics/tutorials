@@ -21,12 +21,12 @@ workdir=$USERWORK/$SLURM_JOB_ID
 mkdir -p $workdir
 
 ## Copy input files to the work directory and move to work dir:
-cp Matrix_original_supermatrix.fas Matrix_original_supermatrix_partition.txt ../../week1/Programs/BaCoCa/BaCoCa.v1.105.pl $workdir
+cp Matrix_original_supermatrix.fas Matrix_original_supermatrix_partition.txt ../../week1/Programs/BaCoCa/BaCoCa.v1.109.pl $workdir
 cd $workdir
 
 sed '/>/s/-/_/' < Matrix_original_supermatrix.fas >> Matrix_original_supermatrix_mod.fas
 sed 's/^DNA, //' < Matrix_original_supermatrix_partition.txt | sed 's/-/ - /' >> Matrix_original_supermatrix_partition_mod.txt
-perl BaCoCa.v1.105.pl -i Matrix_original_supermatrix_mod.fas -p Matrix_original_supermatrix_partition_mod.txt
+perl BaCoCa.v1.109.pl -i Matrix_original_supermatrix_mod.fas -p Matrix_original_supermatrix_partition_mod.txt
 
 
 ## Make sure the results are copied back to the submit directory:
