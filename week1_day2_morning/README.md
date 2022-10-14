@@ -30,7 +30,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	cd Day2Morning
 	```
 	
-3. First we need to get tree with bootstrap values for each individual loci<br>
+3. First we need to get a tree with bootstrap values for each individual loci<br>
 	
 	```
 	cd SingleGenes
