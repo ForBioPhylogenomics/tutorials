@@ -137,7 +137,7 @@ As the length of all alignments, we use 1,000 bp, assuming that this length is a
 
 Unlike in the earlier tutorials, we are now going to extract a much larger number of alignments, first because the shorter alignment length of 1,000 bp now allows more alignments to be extracted, and second because we will still filter the alignments by their signals for recombination.
 
-* Execute the script `make_alignments_from_maf.py` to extract up to a maximum of 5,000 alignments (`-n 10000`) with a length of 1,000 bp (`-l 1000 -k 1000`) in Nexus format (`-f nexus`) from the whole-genome alignment `cichlids_chr5.maf`, using only those with sequences for all six species of the whole-genome alignment (`-x 6`), a completeness of at least 90% (`-c 0.95`), and at least 20 polymorphic sites (`-m 10`):
+* Execute the script `make_alignments_from_maf.py` to extract up to a maximum of 5,000 alignments (`-n 10000`) with a length of 1,000 bp (`-l 1000 -k 1000`) in Nexus format (`-f nexus`) from the whole-genome alignment `cichlids_chr5.maf`, using only those with sequences for all six species of the whole-genome alignment (`-x 6`), a completeness of at least 95% (`-c 0.95`), and at least 20 polymorphic sites (`-m 10`):
 
 		module load Python/3.8.2-GCCcore-9.3.0
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python make_alignments_from_maf.py cichlids_chr5.maf cichlids -n 10000 -x 6 -l 1000 -k 1000 -c 0.95 -m 10 -p short_alignments -f nexus
