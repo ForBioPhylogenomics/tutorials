@@ -7,6 +7,7 @@ The folder "_scripts_" contains all the scripts to be run on SAGA. However, we w
 # [LECTURE](Lecture)
 The folder "_Lecture_" contains the lecture from this session.
 * [Missingness & Phylogenetic signal](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_afternoon/Lecture/Day2_02_Missingness_Signal.pdf)
+* [MARE manual](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_afternoon/Lecture/MARE_manual_v0.1.2-rc.pdf)
 
 # EXERCISE
 1. For getting started, copy all data from the folder "_Day2Afternon_" to your folder in the project area in SAGA
@@ -44,7 +45,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	
 	* Copy the file "_sbatch_Supermatrix_MARE_tree.sh_" to the three results folders
 	
-	* Change them so that they fit to appropriate fasta file (check the MARE manual on the Github folder for this; what name has the reduced supermatrix?)
+	* Change them so that they fit to appropriate fasta file (check the MARE manual in the Lecture folder or at the link above for this; what name has the reduced supermatrix?)
 	
 	* Submit the sbatch files
 
