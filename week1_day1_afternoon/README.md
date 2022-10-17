@@ -14,8 +14,8 @@ The folder "_Lectures_" contains all the lectures from this session.
 
 	```
 	cd /cluster/projects/nn9458k/phylogenomics/
-	mkdir $YOURNAME
-	cd $YOURNAME
+	mkdir $YOURNAME # You need to replace the variable $YOURNAME with, for example, your first or last name. This will be the folder you are working in the next two weeks.
+	cd $YOURNAME # You need to replace the variable $YOURNAME with the name you chose in the line above
 	cp -r ../week1/Day1Afternoon .
 	cd Day1Afternoon
 	cp .ncbirc ~
@@ -37,6 +37,7 @@ The folder "_Lectures_" contains all the lectures from this session.
 	
 	```
 	cat Argentina_sp_contaminated.fasta_Taxa_found.txt
+	cd ..
 	```
 	
 	Check which taxa where found for the added _Protodrilus symbioticus_-dataset and which for the original _Argentina_ sp.-dataset? Which taxa will hence be relevant for the screening of contamination given that we have the artificially added one at hand already? Do we need an additional one? 
@@ -72,7 +73,16 @@ The folder "_Lectures_" contains all the lectures from this session.
 	sbatch sbatch_Supermatrix_Para_tree.sh
 	```
 	
-9. Now you have a final tree (ending on _.treefile_) and compare it with the tree including the contaminated sequences. You can find this tree in the folder "_Day1Morning_". Are there any differences between the trees? Have in mind Argentina was the taxon with deliberate contamintion in this example and two loci were affected by this.<br>
+9. Download the final tree (ending on _.treefile_) as well as the one with the contaminated sequences to your local computer. You can find the latter tree in the folder "_Day1Morning_". This will allow you to look at them using _FigTree_.
+	You can use either _WinSCP_ or any other similar program to download the trees or you can use the command _scp_. In both cases, you should nagivate first to the folder, where you want the data to be on your local computer.
+	The commands below are to be executed from your local computer if you are using the command line for download.
+
+	```
+	scp $USERID@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/week1/Day1Morning/Concatenated_Para_Conta_SupermatrixTree/*.treefile . #This is for the tree with contaminated data. BE AWARE: You need to replace the variable $USERID with your user-id on Saga.
+	scp $USERID@saga.sigma2.no:/cluster/projects/nn9458k/phylogenomics/$YOURNAME/week1/Day1Afternoon/Results/*.treefile . #This is for the tree with uncontaminated data. BE AWARE: You need to replace the variable $USERID with your user-id on Saga and the variable $YOURNAME with the name of the folder you generated above.
+	```
+	
+10. Now you have a final tree (ending on _.treefile_) and compare it with the tree including the contaminated sequences. Are there any differences between the trees? Have in mind Argentina was the taxon with deliberate contamintion in this example and two loci were affected by this.<br>
 	
 # [RESULTS](Results)
 The folder "_Results_" contains the most important results from this session.
