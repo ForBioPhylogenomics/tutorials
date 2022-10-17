@@ -33,14 +33,14 @@ The folder "_Lectures_" contains all the lectures from this session.
 	cd Results
 	cat Argentina_sp_contaminated.fasta_nr_RNA_BLAST_Matches.txt
 	```
-Take a look at the output before executing the next command. Which hits belong to which dataset? (Hint: Look at the different name structures for the query sequences.)
-
+	Take a look at the output before executing the next command. Which hits belong to which dataset? (Hint: Look at the different name structures for the query sequences.)
+	
 	```
 	cat Argentina_sp_contaminated.fasta_Taxa_found.txt
 	```
-
-Check which taxa where found for the added _Protodrilus symbioticus_-dataset and which for the original _Argentina_ sp.-dataset? Which taxa will hence be relevant for the screening of contamination given that we have the artificially added one at hand already? Do we need an additional one? 
-
+	
+	Check which taxa where found for the added _Protodrilus symbioticus_-dataset and which for the original _Argentina_ sp.-dataset? Which taxa will hence be relevant for the screening of contamination given that we have the artificially added one at hand already? Do we need an additional one? 
+	
 4. The next step would now to find proper datasets allowing for screening against positive and negative reference datasets. For this course, we already did this for you. What could be good datasets for such a screening of the entire transcriptomic or genomic datasets?<br>
 
 	1. Please also have in mind that we will use here only the genes for screening, which are in the alignments we selected. However, you would usually do this on the entire dataset before the orthology determination.<br>
