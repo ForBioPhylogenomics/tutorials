@@ -33,7 +33,7 @@ The folder "_Lectures_" contains all the lectures from this session.
 	cd Results
 	cat Argentina_sp_contaminated.fasta_nr_RNA_BLAST_Matches.txt
 	```
-	Take a look at the output before executing the next command. Which hits belong to which dataset? (Hint: Look at the different name structures for the query sequences.)
+	Take a look at the output before executing the next command. Which hits belong to which dataset? ([Hint:] Look at the different name structures for the query sequences.)
 	
 	```
 	cat Argentina_sp_contaminated.fasta_Taxa_found.txt
