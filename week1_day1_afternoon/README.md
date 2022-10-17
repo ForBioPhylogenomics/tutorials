@@ -27,8 +27,14 @@ The folder "_Lectures_" contains all the lectures from this session.
 	sbatch --get-user-env sbatch_ContaminationDetection.sh
 	```
 	
-3. Compare "_Argentina_sp_contaminated.fasta_nr_RNA_BLAST_Matches.txt_" with "_Argentina_sp_contaminated.fasta_Taxa_found.txt_" and find out which contaminations have been found. Which datasets would be needed having in mind that we added _Protodrilus symbioticus_ articfically as a contamination to the dataset?
+3. Go to the "_Results_" folder and compare "_Argentina_sp_contaminated.fasta_nr_RNA_BLAST_Matches.txt_" with "_Argentina_sp_contaminated.fasta_Taxa_found.txt_" and find out which contaminations have been found. Which datasets would be needed having in mind that we added _Protodrilus symbioticus_ articfically as a contamination to the dataset?
 
+	```
+	cd Results
+	cat Argentina_sp_contaminated.fasta_nr_RNA_BLAST_Matches.txt
+	cat Argentina_sp_contaminated.fasta_Taxa_found.txt
+	```
+	
 4. The next step would now to find proper datasets allowing for screening against positive and negative reference datasets. For this course, we already did this for you. What could be good datasets for such a screening of the entire transcriptomic or genomic datasets?<br>
 
 	1. Please also have in mind that we will use here only the genes for screening, which are in the alignments we selected. However, you would usually do this on the entire dataset before the orthology determination.<br>
