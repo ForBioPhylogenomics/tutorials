@@ -12,8 +12,8 @@
 set -o errexit # exit on errors
 set -o nounset  # Treat any unset variables as an error
 
-#module purge  # Reset the modules to the system default
-module load BLAST+/2.11.0-gompi-2020b
+module --quiet purge
+module load BLAST+/2.13.0-gompi-2022a 
 
 ## Create work dir
 backdir=$(pwd)
@@ -21,7 +21,7 @@ workdir=$USERWORK/$SLURM_JOB_ID
 mkdir -p $workdir
 
 ## Copy input files to the work directory and move to work dir:
-cp ContaminatingTaxaDetectionPipeline.sh Argentina_sp_contaminated.fasta Barcode_Fish18S.fasta RetrieveTaxonomyDatabase.sh RetrieveTaxonPath.sh $workdir
+cp ContaminatingTaxaDetectionPipeline.sh Argentina_sp_contaminated.fasta Barcode_Fish18S.fasta $workdir
 cd $workdir
 
 #Finding the contamination using a barcoding approach
