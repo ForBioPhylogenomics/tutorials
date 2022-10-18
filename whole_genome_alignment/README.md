@@ -610,7 +610,7 @@ Nevertheless, if all course participants would run Cactus in their working direc
 		rsync ${start_dir}/cactus-v2.2.3.sif .
 
 		# Convert the whole-genome alignment from hal to maf format, using orenil as reference.
-		singularity exec -B $(pwd):/data cactus-v2.2.3.sif hal2maf --refGenome orenil --onlyOrthologs --noAncestors --maxBlockLen 1000000 --maxRefGap 1000 /data/cichlids_chr5.hal /data/cichlids_chr5.hal
+		singularity exec -B $(pwd):/data cactus-v2.2.3.sif hal2maf --refGenome orenil --onlyOrthologs --noAncestors --maxBlockLen 1000000 --maxRefGap 1000 /data/cichlids_chr5.hal /data/cichlids_chr5.maf
 
 		# Return the result in maf format to the start directory.
 		rsync cichlids_chr5.maf ${start_dir}
