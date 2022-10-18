@@ -1,13 +1,13 @@
 # Whole Genome Alignment
 
 A tutorial on multiple whole genome alignment with Cactus<br>
-By Ole K. Tørresen
+By Ole K. Tørresen and Michael Matschiner
 
 ## Summary
 
-Large scale projects such as Earth BioGenome Project ([Lewin et al. (2018)](https://doi.org/10.1073/pnas.1720115115)), the Vertebrate Genomes Project ([Rhie et al. (2021)](https://doi.org/10.1038/s41586-021-03451-0)), and other similar efforts, aspire to sequence and assemble the genomes of all living species. More and more high quality genome assemblies are therefore being deposited in public databases, and these resources contain great potential and enables rigorous investigation into a multitude of aspects of biology through data - and curiosity driven research. The further generation of high-quality genomes will hopefully facilitate great leaps in our understanding of, and ability to answer, core questions within fundamental biology such as in ecology and evolution, and in other fields such as medicine.
+Large scale projects such as Earth BioGenome Project ([Lewin et al. (2018)](https://doi.org/10.1073/pnas.1720115115)), the Vertebrate Genomes Project ([Rhie et al. (2021)](https://doi.org/10.1038/s41586-021-03451-0)), and other similar efforts, aspire to sequence and assemble the genomes of all living species. More and more high quality genome assemblies are therefore being deposited in public databases, and these resources contain great potential and enable rigorous investigation into a multitude of aspects of biology through data - and curiosity driven research. The further generation of high-quality genomes will hopefully facilitate great leaps in our understanding of, and ability to answer, core questions within fundamental biology such as in ecology and evolution, and in other fields such as medicine.
 
-However, to actually understand these genomes, we need some way of analysing them. For smaller projects, sequencing and assembling a few species, annotating and analysing each can be done focussing on each in turn. However, for large projects such as Zoonimia (131 new genome assemblies) ([Zoonomia Consortium (2020)](https://doi.org/10.1038/s41586-020-2876-6)) or bird 10k (B10K; 267 new genome assemblies) ([Feng et al. (2020)](https://doi.org/10.1038/s41586-020-2873-9)), using that much time and effort on each genome is not scalable, and therefore they used whole-genome alignments to analyse their datasets. So far, the only whole-genome aligner that has been used successfully on such large datasets is Cactus ([Armstrong et al. 2020](https://doi.org/10.1038/s41586-020-2871-y)).
+However, to actually understand these genomes, we need some way of analysing them comparatively. For smaller projects, sequencing and assembling a few species, annotating and analysing each can be done focussing on each in turn. However, for large projects such as Zoonimia (131 new genome assemblies) ([Zoonomia Consortium (2020)](https://doi.org/10.1038/s41586-020-2876-6)) or bird 10k (B10K; 267 new genome assemblies) ([Feng et al. (2020)](https://doi.org/10.1038/s41586-020-2873-9)), using that much time and effort on each genome is not scalable, and therefore they used whole-genome alignments to analyse their datasets. So far, the only whole-genome aligner that has been used successfully on such large datasets is Cactus ([Armstrong et al. 2020](https://doi.org/10.1038/s41586-020-2871-y)).
 
 ## Table of contents
 
@@ -15,31 +15,30 @@ However, to actually understand these genomes, we need some way of analysing the
 * [Dataset](#dataset)
 * [Requirements](#requirements)
 * [Softmasking with Red](#softmask)
+* [Data subsetting](#subset)
 * [Creating a guide tree with Mash](#mash)
 * [Running Cactus](#cactus)
 
 <a name="outline"></a>
 ## Outline
 
-In this tutorial we will run six genome assemblies of varying quality through this pipeline. This requires masking repeats in the genomes and a guide tree of the species involved. Unfortunately, most of these processes take longer than the time we have available in this session, but all intermediate and final files are available on Saga.
-
-A short presentation of these concepts are [available here](whole_genome_alignment.pdf).
+In this tutorial we will produce a whole-genome alignment for six genome assemblies of varying quality. This requires masking repeats in the genomes and a providing a guide tree of the species involved. Due to the large computational requirements of whole-genome alignment, it may not be possible to run the full Cactus analysis, but all intermediate and final files are available on Saga.
 
 <a name="dataset"></a>
 ## Dataset
 
-The dataset used in this tutorial consists of a subset of species you have used earlier in this course. They are all cichlids, but five of them are quite closely related with Nile tilapia as outgroup.
+The dataset used in this tutorial consists of genome assemblies for a subset of the species that were used in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md). The rather fragmented genome assemblies for four species of the cichlid genus *Neolamprologus* (*N. marunguensis*, *N. gracilis*, *N. olivaceous*, and *N. pulcher*) were produced from Illumina sequencing data by [Gante et al. (2016)](https://doi.org/10.1111/mec.13767). Additionally, a fifth genome assembly for *Neolamprologus brichardi* had been released earlier by [Brawand et al. (2014)](https://doi.org/10.1038/nature13726). The five *Neolamprologus* species co-occur in Lake Tanganyika in East Africa. Finally, the chromosome-level genome assembly for Nile tilapia, *Oreochromis niloticus*, is used as an outgroup and was published by [Conte et al. (2019)](https://doi.org/10.1093/gigascience/giz030).
 
 <center>
 
-| ID      | Species                       | Common name               | Genus            |
-|---------|-------------------------------|---------------------------|------------------|
-| neobri  | *Neolamprologus brichardi*    | lyretail cichlid          | *Neolamprologus* |
-| neomar  | *Neolamprologus marunguensis* | ?                         | *Neolamprologus* |
-| neogra  | *Neolamprologus gracilis*     | ?                         | *Neolamprologus* |
-| neooli  | *Neolamprologus olivaceous*   | ?                         | *Neolamprologus* |
-| neopul  | *Neolamprologus pulcher*      | daffodil cichlid          | *Neolamprologus* |
-| orenil  | *Oreochromis niloticus*       | Nile tilapia              | *Oreochromis*    |
+| ID      | Species                       | Distribution           |
+|---------|-------------------------------|------------------------|
+| neobri  | *Neolamprologus brichardi*    | Lake Tanganyika        |
+| neomar  | *Neolamprologus marunguensis* | Lake Tanganyika        |
+| neogra  | *Neolamprologus gracilis*     | Lake Tanganyika        |
+| neooli  | *Neolamprologus olivaceous*   | Lake Tanganyika        |
+| neopul  | *Neolamprologus pulcher*      | Lake Tanganyika        |
+| orenil  | *Oreochromis niloticus*       | Central African rivers |
 
 
 </center>
@@ -47,272 +46,620 @@ The dataset used in this tutorial consists of a subset of species you have used 
 <a name="requirements"></a>
 ## Requirements
 
-We will use [Red](http://toolsmith.ens.utulsa.edu/) (but via the Python script [redmask](https://github.com/nextgenusfs/redmask)), [Mash](https://github.com/marbl/Mash), [rapidNJ](https://github.com/somme89/rapidNJ) and [Cactus](https://github.com/ComparativeGenomicsToolkit/cactus). Red, Mash and rapidNJ should be available as modules on Saga, while Cactus works best as an container (the installation is non-trivial.)
+This tutorial requires the programs **Red**<!--http://toolsmith.ens.utulsa.edu/-->, **Minimap2**, **seqtk**, **Samtools**, **Mash**<!--(https://github.com/marbl/Mash)-->, **RapidNJ**<!--https://github.com/somme89/rapidNJ-->. All of these tools are available as modules on Saga. However, we will run Red through the Python script **redmask.py**, for which the following steps are required:
 
+* **redmask.py**: Download the script `redmask.py` from [its GitHub repository](https://github.com/nextgenusfs/redmask) to your working directory on Saga, using `wget`:
+
+		wget https://raw.githubusercontent.com/nextgenusfs/redmask/master/redmask.py
+		
+	Because `redmask.py` uses the deprecated `xrange`, it might be worth to fix this so that the script runs without an error. To do so, use the following command, which replace all occurrences of "xrange" with "range":
+	
+		sed -i 's/xrange/range/g' redmask.py
+
+	As `redmask.py` requires a Python package that is not readily available on Saga, you will need to install this package locally (for you as a user), do this:
+
+		module purge
+		module load Biopython/1.72-foss-2018b-Python-3.6.6
+		pip3 install natsort --user
+
+
+Additionally, the program Cactus is required:
+
+* **Cactus**: The program [Cactus](https://github.com/ComparativeGenomicsToolkit/cactus) is not available as a module on Saga, and is best used within a [Singularity](https://apptainer.org) container, as its installation is far from trivial. In your working directory on Saga, obtain the Cactus container for Singularity with the following command:
+
+		singularity pull --name cactus-v2.2.3.sif docker://quay.io/comparative-genomics-toolkit/cactus:v2.2.3
 
 
 <a name="softmask"></a>
 ## Softmasking with Red
 
-A detailed exposition of alignment is outside the scope of this tutorial (and I guess most of you know it quite well). However, to understand this step, we need to review some steps of it. Broadly, to create an alignment two sequences needs to be compared in some manner. The classic algorithms here are [Smith-Waterman](https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm) and [Needleman-Wunsch](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm), for respectively local and global alignments. In local alignment the most similar sequence is found between the two input sequences, while a global alignment requires that the whole length of both input sequences are involved. For larger sequences (chromosomes for instance) or for multiple comparisons (between proteins and a genome), the requirements in computation (both memory and CPU) becomes unpractical. To remedy this, different approaches have been developed, such as [BLAST](https://en.wikipedia.org/wiki/BLAST_(biotechnology)) where words (substrings of the sequences) are connected to the sequences and only sequences with words in common are compared.
+To create an alignment, two sequences need to be compared in some manner. The classic algorithms for pairwise alignment are [Smith-Waterman](https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm) and [Needleman-Wunsch](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm), for respectively "local" and "global" alignments. In local alignment, the most similar part is found between two input sequences, while a global alignment compares both input sequences from end to end. However, the computational demands of these algorithms prevent their application to longer sequences such as full chromosomes. To circumvent this issue, different approaches have been developed, such as [BLAST](https://en.wikipedia.org/wiki/BLAST_(biotechnology)), where "words" (substrings of the sequences) are connected to the sequences and only sequences with words in common are compared.
 
-Repetitive sequences are sequences that are identical or very similar that occur multiple places in a genome. For instance the short tandem repeat ACT repeated both in tandem (ACTACTACTACT), but also multiple places, or different transposable elements that have copied themselves across the genome. These repetitive sequences will lead to large numbers of comparisons unless they are taken out of the picture in some way. The usual approach is to mask them, either hard mask (replace the repeats with Ns) or soft mask (lower case letters; standard fasta sequence is upper case). If a sequence is hard masked, it is basically gone from the analysis, so the recommendation is to soft mask. Alignments will not be initiated in soft masked regions, but alignments might extend into soft mask regions and therefore lead to less fragmented alignments.
+Repetitive sequences are sequences that are identical or very similar, occurring at multiple locations in a genome. For instance, repetitive sequences include microsatellites or transposable elements that copied themselves across the genome. These repetitive sequences will lead to large numbers of comparisons in alignments unless they are removed from the analysis in some way. The usual approach to do so is by "masking" them. "Hard masking" means that repetitive regions of the genome are replaced with "N"s so that sequence information is effectively removed, while "soft masking" retains all sequence information, but marks repetitive sequences with lower case letters (standard Fasta format uses upper case letters). Even though the sequence information is still present with soft masking, alignment programs are usually written so that they recognize these masked regions and do not initiate alignments within such regions. However, alignments initiated outside of softmasked regions can be extended into these regions, which thus leads to less fragmented alignments.
 
-Maybe most common today is to use [RepeatModeler](http://www.repeatmasker.org/RepeatModeler/) ([Flynn et al (2020)](https://doi.org/10.1073/pnas.1921046117)) to create a species specific repeat library, and use that in [RepeatMasker](https://www.repeatmasker.org/) to mask the genome. That process is a bit circumstantial so we'll take a short cut here (but feel free to use it in your own analysis). Running these two on a bird genome (about 1 Gbp) took around 20 hours with 40 CPUs for RepeatModeler and 2 hours with 40 CPUs for RepeatMasker, compared to 15 to 60 minutes with 1 CPU with using Red on the genomes here. RepeatModeler/RepeatMasker might be better, but it is hard to evaluate. If you are interested in the actual repeats themselves (which transposable element occurs where, for instance), running RepeatModeler/RepeatMasker is needed, but for just masking the repeats, Red is likely sufficient.
+One of the most common approaches for repeat masking is to create a species specific repeat library with [RepeatModeler](http://www.repeatmasker.org/RepeatModeler/) ([Flynn et al (2020)](https://doi.org/10.1073/pnas.1921046117)) and to use that library to mask the genome with [RepeatMasker](https://www.repeatmasker.org/). The combination of these two tools is computationally rather demanding, though. For example, running both programs for a bird genome (about 1 Gbp) took around over 20 hours with 40 CPUs. While the combination of RepeatModeler and RepeatMasker may be the best option for users interested in the repeats themselves (asking, for example, where certain transposable elements in the genome), running these tools is not required when the goal is merely to mask the repeats, as it is here. In that case, the program Red ([Giris 2015](https://doi.org/10.1186/s12859-015-0654-5)) is a much faster solution. We will run Red via the Python script [redmask.py](https://github.com/nextgenusfs/redmask).
 
-Red ([Giris (2015)](https://doi.org/10.1186/s12859-015-0654-5)) can do the softmasking in one step instead of two, and is faster. We'll run it via the Python script [redmask](https://github.com/nextgenusfs/redmask) to get readily softmasked genomes.
+* First have a look at the help text of the script `redmask.py`:
 
-First, go to your user folder on Saga and copy the needed scripts (you might have done part of this before):
+		module purge
+		module load Biopython/1.72-foss-2018b-Python-3.6.6
+		python3 redmask.py -h
 
-```
-cd /cluster/projects/nn9458k/phylogenomics/
-mkdir $YOURNAME
-cd $YOURNAME
-mkdir -p cichlids
-cd cichlids
-cp ../../week2/data/cichlids/scripts/* .
+	As you might recognize from this help text, the usage of the script is rather straight forward. The only two arguments required are `-i` for the input genome assembly in Fasta format and `-o` for the name of the output file.
 
-```
+* Copy the directory with the six input genome assemblies to your working directory. The path to this directory on Saga is `/cluster/projects/nn9458k/phylogenomics/week2/data/cichlid_assemblies`. Thus, copy it with this command:
 
-You can also look at the scripts in the folder [scripts](scripts), but it is easiest to get them on Saga.
+		cp -r /cluster/projects/nn9458k/phylogenomics/week2/data/cichlid_assemblies .
 
-The redmask command itself is quite straight forward:
-```
-redmask.py -i genome.fa -o mygenome
-```
+	Alternatively (and this is here listed only for completeness), the genomes could also be obtained from online repositories with the following commands:
+	
+		# Make the assembly directory.
+		mkdir cichlid_assemblies
+		
+		# Download the genome assembly of Neolamprologus brichardi.
+		wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/239/395/GCF_000239395.1_NeoBri1.0/GCF_000239395.1_NeoBri1.0_genomic.fna.gz
+		zcat GCF_000239395.1_NeoBri1.0_genomic.fna.gz | cut -f 1 -d " " > neobri.fasta
+		
+		# Download the genome assembly of Neolamprologus marunguensis.
+		wget http://evoinformatics.group/repos/neolamprologus/Ma.scf.fasta.gz
+		gunzip Ma.scf.fasta.gz
+		mv Ma.scf.fasta neomar.fasta
+		
+		# Download the genome assembly of Neolamprologus gracilis.
+		wget http://evoinformatics.group/repos/neolamprologus/Gr.scf.fasta.gz
+		gunzip Gr.scf.fasta.gz
+		mv Gr.scf.fasta neogra.fasta
+		
+		# Download the genome assembly of Neolamprologus olivaceous.
+		wget http://evoinformatics.group/repos/neolamprologus/Ol.scf.fasta.gz
+		gunzip Ol.scf.fasta.gz
+		mv Ol.scf.fasta neooli.fasta
 
-But we'll wrap in an SBATCH script and run it for all genomes. Unfortunately, redmask requires a Python module not readily available on Saga. To set install it locally (for you as a user), do this:
-```
-module purge
-module load Biopython/1.72-foss-2018b-Python-3.6.6
-pip3 install natsort --user
-```
-We load the same module that we use in the script to ensure that we install natsort for the correct version of Python.
+		# Download the genome assembly of Neolamprologus pulcher.
+		wget http://evoinformatics.group/repos/neolamprologus/Pu.scf.fasta.gz
+		gunzip Pu.scf.fasta.gz
+		mv Pu.scf.fasta neopul.fasta
+		
+		# Download the genome assembly of Oreochromis niloticus.
+		wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/858/045/GCF_001858045.2_O_niloticus_UMD_NMBU/GCF_001858045.2_O_niloticus_UMD_NMBU_genomic.fna.gz
+		zcat GCF_001858045.2_O_niloticus_UMD_NMBU_genomic.fna.gz | cut -f 1 -d " " > orenil.fasta
 
-Then you can do this:
+* Write a new Slurm script named `run_red.slurm` with the following content to run the `redmask.py` script:
 
-```
-sh start_red.sh
-```
-This little snippet starts one script per genome. Feel free to look around in it.
+		#!/bin/bash
 
-Be aware that this creates lots of small files which exceeded the quota for the course. run_red.sh now navigates to `$USERWORK` and runs the job there instead.
+		# Job name:
+		#SBATCH --job-name=red
+		#
+		# Wall clock limit:
+		#SBATCH --time=2:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --mem-per-cpu=20G
+		#SBATCH --nodes=1
+		#SBATCH --ntasks-per-node=1
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
 
-When I ran through this, it took 15 to 60 minutes per genome to finish.
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
 
-If you are unable to get it running for some reason, or want to continue anyhow, you can do this:
+		# Load modules.
+		module load Biopython/1.72-foss-2018b-Python-3.6.6
+		module load Red/2015-05-22-GCC-7.3.0-2.30
 
-```
-mkdir -p masked_assemblies
-cd masked_assemblies
-rsync ../../../week2/data/cichlids/softmasked/* .
-cd ..
-```
-When done, you should see something like this in masked_assemblies:
-```
--rw-rw-r-- 1 olekto nn9458k   43497196 Jun  9 21:40 neobri.repeats.bed
--rw-rw-r-- 1 olekto nn9458k  275320088 Jun  9 21:40 neobri.repeats.fasta
--rw-rw-r-- 1 olekto nn9458k  865018698 Jun  9 21:40 neobri.softmasked.fa
--rw-rw-r-- 1 olekto nn9458k   45092622 Jun  9 22:16 neogra.repeats.bed
--rw-rw-r-- 1 olekto nn9458k  262196845 Jun  9 22:16 neogra.repeats.fasta
--rw-rw-r-- 1 olekto nn9458k  672846647 Jun  9 22:14 neogra.softmasked.fa
--rw-rw-r-- 1 olekto nn9458k   46494946 Jun  9 22:00 neomar.repeats.bed
--rw-rw-r-- 1 olekto nn9458k  269948250 Jun  9 22:01 neomar.repeats.fasta
--rw-rw-r-- 1 olekto nn9458k  683501275 Jun  9 21:59 neomar.softmasked.fa
--rw-rw-r-- 1 olekto nn9458k   46074867 Jun  9 22:02 neooli.repeats.bed
--rw-rw-r-- 1 olekto nn9458k  267874589 Jun  9 22:03 neooli.repeats.fasta
--rw-rw-r-- 1 olekto nn9458k  681893391 Jun  9 22:01 neooli.softmasked.fa
--rw-rw-r-- 1 olekto nn9458k   45076389 Jun  9 22:03 neopul.repeats.bed
--rw-rw-r-- 1 olekto nn9458k  262152533 Jun  9 22:03 neopul.repeats.fasta
--rw-rw-r-- 1 olekto nn9458k  674817636 Jun  9 22:02 neopul.softmasked.fa
--rw-rw-r-- 1 olekto nn9458k   30337323 Jun  9 21:52 orenil.repeats.bed
--rw-rw-r-- 1 olekto nn9458k  347698289 Jun  9 21:53 orenil.repeats.fasta
--rw-rw-r-- 1 olekto nn9458k 1025835685 Jun  9 21:52 orenil.softmasked.fa
-```
+		# Get the command-line arguments.
+		fasta=`readlink -f ${1}`
+		masked_fasta=`readlink -f ${2}`
+
+		# Copy the redmask script to a temporary directory.
+		cp redmask.py ${SCRATCH}
+
+		# Move to the temporary directory.
+		cd ${SCRATCH}
+
+		# Run redmask.py.
+		python3 redmask.py -i ${fasta} -o ${masked_fasta}
+
+	Note that the script contains commands to move to a temporary directory before running `redmask.py` (`cd ${SCRATCH}`). This is because Red produces a large number of small files which would exceeded the quota for the course if they would accumulate in the course directory.
+
+* To submit the Slurm script `run_red.slurm` in parallel for all six assemblies, write another new script named `run_red.sh` with the following content:
+
+		mkdir cichlid_assemblies_masked
+		for fasta in cichlid_assemblies/*.fasta
+		do
+			fasta_id=`basename ${fasta$.fasta}`
+			masked_fasta=cichlid_assemblies_masked/${fasta_id}
+			log=run_red.${fasta_id}.out
+			sbatch -o ${log} run_red.slurm ${fasta} ${masked_fasta}
+		done
+
+* Then, execute the script `run_red.sh` (which then internally runs `run_red.slurm`, which in turn runs `redmask.py`):
+
+		bash run_red.sh
+
+	This should take between 20 and 40 minutes to finish. But since the next part of this tutorial does not use the softmasked assemblies produced by Red, you can already continue with this next part. Nevertheless, if you should be unable to run Red for some reason, you can also obtain prepared softmasked assemblies from `/cluster/projects/nn9458k/phylogenomics/cichlid_assemblies_masked`:
+
+		cp -r /cluster/projects/nn9458k/phylogenomics/cichlid_assemblies_masked .
+
+
+<a name="subset"></a>
+## Data subsetting
+
+As Cactus is computationally highly demanding (see discussion below), producing a complete whole-genome alignment of the six assemblies might take several days and is not feasible for this course. However one way to reduce the computational demand is to subset the assemblies first, keeping only those contigs that map to a certain chromosome of one of the species included in the analysis. In our case, the genome for *Oreochromis niloticus* ("orenil") is assembled to chromosome-level, and thus a suitable reference for this type of data subsetting. We'll pick chromosome 5 of this genome, and thus keep all contigs of the other species that map to this chromosome. Note, that this could in principle be done with all other chromsomes simultaneously, so that we could parallelize the whole-genome alignment, using one Cactus job for each chromosome. This would reduce the overall run time as well as the memory requirements for a complete whole-genome alignment. But for this tutorial, using data from a single chromosome will be more than sufficient.
+
+* Write a new Slurm script named `run_minimap2.slurm`, with the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=minimap2
+		#
+		# Wall clock limit:
+		#SBATCH --time=1:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --mem-per-cpu=2G
+		#SBATCH --nodes=1
+		#SBATCH --ntasks-per-node=10
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load modules.
+		module load minimap2/2.17-GCC-8.3.0
+
+		# Get the command-line argument.
+		fasta=${1}
+
+		# Run minimap2.
+		minimap2 -t 10 -cx asm20 cichlid_assemblies/orenil.fasta ${fasta} > ${fasta%.fasta}_to_orenil.paf
+
+* Then, execute this Slurm script script for each of the *Neolamprologus* assemblies in parallel:
+
+		for fasta in cichlid_assemblies/neo*.fasta
+		do
+			fasta_id=`basename ${fasta%.fasta}`
+			sbatch -o run_minimap2.${fasta_id}.out run_minimap2.slurm ${fasta}
+		done
+
+	This should take around 5 minutes.
+
+* Once the Minimap2 runs have finished, five files with the ending `.paf` should be added to the directory `cichlid_assemblies`. Make sure that this is the case:
+
+		ls cichlid_assemblies/*.paf
+
+So far, no data subsetting has taken place. Instead, we only mapped all contigs of the five *Neolamprologus* species to the genome assembly of *Oreochromis niloticus* ("orenil"). But through this mapping, Minimap2's output files in PAF format (those ending in `.paf`) store the information connecting contigs to *Oreochromis niloticus* ("orenil") chromosomes, and this information will allow us to subset those contigs that map to chromosome 5.
+
+* Have a look at the content of one of Minimap2's output files, for example `neobri_to_orenil.paf`, using `less -S`:
+
+		less -S cichlid_assemblies/neobri_to_orenil.paf
+		
+	**Question 1:** Can you figure out what information is stored in this file? [(see answer)](#q1)
+
+* To subset the contigs that map to chromosome 5 of *Oreochromis niloticus* ("orenil"), we'll first need to identify the IDs of these contigs from the files in PAF format. In the assembly file `orenil.fasta`, chromsome 5 has the ID "NC_031970.2". To identify the IDs of contigs that map to this chromosome, write a new Slurm script named `identify_contigs_from_paf.slurm` with the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=ident_paf
+		#
+		# Wall clock limit:
+		#SBATCH --time=0:10:00
+		#
+		# Processor and memory usage:
+		#SBATCH --mem-per-cpu=1G
+		#SBATCH --nodes=1
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Get the command-line arguments.
+		paf=${1}
+
+		# Identify ids of contigs mapping to chromosome 5 of orenil.
+		grep NC_031970.2 ${paf} \    # Keep only lines that contain the ID of chromosome 5
+		  | awk '$12 > 50' \         # Keep only lines with an alignment quality is above 50
+		  | awk '$11 > 5000' \       # Keep only lines with an alignment length above 5000
+		  | cut -f 1 \               # Keep only the first column of remaining lines
+		  | sort -u > ${paf%.paf}_chr5_contig_ids.txt
+
+* Then, submit the Slurm script `identify_contigs_from_paf.sh` five times, with each PAF-format file as input:
+
+		for paf in cichlid_assemblies/*.paf
+		do
+			paf_id=`basename ${paf%_to_orenil.paf}`
+			sbatch -o identify_contigs_from_paf.${paf_id} identify_contigs_from_paf.slurm ${paf}
+		done
+	
+	These jobs should finish within seconds.
+
+	**Question 2:** How many contigs map to chromosome 5 of *Oreochromis niloticus* ("orenil"), per species? [(see answer)](#q2)
+
+As a next step, we'll need to extract those contigs from each of the *Neolamprologus* genomes that map to chromosome 5 of *Oreochromis niloticus* ("orenil"). We will do this with the [SeqTK](https://github.com/lh3/seqtk) toolkit by Heng Li. And importantly, we'll extract the contigs from the softmasked versions of the genome assemblies.
+
+* Copy the Slurm script `identify_contigs_from_paf.slurm` to a new file named `extract_identified_contigs.slurm`:
+
+		cp identify_contigs_from_paf.slurm extract_identified_contigs.slurm
+		
+* Open file `extract_identified_contigs.slurm` with a text editor, change the job name on line 4, and edit the last part of the script (after line 20), so that it has the following content:
+
+		#!/bin/bash
+
+		# Job name:
+		#SBATCH --job-name=extract_ids
+		#
+		# Wall clock limit:
+		#SBATCH --time=0:10:00
+		#
+		# Processor and memory usage:
+		#SBATCH --mem-per-cpu=1G
+		#SBATCH --nodes=1
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
+
+		# Load modules.
+		module load seqtk/1.3-foss-2018b
+
+		# Get the command-line arguments.
+		fasta=${1}
+		id_list=${2}
+		chr5_fasta=${3}
+		
+		# Extract contigs mapping to chromosome 5 of orenil.
+		seqtk subseq ${fasta} ${id_list} > ${chr5_fasta}
+
+* Use the following commands to submit the Slurm script `extract_identified_contigs.slurm` with for every softmasked *Neolamprologus* genome assembly:
+
+		mkdir cichlid_assemblies_masked_chr5
+		for fasta in cichlid_assemblies_masked/neo*.softmasked.fa
+		do
+			fasta_id=`basename ${fasta%.softmasked.fa}`
+			id_list=cichlid_assemblies/${fasta_id}_to_orenil_chr5_contig_ids.txt
+			chr5_fasta=cichlid_assemblies_masked_chr5/${fasta_id}.softmasked.chr5.fasta
+			sbatch -o extract_identified_contigs.${fasta_id}.out extract_identified_contigs.slurm ${fasta} ${id_list} ${chr5_fasta}
+		done
+
+	These jobs should take 1-10 minutes to finish.
+	
+* Finally, we'll also need to extract chromosome 5 from the *Oreochromis niloticus* ("orenil") assembly itself, which we can do with the program [Samtools](https://www.htslib.org) ([Li et al. 2009](https://doi.org/10.1093/bioinformatics/btp352)).
+
+		module purge
+		module load SAMtools/1.15.1-GCC-11.3.0
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k samtools faidx cichlid_assemblies_masked/orenil.softmasked.fa NC_031970.2 > cichlid_assemblies_masked_chr5/orenil.softmasked.chr5.fasta
+
+	The directory `cichlid_assemblies_masked_chr5` should now contain six Fasta files with a data subset corresponding to chromosome 5 of *Oreochromis niloticus* ("orenil").
+
 
 <a name="mash"></a>
 ## Creating a guide tree with Mash
 
-In addition to softmasked genome assemblies, Cactus requires a guide tree. This is because it aligns a handful of genomes at a time (2-5). For instance, it could start with the two most closely related, aligns those, and then use that alignment to reconstruct an ancestral genome to those two. That reconstructed genome is then used to align against the next. This means that Cactus scales linear with the number of genomes and not quadratically as would have been the case if all genomes were compared against all.
+In addition to softmasked genome assemblies, Cactus requires a guide tree to perform the whole-genome alignment. This is because for computational reasons it does not align all genomes at once, but applies an iterative process instead. Thus, the program begins by aligning the most-closely related genomes to each other, uses this pairwise alignment to reconstruct the ancestral genome of their common ancestor, and then proceeds by aligning that reconstructed genome to the next-closely related one. By progressing in this way, the computational demands of Cactus scale linear with the number of genomes and not quadratically, as would have been the case if all genomes were compared against all.
 
-Creating phylogenies can be a time consuming process, and therefore we will cheat. We will use Mash ([Ondov et al. (2016)](https://doi.org/10.1186/s13059-016-0997-x)), which is a fast genome and metagenome distance estimator. Mash reduces large sequences to compressed sketch representations, enabling much quicker comparisons between sequences compared to older methods.
+Providing a guide tree to produce an alignment may sound circular, because the alignment is often required for exactly the purpose of building a phylogeny. Thus, one might worry that the guide tree that is used influences the alignment, and that this in turn biases the phylogeny that is produced from the alignment, so that this phylogeny may then just be the same as the guide tree again. However, the influence of the guide tree on the alignment is usually not very strong, so that the phylogeny produced with the alignment is largely independent of the guide tree that was used. Thus, if any phylogenetic hypothesis is available (e.g. from previous studies), this hypothesis can be used to provide a guide tree, usually without having to worry that it might bias the outcome. But if this is not the case, an elegant alternative (that is completely free of circularity) is to produce a guide tree not on the basis of an alignment, but based on the similarity of the [k-mer](https://en.wikipedia.org/wiki/K-mer) profiles of genome assemblies.
 
-Since we use the original genome assembly fasta files, and not the softmasked ones, you can run this independent of the softmasking above.
+One convenient tool for the fast calculation and comparison of k-mer profiles is the program Mash ([Ondov et al. 2016](https://doi.org/10.1186/s13059-016-0997-x)). Mash reduces large sequences to compressed "sketch representations", enabling much quicker comparisons between sequences compared to older methods. We are going to use two functions of Mash, "sketch" to produce a sketch representation of each of the six unmasked genome assemblies, and "triangle" to calculate a distance matrix from these sketch representations.
 
-If you followed the instructions above, you should have a script called run_mash_triangle.sh in your folder. Submit that:
+* Write a new Slurm script named `run_mash.slurm` with the following content:
 
-```
-sbatch run_mash_triangle.sh
-```
+		#!/bin/bash
 
-This runs quite quickly, less than 1 minute when I did it. Considering that it is comparing the content of six fasta files containing genomes between 600 and 1000 Mbp, this is quite nice.
+		# Job name:
+		#SBATCH --job-name=mash
+		#
+		# Wall clock limit:
+		#SBATCH --time=0:10:00
+		#
+		# Processor and memory usage:
+		#SBATCH --mem-per-cpu=5G
+		#SBATCH --nodes=1
+		#SBATCH --ntasks-per-node=10
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=run_mash.out
 
-The result, in the subfolder mash is this:
-```
-$cat mash/infile
-	6
-neobri
-neogra	0.00981378
-neomar	0.00985499	0.00888862
-neooli	0.00904645	0.00948708	0.0090861
-neopul	0.00924552	0.00924552	0.00932572	0.00659353
-orenil	0.0519203	0.0509537	0.0515304	0.0509537	0.0511448
-```
+		# Set up job environment.
+		set -o errexit  # Exit the script on any error
+		set -o nounset  # Treat any unset variables as an error
+		module --quiet purge  # Reset the modules to the system default
 
-If you recognise a lower-triangle [distance matrix](https://evolution.gs.washington.edu/phylip/doc/distance.html) here, you are quite correct. We need to create a guide tree based on this. However, the program we'll use don't support lower-triangle matrices, but needs a full. So we need to convert it. I rewrote slightly a function I found on the [support forum to Mash](https://github.com/marbl/Mash/issues/9) to do this. Run these commands:
+		# Load modules.
+		module load Mash/2.3-GCC-10.2.0
 
-```
-module purge
-module load Biopython/1.72-foss-2018b-Python-3.6.6
-python /cluster/projects/nn9458k/phylogenomics/week2/src/convert_triangle_full.py mash/infile  > full_distance_matrix
-```
+		# Produce a sketch representation of each unmasked assembly.
+		for fasta in cichlid_assemblies/*.fasta
+		do
+			mash sketch ${fasta}
+		done	
 
-We need to load that Biopython module so we have the Python libraries that we need (numpy and pandas) available. The file full_distance_matrix should contain this now:
-```
-6
-neobri	0.0	0.00981378	0.00985499	0.00904645	0.00924552	0.0519203
-neogra	0.00981378	0.0	0.00888862	0.00948708	0.00924552	0.0509537
-neomar	0.00985499	0.00888862	0.0	0.0090861	0.00932572	0.0515304
-neooli	0.00904645	0.00948708	0.0090861	0.0	0.00659353	0.0509537
-neopul	0.00924552	0.00924552	0.00932572	0.00659353	0.0	0.0511448
-orenil	0.0519203	0.0509537	0.0515304	0.0509537	0.0511448	0.0
-```
+		# Calculate a distance matrix from the sketch representations.
+		mash triangle cichlid_assemblies/*.msh > distance_matrix.txt
 
-Then we'll run [rapidNJ](https://github.com/somme89/rapidNJ) on the full distance matrix to get a tree. Since this is also a quick process, we'll just run it on the command line and not in a sbatch script:
-```
-module purge
-module load rapidNJ/210609-foss-2020b
-rapidnj full_distance_matrix -i pd |sed "s/'//g" > nj_tree
-```
-We're removing the single quote sign because it would confuse Cactus later on.
+* Submit the Slurm script `run_mash.slurm`:
 
+		sbatch run_mash.slurm
 
-The result is this:
-```
-((neomar:0.0045736,neogra:0.004315):0.00021445,((neopul:0.0033453,neooli:0.0032482):0.00094829,neobri:0.0049009):0.00032849,orenil:0.046583);
-```
-You can use [IcyTree](https://icytree.org/) (choose 'File' -> 'Enter tree directly') or [Phylogenetic tree (newick) viewer](http://etetoolkit.org/treeview/) (clear the alignment box and paste in the tree in the box on the left) to visualise it online.
+	This should finish quite quickly, probably within a few minutes. Considering that Mash is comparing the content of six whole-genome assemblies with sizes between 600 and 1,000 Mbp, this is quite impressive.
 
-When we are done with this part, we have both a set of softmasked files and a guide tree, so we are all set to run Cactus!
+* Have a look at the result file named `distance_matrix.txt`, which you should now find in the working directory:
+
+		less distance_matrix.txt
+
+	If you recognise a lower-triangle [distance matrix](https://evolution.gs.washington.edu/phylip/doc/distance.html) here, you are quite correct. This distance matrix will be the basis for the guide tree, which we will produce with the Neighbor-Joining algorithm implemented in the program [RapidNJ](https://github.com/somme89/rapidNJ) ([Simonsen et al. 2008](https://users-birc.au.dk/cstorm/software/rapidnj/papers/SimonsenOthers2008_WABI.pdf)). However, RapidNJ does not accept lower-triangle distance matrices as input and instead requires a full matrix, so we will need to convert its format. To do so, we'll use a slightly modified version of a Python script provided by Anthony Underwood on the [support forum to Mash](https://github.com/marbl/Mash/issues/9). This script is now named `convert_triangle_to_square_matrix.py`.
+	
+* Either copy the Python script `convert_triangle_to_square_matrix.py` to your working directory or download it from GitHub. To copy it on Saga, use this command:
+
+		cp /cluster/projects/nn9458k/phylogenomics/week2/src/convert_triangle_to_square_matrix.py .
+		
+	To download it from GitHub, use this command:
+	
+		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_src/convert_triangle_to_square_matrix.py
+	
+* Execute the Python script `convert_triangle_to_square_matrix.py`:
+
+		module purge
+		module load Biopython/1.72-foss-2018b-Python-3.6.6
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k --pty python convert_triangle_to_square_matrix.py distance_matrix.txt distance_matrix_full.txt
+
+	In the above code, the Biopython module is loaded so that the Python libraries [NumPy](https://numpy.org) and [pandas](https://pandas.pydata.org) are available.
+
+* Have a look at the full distance in file `distance_matrix_full.txt`:
+
+		less distance_matrix_full.txt
+		
+	**Question 3:** Which species are most closely related to each other, and which is the most distantly related species, according to this distance matrix? [(see answer)](#q3)
+
+* As you will have seen, the distance matrix includes, in the first column, not just the species IDs, but the paths to assembly filenames (e.g. "cichlid_assemblies/neobri.fasta" and not just "neobri"). We will need to replace this before we use the guide tree as input for Cactus, and we might as well do it now in the distance matrix. Do so with the following command:
+
+		sed -i 's/cichlid_assemblies\///g' distance_matrix_full.txt
+		sed -i 's/.fasta//g' distance_matrix_full.txt
+
+* Have another look at file `distance_matrix_full.txt`. You should see that the first column now only contains the species IDs (except on the first row, where the number "6" specifies the number of taxa in the distance matrix).
+
+* Next, we'll need to run [RapidNJ](https://github.com/somme89/rapidNJ) on the full distance matrix to obtain the guide tree. To do so, execute the following commands:
+
+		module purge
+		module load rapidNJ/210609-foss-2020b
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:10:00 --account=nn9458k rapidnj distance_matrix_full.txt -i pd > nj.tre
+	
+* Have a look at the output file `nj.tre` with `less`:
+
+		less nj.tre
+
+	You should see that the file contains a single line with a tree string in Newick format. However, we still need to change one thing, namely, we have to remove the single quotes that RapidNJ placed around each species ID, because these would confuse Cactus. Remove the single quotes with this command:
+
+		sed -i "s/'//g" nj.tre
+
+	(Note that this time, double quotes were required around the expression.)
+
+* Once more display the content of `nj.tre` with `less`, and then copy the tree string.
+
+* Paste the tree string on your own computer into a new FigTree window. Root the tree on the long branch leading to "orenil", and also orient the tree. The FigTree window should then look as shown below.<p align="center"><img src="img/figtree1.png" alt="FigTree" width="700"></p>
+
+	**Question 4:** How does this phylogeny compare to the one estimated by [Gante et al. (2016)](https://doi.org/10.1111/mec.13767)? [(see answer)](#q4)
+
+With the softmasked assemblies (subset to data from a single chromosome) and the guide tree at hand, we can now prepare a setup file for the Cactus analysis. This file should contain, on its first line, the guide tree, followed by a table with two columns, in which for each genome assembly, the species ID and the path to the assembly are separated by a tab.
+
+* To write the setup file for Cactus, named `cactus_setup.txt`, execute the following commands:
+
+		cat nj.tre > cactus_setup.txt
+		for fasta in cichlid_assemblies_masked_chr5/*.softmasked.chr5.fasta
+		do
+			species_id=`basename ${fasta%.softmasked.chr5.fasta}`
+			echo "${species_id} /data/${fasta}" >> cactus_setup.txt
+		done
+
 
 <a name="cactus"></a>
 ## Running Cactus
 
-Multiple genome alignment programs align multiple genomes toward each other, unlike pairwise genome alignment programs (such as Mummer and Minimap2) which only aligns two and two. They have existed for more than a decade, but several of the older were reference based, meaning that one genome was the reference and all others were aligned towards that. Any regions shared by the non-reference genomes would not be represented in the final alignment, a quite large limitation. [Cactus](https://github.com/ComparativeGenomicsToolkit/cactus), or Progressive Cactus as the authors also call it, is one of the few modern reference-free multiple genome aligners. The only other I know of is [SibeliaZ](https://github.com/medvedevgroup/SibeliaZ), but in my experience hasn't performed as well as Cactus.
+Multiple genome alignment programs align several genomes to each other, unlike pairwise genome alignment programs (such as Minimap2) which only align two. They have existed for more than a decade, but several of the older programs were reference based, meaning that one genome was considered the reference and all others were aligned to this one, as with Minimap2. With such reference-based whole-genome alignment, regions shared only by the non-reference genomes are not represented in the final alignment. Depending on the intended analysis type, this can be a rather severe limitation; however, for the phylogenetic analyses performed in this course, excluding such regions has no consequences. [Cactus](https://github.com/ComparativeGenomicsToolkit/cactus) ([Armstrong et al. 2020](https://doi.org/10.1038/s41586-020-2871-y)), or Progressive Cactus as the authors also call it, is one of the few modern reference-free multiple genome aligners. Perhaps the only other such program is [SibeliaZ](https://github.com/medvedevgroup/SibeliaZ) ([Minkin and Medvedev 2020](https://doi.org/10.1038/s41467-020-19777-8)); however, SibeliaZ does not seem to perform as well as Cactus.
 
-Unfortunately, Cactus is not an easy program to use. There are likely multiple reasons for this, some might be that it parts are quite old (it builds directly on software older than a decade), which can lead to it being a bit clunky and not so easy to update those old parts. It is tightly connected to a system called Toil, which handles running jobs, and if that has some issues (we'll come back to that later), it can be hard to get working. For these reasons it can be difficult to install properly. Luckily they provide a Docker container, and Saga has support for that via Singularity, so we will use that.
+Unfortunately, Cactus is not an easy program to use. There are likely multiple reasons for this, some might be that its parts are quite old (it builds directly on software older than a decade), which can lead to it being a bit clunky and difficult to update. It is tightly connected to a system called [Toil](https://toil.readthedocs.io/en/latest/) ([Vivian et al. 2017](https://doi.org/10.1038/nbt.3772)), which handles running jobs, and any issues with Toil will make it hard to get Cactus working. For these reasons, it can be difficult to install Cactus properly. Luckily the authors of Cactus provide a Docker container within which Cactus can run, and Saga has support for such containers via the installed [Singularity](https://apptainer.org) program.
 
-Earlier, and when working with this tutorial, I spent quite some time getting Cactus to run successfully. I think I know how now, but we might have some issues which I'll try to explain how to avoid. This might be a bit technical, but I think it is good to know.
+Despite the support for Docker containers, getting Cactus to run on Saga is still not trivial. The first limitation is that [Toil](https://github.com/DataBiosphere/toil) uses many hard links via [`os.link`](https://docs.python.org/3/library/os.html#os.link) (and not soft links) to link files between directories, especially to two directories that it names `jobStore` and `workDir`. Unfortunately, the filesystem on Saga, BeeGFS, [does not support hard linking between directories](https://www.beegfs.io/wiki/FAQ#hardlinks). That means that using `--workDir` as an option for Cactus will just not work, because files would need to be be hard linked. This limitation has been listed as an [open issue on the Toil github page](https://github.com/DataBiosphere/toil/issues/2232) since 2018.
 
-The first limitation is that [Toil](https://github.com/DataBiosphere/toil) uses a lot of hard links via [os.link](https://docs.python.org/3/library/os.html#os.link) (and not soft links) in Python to link files between folders, especially jobStore and workDir (overview of the jobs running and a temporary directory, respectively). Unfortunately, the filesystem on Saga, BeeGFS, [does not support hard linking between folders](https://www.beegfs.io/wiki/FAQ#hardlinks). That means that using --workDir as an option for Cactus will just not work, because files will be hard linked. You can also run into issues regarding temporary directories with this limitation. Some of this is discussed as [an issue on the Toil github page](https://github.com/DataBiosphere/toil/issues/2232).
+The second limitation is that Cactus makes extensive use of the `/tmp` directories on Saga nodes (unless specifying `--workDir`, but, as explained above, that is not possible on Saga). The normal nodes on Saga seem to have `/tmp` partitions with a size of only about 19 GB, so jobs analyzing larger datasets will quickly fill these and then fail. Specifying a different temporary directory will also not work, because that will again be affected by the lack for hard link. As one solution, Saga's "bigmem" nodes can be requested for the analysis (with the command `#SBATCH --partition=bigmem` at the top of Slurm scripts). These partitions have `/tmp` directories with a size of up to 303 GB, which in most cases is sufficient. However, the "bigmem" nodes often have long waiting times on Saga, which can be inconvenient when multiple settings need to be tested. Fortunately, the data subset that we will analyze here does not exceed the resources available on Saga's standard nodes, and we don't need to request a "bigmem" node.
 
-The second is that Cactus uses /tmp quite a bit (unless specifying --workDir, but as explained above, doesn't work on Saga). The normal nodes on Saga seem to only have about 19 GB /tmp partitions, so larger jobs will quickly fill up these and then fail. Specifying a different temporary folder will not work, because that will be affected with the hard linking issue again. The bigmem nodes (specify #SBATCH --partition=bigmem in the sbatch script) have 303 GB /tmp partitions and will not as easily fill up those (but it only looks like the largest and not the medium sized ones have this).
+Nevertheless, if all course participants would run Cactus in their working directories, too many temporary files would be written in subdirectories of `/cluster/projects/nn9458k/phylogenomics`. Therefore, we'll need to include commands to move to another directory (`${USERWORK}`), and to copy input files into that directory, before Cactus is started.
 
-(It might be possible to use $LOCALSCRATCH, see here: https://documentation.sigma2.no/files_storage/clusters.html#job-scratch-area-on-local-disk. I have tried it with Comparative Annotation Toolkit, and couldn't get it working, but the code is different between CAT and Cactus, so it might work. I haven't tested it yet.)
+* To run Cactus, write a new Slurm script named `run_cactus.slurm`, with the following content:
 
-In the future it is likely that Toil will change their code to not hard link or to handle those cases better at least, or if you run on a different system than Saga, you might not have these limitations. However, I think it is good to point out that your and our analyses might stop or be delayed by such choices as which filesystem is used on our computation cluster (and that choice is usually without us and it would be hard to imagine all different cases such as this).
+		#!/bin/bash
 
-As you might understand, Cactus is a beast and therefore is quite computing hungry. When I ran the dataset, it used 30 hours using 32 CPUs on a bigmem node. We have been given a reservation for nodes on Saga, 128 CPUs from 13:15:00 and for 26 hours. All of the participants cannot run the full dataset, nothing will finish in time then. We'll have 2 people running the full dataset, with the rest running a reduced one, using only chromosome 5 from Nile tilapia and the corresponding sequences from the other species (see [Getting only chr5](#chr5) below if you'll like to see how I did that).
+		# Job name:
+		#SBATCH --job-name=cactus
+		#
+		# Wall clock limit:
+		#SBATCH --time=24:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --mem-per-cpu=4G
+		#SBATCH --nodes=1
+		#SBATCH --ntasks-per-node=20
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=run_cactus.out
 
-All cannot run this in the course folder, that is, in /cluster/projects/nn9458k/phylogenomics/$USERNAME, because that might exceed the limitations of what the course have been given. So we need to run this in $USERWORK. I have set this up in the scripts, and hopefully it will work fine.
+		# Purge modules.
+		module --force purge
 
-To start, we need to grab the container. You don't have to do this, I put it into the work scripts, but this is basically the command:
-```
-singularity pull --name cactus-v1.3.0.sif docker://quay.io/comparative-genomics-toolkit/cactus:v1.3.0
-```
+		# Memorize the current directory as start directory.
+		start_dir=${PWD}
 
-If you copied the scrips in the first part, it is basically to just do:
+		# Move to the work directory.
+		cd ${USERWORK}
 
-```
-sbatch run_cactus_chr5.sh
-```
+		# Set up the directory structure.
+		mkdir -p cactus
+		cd cactus
+		rm -rf jobStore
 
-And everything should work fine. In the end you'll get cichlids_chr5.hal and cichlids_chr5.maf files in your /cluster/projects/nn9458k/phylogenomics/$USERNAME folder, in addition to halValidation.chr5.txt and halStats.chr5.txt, a validation and a statistics file of the HAL file. The whole process took about 5 hours when I tried it.
+		# Copy the input files from the start directory.
+		rsync -ravz ${start_dir}/cichlid_assemblies_masked_chr5 .
+		cp ${start_dir}/cactus_setup.txt .
 
-halValidation.chr5.txt should basically just contain:
-```
-File valid
-```
+		# Copy the cactus image from its directory.
+		rsync ${start_dir}/cactus-v2.2.3.sif .
 
-While halStats.chr5.txt should contain this:
-```
-hal v2.1
-((neomar:0.0045736,neogra:0.004315)Anc1:0.00021445,((neopul:0.0033453,neooli:0.0032482)Anc3:0.00094829,neobri:0.0049009)Anc2:0.00032849,orenil:0.046583)Anc0;
+		# Run cactus.
+		singularity exec -B $(pwd):/data cactus-v2.2.3.sif cactus --maxCores 20 /data/jobStore /data/cactus_setup.txt /data/cichlids_chr5.hal --binariesMode local
 
-GenomeName, NumChildren, Length, NumSequences, NumTopSegments, NumBottomSegments
-Anc0, 3, 28764338, 471, 0, 562986
-Anc1, 2, 22457867, 1162, 482173, 155250
-neomar, 0, 22119859, 1278, 152061, 0
-neogra, 0, 21364358, 1287, 148253, 0
-Anc2, 2, 29214047, 356, 555446, 254028
-Anc3, 2, 22168327, 1182, 133108, 140058
-neopul, 0, 20898136, 1358, 133718, 0
-neooli, 0, 21525845, 1293, 136975, 0
-neobri, 0, 43197405, 18, 315265, 0
-orenil, 0, 39714817, 1, 692510, 0
-```
-Running the full alignment is quite similar to the one above, but we need some extra information for the sbatch command since we have gotten two bigmem nodes reserved.
+		# Validate the hal file.
+		singularity exec -B $(pwd):/data cactus-v2.2.3.sif halValidate /data/cichlids_chr5.hal > ${start_dir}/cichlids_chr5.hal.valid.txt
 
-```
-sbatch --reservation=nn9458k run_cactus_all.sh
-```
-If that is successful, you'll see cichlids_all.hal, halValidation.all.txt and halStats.all.txt with the content of the stats file this:
+		# Get statistics for the result.
+		singularity exec -B $(pwd):/data cactus-v2.2.3.sif halStats /data/cichlids_chr5.hal > ${start_dir}/cichlids_chr5.hal.stats.txt
 
-```
-hal v2.1
-((neomar:0.0045736,neogra:0.004315)Anc1:0.00021445,((neopul:0.0033453,neooli:0.0032482)Anc3:0.00094829,neobri:0.0049009)Anc2:0.00032849,orenil:0.046583)Anc0;
+		# Return the result in hal format to the start directory.
+		rsync cichlids_chr5.hal ${start_dir}
 
-GenomeName, NumChildren, Length, NumSequences, NumTopSegments, NumBottomSegments
-Anc0, 3, 681329676, 32958, 0, 16672331
-Anc1, 2, 659155609, 75358, 15727138, 6780370
-neomar, 0, 668470958, 89823, 6854395, 0
-neogra, 0, 657998073, 91312, 6746422, 0
-Anc2, 2, 662754018, 18173, 15927409, 5320178
-Anc3, 2, 660323875, 78298, 4933681, 6370077
-neopul, 0, 659878940, 94163, 6380869, 0
-neooli, 0, 666859030, 91778, 6457234, 0
-neobri, 0, 847910432, 9099, 6072207, 0
-orenil, 0, 1005681550, 2460, 22880110, 0
-```
+* Submit the Cactus run with `sbatch`:
 
-You'll work further with the cichlids_chr5.maf file tomorrow.
+		sbatch run_cactus.slurm
 
-One of the main advantages of having a multiple whole genome alignment is that you can pinpoint conserved sequences across the species. In many cases that will be exons, and a HAL file can be use for [comparative annotation](https://github.com/ComparativeGenomicsToolkit/Comparative-Annotation-Toolkit). This is outside the scope of this tutorial.
+	Note that if we had produced data subsets not just for chromosome 5 but for all chromosomes, we could have executed `run_cactus.slurm` in parallel for all of these chromosomes after only minor rewriting of the script.
 
-You have come to the end and are done with the tutorial. Congratulations!
+	This Cactus run should not take more than 30 minutes, but unfortunately, this will not yet produce the output files that we need, and we will need to submit another more computationally demanding job to obtain the whole-genome alignment in a usable format.
+	
+* Once the Cactus job has finished, wee which output files have been returned to the working directory:
 
-<a name="chr5"></a>
-## Getting only chr5
-This is for information purposes only, and to get this kinda complete.
+		ls cichlids_chr5.hal*
+		
+	This should show three files, named `cichlids_chr5.hal`, `cichlids_chr5.hal.valid.txt`, and `cichlids_chr5.hal.stats.txt`.
+	
+* The content of the file `cichlids_chr5.hal.valid.txt` should contain only the two words "File valid", confirming that a valid output file was written by Cactus. Make sure that this is the case.
 
-To create a reduced dataset we'll only use chromosome 5 from Nile tilapia and the corresponding sequences from the other species. For each species I did this:
-```
-module load StdEnv minimap2/2.17-GCC-8.3.0
+* Also have a look at file `cichlids_chr5.hal.stats.txt`. Below a line starting with "GenomeName, NumChildren...", you should see a table that lists for each of the genome assemblies and the reconstructed ancestral genomes, their IDs ("GenomeName") followed by the numbers of their descendents in the guide tree ("NumChildren"), the total length of the aligned sequences, and the number of these sequences. You should be able to recognize that 18 of the 20 sequences that were included in the input file of *N. brichardi* ("neobri"), and of course the 1 sequence used for *Oreochromis niloticus* ("orenil") are listed.
 
-mkdir -p paf_alignments
+* Finally, try to see the content of file that contains the whole-genome alignment, `cichlids_chr5.hal`, using `less`:
 
-cd paf_alignments
+		less cichlids_chr5.hal
+		
+	As you'll find out, this file is not human-readable, but in the binary [HAL format](https://github.com/ComparativeGenomicsToolkit/hal). This format can be used with a program called [HAL Tools](https://github.com/ComparativeGenomicsToolkit/hal), but this won't allow us to perform phylogenomic analyses with it. Thus, we still need to convert the whole-genome alignment into a different format that we can use for downstream analyses. The only option to do so is to convert it into [MAF format](https://genome.ucsc.edu/FAQ/FAQformat.html#format5), with the `hal2maf` command that is also only available through Cactus.
+	
+* Start writing another Slurm script named `convert_hal_to_maf.slurm` by copying the script `run_cactus.slurm`:
 
-if [ ${1} != 'orenil' ]; then
-	minimap2 -t 10  -cx asm20 ../../data/orenil.fasta ../../data/${1}.fasta > $1_orenil.asm20.paf
-fi
-```
-That is, mapped all against Nile tilapia. Chromosome 5 is called NC_031970.2 in Nile tilapia, so we extract all sequences that map to it at a quality higher than 50 and with an alignment length longer than 5000 bp:
-```
-module load StdEnv seqtk/1.3-foss-2018b
+		cp run_cactus.slurm convert_hal_to_maf.slurm
 
-for i in $(ls ../data/*fasta); do
-	j=${i%.fasta}
-	l=${j##*/}
-	echo $l
-	#>NC_031970.2 is LG5/chromosome 5
-	#quality of more than 50 and longer than 5000 bp alignmentx
-	grep NC_031970.2 paf_alignments/${l}_orenil.asm20.paf |awk '$12 > 50' |awk '$10 > 5000'| cut -f 1 | sort -u > paf_alignments/${l}_maps_to_chr5
-	seqtk subseq masked_assemblies/${l}.softmasked.fa paf_alignments/${l}_maps_to_chr5 > masked_assemblies/${l}.softmasked.chr5.fa
-done
+* Then, edit the script `convert_hal_to_maf.slurm` by changing the job name on line 4, the requested number of tasks per node on line 12, the name of the log file on line 18, and the last part of the script after line 34. It should then have the following content:
 
-samtools faidx  masked_assemblies/orenil.softmasked.fa NC_031970.2 > masked_assemblies/orenil.softmasked.chr5.fa
-```
-In the end the *softmasked.chr5.fa files were created.
+		#!/bin/bash
 
-If you are reading this and thinking "Didn't you basically do what we did above in a fraction of the time?", then yes, you are correct. There might be some more alignments done inside Cactus, but it is clearly not the quickest whole genome aligner out there. Minimap2 is much faster, but it is only pairwise, and there are presently no way of using Minimap2 instead of LastZ (which is in Cactus) now. However, [Cactus does have a pangenome pipeline implemented](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md), which actually uses Minimap2 but assumes genomes from one species and they need to do some tricks (splitting up into chromosomes) to get it to work.
+		# Job name:
+		#SBATCH --job-name=convert
+		#
+		# Wall clock limit:
+		#SBATCH --time=24:00:00
+		#
+		# Processor and memory usage:
+		#SBATCH --mem-per-cpu=4G
+		#SBATCH --nodes=1
+		#SBATCH --ntasks-per-node=1
+		#
+		# Accounting:
+		#SBATCH --account=nn9458k
+		#
+		# Output:
+		#SBATCH --output=convert_hal_to_maf.out
+
+		# Purge modules.
+		module --force purge
+
+		# Memorize the current directory as start directory.
+		start_dir=${PWD}
+
+		# Move to the work directory.
+		cd ${USERWORK}
+
+		# Set up the directory structure.
+		mkdir -p cactus
+		cd cactus
+		rm -rf jobStore
+
+		# Copy the input files from the start directory.
+		rsync ${start_dir}/cichlids_chr5.hal .
+
+		# Copy the cactus image from its directory.
+		rsync ${start_dir}/cactus-v2.2.3.sif .
+
+		# Convert the whole-genome alignment from hal to maf format, using orenil as reference.
+		singularity exec -B $(pwd):/data cactus-v2.2.3.sif hal2maf --refGenome orenil --onlyOrthologs --noAncestors --maxBlockLen 1000000 --maxRefGap 1000 /data/cichlids_chr5.hal /data/cichlids_chr5.hal
+
+		# Return the result in maf format to the start directory.
+		rsync cichlids_chr5.maf ${start_dir}
+
+* Submit the Slurm script `convert_hal_to_maf.slurm` with `sbatch`:
+
+		sbatch convert_hal_to_maf.slurm
+
+	This format conversion will take longer than the first Cactus analysis, and should finish after about 2 hours. The whole-genome alignment in MAF format, in file `cichlids_chr5.maf`, will be used for phylogenomic analyses in the following tutorials.
+
+
+<br><hr>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+## Answers
+
+<a name="q1"></a>
+
+* **Question 1:** The table format of files in PAF format lists for each alignment between a contig and a chromsome the name of the mapped contig (the query) in the first column, the start and end of the mapping region on that contig in columns 3 and 4, and the name of the chromosome to which the contig maps (the target) in column 6. Additionally, the length of the alignment is given in column 11 and the mapping quality in column 12. A full format reference can be found on [Heng Li's GitHub repository](https://github.com/lh3/miniasm/blob/master/PAF.md).
+
+
+<a name="q2"></a>
+
+* **Question 2:** The number of contigs per species mapping to chromosome 5 of *Oreochromis niloticus* ("orenil") can be found with the following command:
+
+		for id_list in cichlid_assemblies/*_chr5_contig_ids.txt
+		do
+			cat ${id_list} | wc -l
+		done
+
+	This should show that around 1,500 contigs map for all species, except for *Neolamprologus brichardi* ("neobri"), which has only 20 aligning regions. The reason for this is that the *Neolamprologus brichardi* genome was sequenced with much greater coverage than the other *Neolamprologus* genomes, resulting in a far more contiguous assembly. The "contigs" in this case are in fact scaffolds.
+
+
+<a name="q3"></a>
+
+* **Question 3:** The full distance matrix should have a content very similar to the following:
+
+		6
+		cichlid_assemblies/neobri.fasta 0.0     0.00981378      0.00985499      0.00904645      0.00924552      0.0519203
+		cichlid_assemblies/neogra.fasta 0.00981378      0.0     0.00888862      0.00948708      0.00924552      0.0509537
+		cichlid_assemblies/neomar.fasta 0.00985499      0.00888862      0.0     0.0090861       0.00932572      0.0515304
+		cichlid_assemblies/neooli.fasta 0.00904645      0.00948708      0.0090861       0.0     0.00659353      0.0509537
+		cichlid_assemblies/neopul.fasta 0.00924552      0.00924552      0.00932572      0.00659353      0.0     0.0511448
+		cichlid_assemblies/orenil.fasta 0.0519203       0.0509537       0.0515304       0.0509537       0.0511448       0.0
+
+	The smallest value overall in this matrix is 0.00659353. This value can be found on the fifth column in the sixth row, meaning that it is the distance between the sketch representations for *Neolamprologus pulcher* ("neopul") and *N. olivaceus* ("neooli"). Therefore, these two species seem to be most closely related to each other. The largest values in the distance matrix (each around 0.05) are found in the last row, and thus are the distances between the sketch representation for *Oreochromis niloticus* ("orenil") and all other species. This makes sense because *Oreochromis niloticus* was added to the dataset as an outgroup.
+	
+	
+<a name="q4"></a>
+
+* **Question 4:** The two phylogenies are not so different. Both recover the sister-group relationship between *Neolamprologus pulcher* ("neopul") and *N. olivaceous* ("neooli"), and also the clade that combines these two species with *N. brichardi* ("neobri"). The only difference is the position of *N. gracilis* ("neogra"), which is the sister to *N. marunguensis* ("neomar") in the phylogeny produced by RapidNJ, but was placed closer to the other three *Neolamprologus* species in Gante et al. (2016). But as the analyses of Gante et al. (2016) suggested, introgression occurred between *N. marunguensis* and *N. gracilis*, rendering the position of the latter rather difficult to identify.
