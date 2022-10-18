@@ -9,14 +9,14 @@ The folder "_Lecture_" contains the lecture from this session.
 * [Paralogy](https://github.com/ForBioPhylogenomics/tutorials/blob/main/week1_day2_morning/Lecture/Day2_01_Paralogy.pdf)
 
 # EXERCISE
-1. For the TreSpEx analyses we first need to install some modules in your home directory as they are not included in the availables ones on SAGA<br>
+1. For the TreSpEx analyses we first need to install some modules in your home directory as they are not included in the availables ones on SAGA.<br>
 
 	```
 	module load Perl/5.32.0-GCCcore-10.2.0
-	export PERL_CPANM_HOME=/tmp/cpanm_$USER
+	export PERL_CPANM_HOME=/tmp/cpanm_$USER # this time the variable is a variable of the system and can be used as is.
 	cpanm Statistics::LineFit
 	cpanm --force Statistics::Test::WilcoxonRankSum
-	export PERL5LIB=/cluster/home/$USER/perl5/lib/perl5:$PERL5LIB
+	export PERL5LIB=/cluster/home/$USER/perl5/lib/perl5:/cluster/home/$USER/perl5/:$PERL5LIB # this time the variable is a variable of the system and can be used as is.
 	nano .bashrc
 	copy the line from e) into the text editor at the end
 	close the file and save it with the same name
