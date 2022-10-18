@@ -22,7 +22,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	close the file and save it with the same name
 	```
 	
-2. For getting started, copy all data from the folder "_Day2Morning_" to your folder in the project area in SAGA<nr>
+2. For getting started, copy all data from the folder "_Day2Morning_" to your folder in the project area in SAGA.<nr>
 	
 	```
 	cd /cluster/projects/nn9458k/phylogenomics/$YOURNAME
@@ -30,7 +30,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	cd Day2Morning
 	```
 	
-3. First we need to get a tree with bootstrap values for each individual loci<br>
+3. First we need to get a tree with bootstrap values for each individual loci.<br>
 	
 	```
 	cd SingleGenes
@@ -45,7 +45,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	cp -r /cluster/projects/nn9458k/phylogenomics/week1/Programs/TreSpEx/TreSpEx.v1.2_SAGA.pl /cluster/projects/nn9458k/phylogenomics/week1/Programs/TreSpEx/blast .
 	```
 	
-5. For the paralogy screening and cleaning you will run TreSpEx on the trees with bootstrap values<br>
+5. For the paralogy screening and cleaning you will run TreSpEx on the trees with bootstrap values.<br>
 	
 	```
 	sbatch sbatch_TreSpEx_Paralogy.sh
@@ -67,7 +67,7 @@ The folder "_Lecture_" contains the lecture from this session.
 	sbatch sbatch_Concatenation.sh
 	```
 	
-7. Next you will run a tree reconstruction to assess effect this paralogy pruning approach<br>
+7. Next you will run a tree reconstruction to assess effect this paralogy pruning approach.<br>
 	
 	```
 	cd Supermatrix
