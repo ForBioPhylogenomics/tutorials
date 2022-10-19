@@ -171,7 +171,7 @@ One of the most common approaches for repeat masking is to create a species spec
 		mkdir cichlid_assemblies_masked
 		for fasta in cichlid_assemblies/*.fasta
 		do
-			fasta_id=`basename ${fasta$.fasta}`
+			fasta_id=`basename ${fasta%.fasta}`
 			masked_fasta=cichlid_assemblies_masked/${fasta_id}
 			log=run_red.${fasta_id}.out
 			sbatch -o ${log} run_red.slurm ${fasta} ${masked_fasta}
@@ -181,7 +181,7 @@ One of the most common approaches for repeat masking is to create a species spec
 
 		bash run_red.sh
 
-	This should take between 20 and 40 minutes to finish. But since the next part of this tutorial does not use the softmasked assemblies produced by Red, you can already continue with this next part. Nevertheless, if you should be unable to run Red for some reason, you can also obtain prepared softmasked assemblies from `/cluster/projects/nn9458k/phylogenomics/cichlid_assemblies_masked`:
+	This should take between 30 and 90 minutes to finish. But since the next steps do not use the softmasked assemblies produced by Red, you can already continue with the tutorial. Nevertheless, if you should be unable to run Red for some reason, you can also obtain prepared softmasked assemblies from `/cluster/projects/nn9458k/phylogenomics/cichlid_assemblies_masked`:
 
 		cp -r /cluster/projects/nn9458k/phylogenomics/cichlid_assemblies_masked .
 
@@ -272,10 +272,10 @@ So far, no data subsetting has taken place. Instead, we only mapped all contigs 
 		paf=${1}
 
 		# Identify ids of contigs mapping to chromosome 5 of orenil.
-		grep NC_031970.2 ${paf} \    # Keep only lines that contain the ID of chromosome 5
-		  | awk '$12 > 50' \         # Keep only lines with an alignment quality is above 50
-		  | awk '$11 > 5000' \       # Keep only lines with an alignment length above 5000
-		  | cut -f 1 \               # Keep only the first column of remaining lines
+		grep NC_031970.2 ${paf} \
+		  | awk '$12 > 50' \
+		  | awk '$11 > 5000' \
+		  | cut -f 1 \
 		  | sort -u > ${paf%.paf}_chr5_contig_ids.txt
 
 * Then, submit the Slurm script `identify_contigs_from_paf.sh` five times, with each PAF-format file as input:
@@ -290,7 +290,11 @@ So far, no data subsetting has taken place. Instead, we only mapped all contigs 
 
 	**Question 2:** How many contigs map to chromosome 5 of *Oreochromis niloticus* ("orenil"), per species? [(see answer)](#q2)
 
-As a next step, we'll need to extract those contigs from each of the *Neolamprologus* genomes that map to chromosome 5 of *Oreochromis niloticus* ("orenil"). We will do this with the [SeqTK](https://github.com/lh3/seqtk) toolkit by Heng Li. And importantly, we'll extract the contigs from the softmasked versions of the genome assemblies.
+As a next step, we'll need to extract those contigs from each of the *Neolamprologus* genomes that map to chromosome 5 of *Oreochromis niloticus* ("orenil"). We will do this with the [SeqTK](https://github.com/lh3/seqtk) toolkit by Heng Li. And importantly, we'll extract the contigs from the softmasked versions of the genome assemblies; thus, it is important that the Red analyses have finished before continuing.
+
+* If Red jobs have not finished, cancel them (with `scancel`, followed by the job ID), and copy the prepared output files from `/cluster/projects/nn9458k/phylogenomics/cichlid_assemblies_masked`:
+
+		cp /cluster/projects/nn9458k/phylogenomics/cichlid_assemblies_masked .
 
 * Copy the Slurm script `identify_contigs_from_paf.slurm` to a new file named `extract_identified_contigs.slurm`:
 
