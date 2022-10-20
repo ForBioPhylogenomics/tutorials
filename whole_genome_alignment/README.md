@@ -132,7 +132,7 @@ One of the most common approaches for repeat masking is to create a species spec
 		#SBATCH --job-name=red
 		#
 		# Wall clock limit:
-		#SBATCH --time=2:00:00
+		#SBATCH --time=5:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --mem-per-cpu=20G
@@ -283,7 +283,7 @@ So far, no data subsetting has taken place. Instead, we only mapped all contigs 
 		for paf in cichlid_assemblies/*.paf
 		do
 			paf_id=`basename ${paf%_to_orenil.paf}`
-			sbatch -o identify_contigs_from_paf.${paf_id} identify_contigs_from_paf.slurm ${paf}
+			sbatch -o identify_contigs_from_paf.${paf_id}.out identify_contigs_from_paf.slurm ${paf}
 		done
 	
 	These jobs should finish within seconds.
