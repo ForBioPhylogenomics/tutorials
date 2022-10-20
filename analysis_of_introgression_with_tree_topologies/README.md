@@ -70,7 +70,7 @@ One assumption underlying most phylogenetic analyses is that the alignments used
 
 These questions are so far rather poorly answered, even though they are actively debated in the recent literature (e.g. [Springer and Gatesy 2016](https://doi.org/10.1016/j.ympev.2015.07.018); [Edwards et al. 2016](https://doi.org/10.1016/j.ympev.2015.10.027)). One way to approach the problem is with simulations: We could simulate how probable it would be to actually have not even a single recombination breakpoint in an alignment of a certain length, and simulated sequences could also be used to test the reliability of phylogenetic inference under these conditions. In one such study, [Lanier and Knowles (2012)](https://doi.org/10.1093/sysbio/syr128) concluded that within-alignment recombination had no noticeable effect on species-tree reconstruction; however, the simulations used in this study were for a rather small set of species, and it is not clear if the results would hold for larger phylogenies. Furthermore, the possible effects of within-alignment recombination on phylogenomic tests for introgression have so far not been tested.
 
-To address at least the question of how probable the absence of recombination is in alignment of a certain size, we can use the Python program [c-genie](https://github.com/mmatschiner/c-genie) (Malinsky and Matschiner; unpublished). This program simulates phylogenetic histories with recombination and calculates the average length of "c-genes" ("coalescent genes"; [Doyle 1995](https://doi.org/10.2307/2419811)), genomic regions uninterrupted by recombination. In addition, c-genie also calculates the lengths of "single-topology tracts", fragments sharing the same tree topology even though recombination within these fragments might have led to variable branch lengths in different parts of the fragment. The length of these single-topology tracts might be more relevant for phylogenetic analysis than the length of c-genes, because one could argue that only those recombination breakpoints that change the tree topology within an aligment have negative consequence for phylogenetic inference while those breakpoints that only change the branch lengths are safe to ignore.
+To address at least the question of how probable the absence of recombination is in an alignment of a certain size, we can use the Python program [c-genie](https://github.com/mmatschiner/c-genie) (Malinsky and Matschiner; unpublished). This program simulates phylogenetic histories with recombination and calculates the average length of "c-genes" ("coalescent genes"; [Doyle 1995](https://doi.org/10.2307/2419811)), genomic regions uninterrupted by recombination. In addition, c-genie also calculates the lengths of "single-topology tracts", fragments sharing the same tree topology even though recombination within these fragments might have led to variable branch lengths in different parts of the fragment. The length of these single-topology tracts might be more relevant for phylogenetic analysis than the length of c-genes, because one could argue that only those recombination breakpoints that change the tree topology within an aligment have negative consequence for phylogenetic inference while those breakpoints that only change the branch lengths are safe to ignore.
 
 As the probability of recombination depends on many factors, including the recombination rate, the generation time, the length of branches in the species tree, and the population size, c-genie requires estimates for these parameters as input. We will here use a tree approximating the relationships of the species included in the whole-genome alignment, as well as a population size and a generation time appropriate for the cichlid species of the whole-genome alignment. For the tree, we'll use the phylogeny of the five *Neolamprologus* species that received the strongest support in [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650), with the outgroup *Metriaclima zebra* ("metzeb") that was used in that study replace by the more divergent Nile tilapia (*Oreochromis niloticus*; "orenil"), as this species takes the role of the outgroup in the whole-genome alignment. The following Newick string encodes this phylogeny: "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):14.1,orenil:16.0)"
 
@@ -119,7 +119,7 @@ There are some reasons why the lengths of c-genes and single-topology tracts may
 <a name="alignments"></a>
 ## Identifying alignments for phylogenetic analysis
 
-Ideally, alignments used for phylogenetic analysis should have as little missing data as possible, be as informative as possible, and show no signs of within-alignment recombination. Thus, we are for this tutorial again going to extract alignments from the whole-genome alignment produced in tutorial [Whole-Genome Alignment](whole_genome_alignment/README.md) while filtering for information content (completeness and number of polymorphic sites), but to reduce the probability of within-alignment recombination, we are, we will also quantify signals of recombination per alignment and remove those alignments for which these signals are strongest.
+Ideally, alignments used for phylogenetic analysis should have as little missing data as possible, be as informative as possible, and show no signs of within-alignment recombination. Thus, we are for this tutorial again going to extract alignments from the whole-genome alignment produced in tutorial [Whole-Genome Alignment](whole_genome_alignment/README.md) while filtering for information content (completeness and number of polymorphic sites), but to reduce the probability of within-alignment recombination, we will also quantify signals of recombination per alignment and remove those alignments for which these signals are strongest.
 
 As the length of all alignments, we use 1,000 bp, assuming that this length is a good compromise between increasing probability of recombination with longer alignments and decreasing phylogenetic signal with shorter alignments. For a more thorough analysis, however, it might be worth testing a range of different alignment lengths.
 
@@ -133,7 +133,7 @@ As the length of all alignments, we use 1,000 bp, assuming that this length is a
 
 * Also make sure that the whole-genome alignment file `cichlids_chr5.maf` is still in your current directory. If the file should be missing, copy it from `/cluster/projects/nn9458k/phylogenomics/week2/data`:
 
-		cp /cluster/projects/nn9458k/phylogenomics/week2/cichlids_chr5.maf .
+		cp /cluster/projects/nn9458k/phylogenomics/week2/res/cichlids_chr5.maf .
 
 Unlike in the earlier tutorials, we are now going to extract a much larger number of alignments, first because the shorter alignment length of 1,000 bp now allows more alignments to be extracted, and second because we will still filter the alignments by their signals for recombination.
 
@@ -144,7 +144,7 @@ Unlike in the earlier tutorials, we are now going to extract a much larger numbe
 
 	The last line of the screen output should indicate that close to 7,000 alignments have been written to directory `short_alignments`.
 
-* Make sure that close to 7,000 alignments in Nexus format are in fact in the new directory `short_alignments`:
+* Make sure that close to 6,000 alignments in Nexus format are in fact in the new directory `short_alignments`:
 
 		ls short_alignments/*.nex | wc -l
 
@@ -207,9 +207,6 @@ The calculation of parsimony scores requires the software PAUP\*, which is insta
 		#
 		# Accounting:
 		#SBATCH --account=nn9458k
-		#
-		# Output:
-		#SBATCH --output=get_numbers_of_hemiplasies.out
 		
 		# Set up job environment.
 		set -o errexit  # Exit the script on any error
@@ -255,7 +252,10 @@ The calculation of parsimony scores requires the software PAUP\*, which is insta
 	
 * Submit this new Slurm script ten times with `sbatch` using the following loop:
 
-		for i in {0..9}; do sbatch get_numbers_of_hemiplasies.slurm ${i}; done
+		for i in {0..9}
+		do
+			sbatch -o get_numbers_of_hemiplasies.${i}.out get_numbers_of_hemiplasies.slurm ${i}
+		done
 	
 * As soon as the script starts running, make sure that the output files are being written by the script:
 
@@ -265,7 +265,7 @@ The calculation of parsimony scores requires the software PAUP\*, which is insta
 
 		cat short_alignment_stats_?.txt | wc -l
 		
-	All alignment files should be processed by the script after around 12 minutes.
+	All alignment files should be processed by the script after around 20-30 minutes.
 	
 * Combine all output files of the script into a single one named `short_alignment_stats.txt` (and add a header line) with the following commands:
 
@@ -609,7 +609,7 @@ As the analyses in this part of the tutorial have shown, genealogy interrogation
 
 <a name="q2"></a>
 
-* **Question 2:** Around 440 alignments should have passed the filtering and should therefore have been copied to directory `short_alignments_filtered`:
+* **Question 2:** Around 400 alignments should have passed the filtering and should therefore have been copied to directory `short_alignments_filtered`:
 
 		ls short_alignments_filtered/*.nex | wc -l
 
