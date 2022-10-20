@@ -30,7 +30,7 @@ If a putative hybrid individual as well as the presumed parental species have al
 <a name="outline"></a>
 ## Outline
 
-In this tutorial I am going to present the use of the program [Dsuite](https://github.com/millanek/Dsuite)([Malinsky et al. 2021](https://doi.org/10.1111/1755-0998.13265)) to identify introgression between species of the genus *Neolamprologus* with the *D*-statistic and the *f*-branch statistic, based on SNP data. Cases of introgression will be further investigated with sliding-window analyses, and ancestry painting will be used to  verify putatitve cases of hybridization.
+In this tutorial I am going to present the use of the program [Dsuite](https://github.com/millanek/Dsuite) ([Malinsky et al. 2021](https://doi.org/10.1111/1755-0998.13265)) to identify introgression between species of the genus *Neolamprologus* with the *D*-statistic and the *f*-branch statistic, based on SNP data. Cases of introgression will be further investigated with sliding-window analyses, and ancestry painting will be used to  verify putatitve cases of hybridization.
 
 
 <a name="dataset"></a>
@@ -83,7 +83,7 @@ This tutorial requires **FigTree** to be installed. Details about the installati
 <a name="dsuite"></a>
 ## Analyzing introgression with Dsuite
 		
-Under incomplete lineage sorting alone, two sister species are expected to share about the same proportion of derived alleles with a third closely related species. Thus, if species "P1" and "P2" are sisters and "P3" is a closely related species, then the number of derived alleles shared by P1 and P3 but not P2 and the number of derived alleles that is shared by P2 and P3 but not P1 should be approximately similar. In contrast, if hybridization leads to introgression between species P3 and one of the two species P1 and P2, then P3 should share more derived alleles with that species than it does with the other one, leading to asymmetry in the sharing of derived alleles. These expectations are the basis for the so-called "ABBA-BABA test" (first described in the Supporting Material of [Green et al. 2010](http://science.sciencemag.org/content/328/5979/710.full)) that quantifies support for introgression by the *D*-statistic. In addition to the three species P1, P2, and P3, the ABBA-BABA test requires a fourth species, "P4", which should be a common outgroup to P1, P2, and P3, and only serves to determine which allele is the ancestral one and which is derived; the ancestral allele is then labelled "A" and the derived allele of a bi-allelic SNP is labelled "B". In the simplest case in which only a single haploid sequence is sampled from each of the four species, "ABBA sites" are those where species P2 and P3 share the derived allele B while P1 retains the ancestral allele A. Similarly "BABA sites" are those where P1 and P3 share the derived allele B while P2 retains the ancestral allele A. The *D*-statistic is then defined as the difference between the counts of ABBA sites and BABA sites relative to the sum of both types of sites:
+Under incomplete lineage sorting alone, two sister species are expected to share about the same proportion of derived alleles with a third closely related species. Thus, if species "P1" and "P2" are sisters and "P3" is a closely related species, then the number of derived alleles shared by P1 and P3 but not P2 and the number of derived alleles that is shared by P2 and P3 but not P1 should be approximately similar. In contrast, if hybridization leads to introgression between species P3 and one of the two species P1 and P2, then P3 should share more derived alleles with that species than it does with the other one, leading to asymmetry in the sharing of derived alleles. These expectations are the basis for the so-called "ABBA-BABA test" (first described in the Supporting Material of [Green et al. 2010](http://science.sciencemag.org/content/328/5979/710.full)) that quantifies support for introgression by the *D*-statistic. In addition to the three species P1, P2, and P3, the ABBA-BABA test requires a fourth species, "P4", which should be a common outgroup to P1, P2, and P3, and only serves to determine which allele is the ancestral one and which is derived. The ancestral allele is then labelled "A" and the derived allele of a bi-allelic SNP is labelled "B". In the simplest case in which only a single haploid sequence is sampled from each of the four species, "ABBA sites" are those where species P2 and P3 share the derived allele B while P1 retains the ancestral allele A. Similarly "BABA sites" are those where P1 and P3 share the derived allele B while P2 retains the ancestral allele A. The *D*-statistic is then defined as the difference between the counts of ABBA sites and BABA sites relative to the sum of both types of sites:
 
 *D* = (*C*<sub>ABBA</sub> - *C*<sub>BABA</sub>) / (*C*<sub>ABBA</sub> + *C*<sub>BABA</sub>)
 
@@ -155,7 +155,7 @@ In this part of the tutorial, we are going to calculate *D*-statistics with Dsui
 
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:02:00 --account=nn9458k --pty Dsuite Dtrios NC_031969.f5.sub1.vcf.gz individuals_dsuite.txt
 		
-	If this should produce an error message that says "Line 1 does not have two columns separated by a tab.", then your attempt at writing tabs to separate columns in file `individuals_dsuite.txt` unfortunately failed. To fix this, you could either try a different editor on Saga, download the file to your local computer with `scp`, edit it there, and copy it back to Saga, or you could copy a prepared version of the file to your directory on Saga with `cp /cluster/projects/nn9458k/phylogenomics/week2/data/individuals_dsuite.txt .`
+	If this should produce an error message that says "Line 1 does not have two columns separated by a tab.", then your attempt at writing tabs to separate columns in file `individuals_dsuite.txt` unfortunately failed. To fix this, you could either try a different editor on Saga, download the file to your own computer with `scp`, edit it there, and copy it back to Saga, or you could copy a prepared version of the file to your directory on Saga with `cp /cluster/projects/nn9458k/phylogenomics/week2/data/individuals_dsuite.txt .`
 	
 	Dsuite should finish after around a minute.
 
@@ -218,7 +218,7 @@ To use the `--tree` option of Dsuite, we will obviously need a tree file. As a b
 	
 		wget https://raw.githubusercontent.com/ForBioPhylogenomics/tutorials/main/week2_res/snapp.tre
 
-However, we need to prepare the tree file before we can use it with Dsuite. First, Dsuite requires tree files in Newick format, but the tree file `snapp.tre` is written in Nexus format. Second, as the tree generated in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) did not include *Neolamprologus cancellatus*, we will need to add this species to the tree manually.
+However, we need to edit the tree file before we can use it with Dsuite. First, Dsuite requires tree files in Newick format, but the tree file `snapp.tre` is written in Nexus format. Second, as the tree generated in tutorial [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md) did not include *Neolamprologus cancellatus*, we will need to add this species to the tree manually.
 
 * To convert the file `snapp.tre` from Nexus to Newick format, make sure that the R script `convert_to_newick.r` is still in your current directory on Saga:
 
@@ -239,7 +239,7 @@ However, we need to prepare the tree file before we can use it with Dsuite. Firs
 	
 		altfas	neocan	neooli	0.503496	12.8118	0	0.152775	14857.6	4294	1418.02
 
-	This output shows that the overall largest *C*<sub>BBAA</sub> value in a trio including "neocan" is 14857.6, and that this number is found in the trio in which "altfas" is P1, "neocan" is P2, and "neooli" is P3. This means that "neocan" appears to be more closely related to "altfas" than to other species in the dataset.
+	This output shows that the overall largest *C*<sub>BBAA</sub> value in a trio including "neocan" is 14,857.6, and that this number is found in the trio in which "altfas" is P1, "neocan" is P2, and "neooli" is P3. This means that "neocan" appears to be more closely related to "altfas" than to other species in the dataset.
 	
 * Write a new file in Newick file named `snapp_w_neocan.nwk` in which "neocan" is inserted into the tree string as the sister species of "altfas". The easiest way to do this to replace "altfas" with "(altfas:1.0,neocan:1.0)", including the parentheses (the branch length of 1.0 is arbitrary but will not be used by Dsuite anyway), using `sed`:
 
@@ -302,9 +302,9 @@ However, we need to prepare the tree file before we can use it with Dsuite. Firs
 * When executing the script `plot_d.rb`, one of Dsuite's output files must be specified as input, together with a maximum *D* value and a maximum p value (specified as the negative of the log of the *p*-value) that will limit the color scale used in the heatmap, and the name for the output file with the plot. Use `individuals_dsuite_BBAA.txt` as the input file, a maximum *D* of 0.7, a maximum negative log of the *p*-value of 8 (so that *p*-values of 10<sup>-8</sup> or lower are shown with full opacity), and the output file name `individuals_dsuite_BBAA.svg`:
 
 		module load Ruby/2.7.2-GCCcore-9.3.0
-		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_d.rb individuals_dsuite_BBAA.txt species_order.txt 0.7 8 individuals_dsuite_BBAA.svg
+		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_d.rb individuals_dsuite_BBAA.txt species_order.txt 0.7 individuals_dsuite_BBAA.svg
 		
-* The heatmap plot in file `individuals_dsuite_BBAA.svg` is written scalable vector graphic (SVG) format. Download this file to your local computer with `scp` and then open it with a program capable of reading files in SVG format, for example with a browser such as Safari, Chrome, or Firefox, or with Adobe Illustrator. The heatmap plot should look as shown below:<p align="center"><img src="img/individuals_dsuite_BBAA.png" alt="Heatmap BBAA" width="600"></p> As you can see from the color legend in the bottom right corner, the colors of this heatmap show two things at the same time, the *D*-statistic as well as its *p*-value. So red colors indicate higher *D*-statistics, and generally more saturated colors indicate greater significance. Thus, the strongest signals for introgression are shown with saturated red, as in the bottom right of the color legend. All cells in rows or columns for "neocan" should bo colored in red or purple corresponding to a highly significant values of the *D*-statistic of at least 0.3.
+* The heatmap plot in file `individuals_dsuite_BBAA.svg` is written in scalable vector graphic (SVG) format. Download this file to your own computer with `scp` and then open it with a program capable of reading files in SVG format, for example with a browser such as Safari, Chrome, or Firefox, or with Adobe Illustrator. The heatmap plot should look as shown below:<p align="center"><img src="img/individuals_dsuite_BBAA.png" alt="Heatmap BBAA" width="600"></p> As you can see from the color legend in the bottom right corner, the colors of this heatmap show two things at the same time, the *D*-statistic as well as its *p*-value. So red colors indicate higher *D*-statistics, and generally more saturated colors indicate greater significance. Thus, the strongest signals for introgression are shown with saturated red, as in the bottom right of the color legend. All cells in rows or columns for "neocan" should be colored in red or purple corresponding to a highly significant values of the *D*-statistic of at least 0.3.
 
 	In case that you're wondering why the heatmap looks symmetric, that is because no matter whether the maximum value of the *D*-statistic for two species is obtained with the first species in position P2 and the second in position P3 or vice versa, the same value is plotted. The reason for this is that even though different values may result in the two cases, those differences should not be taken as evidence for a directionality of introgression from P3 to P2; it could just as well have come from P2 and into P3.
 
@@ -313,7 +313,7 @@ However, we need to prepare the tree file before we can use it with Dsuite. Firs
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_d.rb individuals_dsuite_Dmin.txt species_order.txt 0.7 individuals_dsuite_Dmin.svg
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_d.rb individuals_dsuite_tree.txt species_order.txt 0.7 individuals_dsuite_tree.svg
 		
-* Also download the two plot files `individuals_dsuite_Dmin.svg` and `individuals_dsuite_tree.svg` to your local computer with `scp`.
+* Also download the two plot files `individuals_dsuite_Dmin.svg` and `individuals_dsuite_tree.svg` to your own computer with `scp`.
 
 	The two heatmaps should look as shown below (`individuals_dsuite_Dmin.svg` at top, `individuals_dsuite_tree.svg` below):<p align="center"><img src="img/individuals_dsuite_Dmin.png" alt="Heatmap Dmin" width="600"></p><p align="center"><img src="img/individuals_dsuite_tree.png" alt="Heatmap tree" width="600"></p> As you can see, the heatmaps of files `individuals_dsuite_BBAA.svg` and `individuals_dsuite_tree.svg` are both a bit more saturated overall than the heatmap of file `individuals_dsuite_Dmin.svg`, in agreement with the interpretation of *D*<sub>min</sub> as a conservative estimate of introgression. The strongest difference, however, is in the patterns shown for *Telmatochromis vittatus* ("telvit"). The most saturated red colors in the heatmaps for files `individuals_dsuite_BBAA.svg` and `individuals_dsuite_tree.svg` are those for the cells connecting "neocan" and "telvit". In contrast, these cells are only light blue in the plot based on *D*<sub>min</sub>. Nevertheless, these plots support the hypothesis that introgression occurred between *Neolamprologus cancellatus* ("neocan") and *Telmatochromis vittatus* ("telvit"). However, the other red-purple cells in the rows and columns for "neocan" and "telvit" may only be side effects of this introgression, being caused by sites that are shared between *Neolamprologus cancellatus* ("neocan") and other species only because these other species are closely related to *Telmatochromis vittatus* ("telvit"), the putative donor of introgression.
 	
@@ -333,7 +333,7 @@ Like the *D*-statistic, we can also plot the *f*<sub>4</sub>-ratio, quantifying 
 
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby plot_f4ratio.rb individuals_dsuite_BBAA.txt species_order.txt 0.4 individuals_dsuite_BBAA_f4.svg
 
-* Download the plot file `individuals_dsuite_BBAA_f4.svg` to your local computer and open it in a program capable of reading files in SVG format. The heatmap should look as shown below:<p align="center"><img src="img/individuals_dsuite_BBAA_f4.png" alt="Heatmap BBAA f4" width="600"></p>
+* Download the plot file `individuals_dsuite_BBAA_f4.svg` to your own computer and open it in a program capable of reading files in SVG format. The heatmap should look as shown below:<p align="center"><img src="img/individuals_dsuite_BBAA_f4.png" alt="Heatmap BBAA f4" width="600"></p>
 
 
 
@@ -352,7 +352,7 @@ The *f*-branch statistic can be quantified with Dsuite's `Fbranch` command.
 
 		Dsuite Fbranch
 		
-	You should see that a tree file in Newick format (here calle "TREE_FILE.nwk") as well as a file with output from Dsuite's `Dtrios` command, executed with the `-t` option (here called "FVALS_tree.txt"), are required as input. The tree that was used with the `Dtrios` command should be identical to the one that is used as input for the `Fbranch` command, and it should be rooted with the outgroup (which is the case for the tree in file `snapp_w_neocan.nwk`).
+	You should see that a tree file in Newick format (here called "TREE\_FILE.nwk") as well as a file with output from Dsuite's `Dtrios` command, executed with the `-t` option (here called "FVALS\_tree.txt"), are required as input. The tree that was used with the `Dtrios` command should be identical to the one that is used as input for the `Fbranch` command, and it should be rooted with the outgroup (which is the case for the tree in file `snapp_w_neocan.nwk`).
 	
 * Quantify the *f*-branch statistic with the `Fbranch` command, using `snapp_w_neocan.nwk` as the input tree file and `individuals_dsuite_tree.txt` as the file with output from `Dtrios`:
 
@@ -374,7 +374,7 @@ The *f*-branch statistic can be quantified with Dsuite's `Fbranch` command.
 	
 	This command should have written two new files named `fbranch.png` and `fbranch.svg` for the plot of the *f*-branch statistic.
 	
-* Download the file `fbranch.png` to your local computer and open it. The plot should look as shown below:<img src="img/fbranch.png" alt="f-branch" width="700"></p> As you can see, the plot now includes, to the top and the left of the heatmap, an illustration of the tree that was provided as input. The tree on the left is plotted so that not only terminal branches, but also internal branches correspond to rows of the heatmap. This way, the heatmap can illustrate introgression that is inferred to lead to an internal branch. Note that gray cells indicate pairs of species or branches for which no tests could be conducted, e.g. because they are identical to each other, descendants of each other, or sisters on the phylogeny.
+* Download the file `fbranch.png` to your own computer and open it. The plot should look as shown below:<img src="img/fbranch.png" alt="f-branch" width="700"></p> As you can see, the plot now includes, to the top and the left of the heatmap, an illustration of the tree that was provided as input. The tree on the left is plotted so that not only terminal branches, but also internal branches correspond to rows of the heatmap. This way, the heatmap can illustrate introgression that is inferred to lead to an internal branch. Note that gray cells indicate pairs of species or branches for which no tests could be conducted, e.g. because they are identical to each other, descendants of each other, or sisters on the phylogeny.
 
 	**Question 6** Can the introgression events be identified more clearly from the *f*-branch plot, compared to the heatmaps produced before? [(see answer)](#q6)
 
@@ -444,7 +444,7 @@ To visualize the variation of the *D* and *f*<sub>dM</sub> statistics across chr
 
 		ls altfas_neocan_telvit_localFstats__500_100.pdf
 		
-* Download the file `altfas_neocan_telvit_localFstats__500_100.pdf` from Saga to your local computer with `scp`, and then open the file to see the plot.
+* Download the file `altfas_neocan_telvit_localFstats__500_100.pdf` from Saga to your own computer with `scp`, and then open the file to see the plot.
 
 	The plot should show that the *D*-statistic (in gray) is almost in all windows substantially higher than the *f*<sub>dM</sub>-statistic (in black):<p align="center"><img src="img/trio1.png" alt="Dinvestigate" width="600"></p> There also appears to be a dip in both statistics at around 5 Mbp; however, whether this is an artifact resulting from e.g. missing data or misassembly in the reference genome, or whether it shows a biological signal of reduced introgression is difficult to tell without further analyses.
 
@@ -468,7 +468,7 @@ To visualize the variation of the *D* and *f*<sub>dM</sub> statistics across chr
 		
 * Again, quit the R environment with `quit(save="no")`.
 
-* Download the file `neooli_neopul_neobri_localFstats__500_100.pdf` from Saga to your local computer and open it.
+* Download the file `neooli_neopul_neobri_localFstats__500_100.pdf` from Saga to your own computer and open it.
 
 	This second plot, showing the *D*-statistic and the *f*<sub>dM</sub>-statistic for the trio composed of *Neolamprologus olivaceous* ("neooli"), *N. pulcher* ("neopul), and *N. brichardi* ("neobri"), should look like the one shown below:<p align="center"><img src="img/trio2.png" alt="Dinvestigate" width="600"></p>
 
@@ -513,7 +513,7 @@ To see a pattern that has previously been interpreted as a biological signal rat
 		dev.off()
 		quit(save="no")
 		
-* Download the resulting file `mbuna_deep_Diplotaxodon_localFstats__50_10.pdf` to your local computer with `scp` and open it. The plot should look as shown below:<p align="center"><img src="img/trio3.png" alt="Dinvestigate" width="600"></p>
+* Download the resulting file `mbuna_deep_Diplotaxodon_localFstats__50_10.pdf` to your own computer with `scp` and open it. The plot should look as shown below:<p align="center"><img src="img/trio3.png" alt="Dinvestigate" width="600"></p>
 
 	**Question 7**: Can you see any interesting signal in the *D*- or *f*<sub>dM</sub>-statistic statistics? The opsin genes that were found to be under selection by [Malinsky et al. (2018)](https://doi.org/10.1038/s41559-018-0717-x) are located between 4.3 Mbp and 4.4 Mbp. Do you see anything interesting there? [(see answer)](#q7)
 	
@@ -570,7 +570,7 @@ As the first script requires an uncompressed VCF file as input, first uncompress
 		
 	The screen output of this script will include some warnings about unexpected genotypes, these can be safely ignored as the script automatically excludes those sites. At the very end, the output should indicate that 6,069 sites with the required completeness were found, these are the sites included in the ancestry painting. Th output also reports, for all analyzed specimens, the heterozygosity at those 6,069 sites. For first-generation hybrids, this heterozygosity is expected to be close to 1.
 
-* Download the file `pops1.fixed.svg` to your local computer with `scp` and open it with a program capable of reading files in SVG format. You should see a plot like the one shown below. <p align="center"><img src="img/pops1.fixed.png" alt="Ancestry Painting" width="600"></p>
+* Download the file `pops1.fixed.svg` to your own computer with `scp` and open it with a program capable of reading files in SVG format. You should see a plot like the one shown below. <p align="center"><img src="img/pops1.fixed.png" alt="Ancestry Painting" width="600"></p>
 
 	In this ancestry painting, the two samples of the two parental species are each drawn in solid colors because all included sites were required to be completely fixed and completely without missing data. The samples of *Neolamprologus cancellatus*, "LJC9" and "LJD1" are drawn in between, with two rows per sample that are colored according to genotypes observed at the 6,069 sites. Keep in mind that even though the pattern may appear to show phased haplotypes, this is not the case; instead the bottom row for a sample is arbitrarily colored in red and the top row is colored in blue when the genotype is heterozygous.
 	
@@ -589,9 +589,9 @@ While the effect of reference bias may rarely large enough to lead to false conc
 
 In this part of the tutorial, I am going to demonstrate how SNPs can be extracted from a whole-genome alignment, using the whole-genome alignment for five *Neolamprologus* species and the outgroup Nile tilapia that was produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md).
 
-* Make sure that you still have the whole-genome alignment in MAF format, in file `cichlids_chr5.maf` that was produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md)<!--XXX or ml_inference_of_species_networks? XXX-->, in your current directory on Saga. If not, you can copy one prepared version of it from `/cluster/projects/nn9458k/phylogenomics/week2/data`:
+* Make sure that you still have the whole-genome alignment in MAF format, in file `cichlids_chr5.maf` that was produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md), in your current directory on Saga. If not, you can copy one prepared version of it from `/cluster/projects/nn9458k/phylogenomics/week2/data`:
 
-		cp /cluster/projects/nn9458k/phylogenomics/week2/data/cichlids_chr5.maf .
+		cp /cluster/projects/nn9458k/phylogenomics/week2/res/cichlids_chr5.maf .
 		
 * Add the Python script `make_vcf_from_maf.py` to your current directory on Saga, either by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub with one of the following two commands:
 
@@ -628,7 +628,9 @@ To analyze the new VCF file with Dsuite, we still need a file with a table assig
 		neobri	neobri
 		neooli	neooli
 		neopul	neopul
-		
+
+	As with the first such file before, make sure that the file is in fact tab- and not space-separated.
+
 * Then, run Dsuite's `Dtrios` command to analyze the VCF file `cichlids_chr5.vcf`:
 
 		srun --ntasks=1 --mem-per-cpu=1G --time=00:05:00 --account=nn9458k --pty Dsuite Dtrios cichlids_chr5.vcf individuals_wga_dsuite.txt
@@ -652,7 +654,7 @@ To analyze the new VCF file with Dsuite, we still need a file with a table assig
 
 <a name="q1"></a>
 
-* **Question 1:** In fact, integer counts of ABBA and BABA sites would only be expected if each species would be represented only by a single haploid sequence. With diploid sequences and multiple samples per species, allele frequences are taken into account to weigh the counts of ABBA and BABA sites as described by equation 1 of [Malinsky et al. 2021](https://doi.org/10.1111/1755-0998.13265).
+* **Question 1:** In fact, integer counts of ABBA and BABA sites would only be expected if each species would be represented only by a single haploid sequence. With diploid sequences and multiple samples per species, allele frequences are taken into account to weigh the counts of ABBA and BABA sites as described by equation 1 of [Malinsky et al. (2021)](https://doi.org/10.1111/1755-0998.13265).
 
 
 <a name="q2"></a>
@@ -746,4 +748,4 @@ To analyze the new VCF file with Dsuite, we still need a file with a table assig
 
 <a name="q12"></a>
 
-* **Question 12:** The *D*-statistic should again support the introgression signals that were before detected with the mapping-based VCF file `NC_031969.f5.sub1.vcf.gz`, in other turorials, and in [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). In particular, introgression between *N. marunguensis* ("neomar") and *N. olivaceous* (neooli) should be supported with a highly significant *D*-statistic around 0.1, and introgression between *N. brichardi* ("neobri") and *N. pulcher* ("neopul") should be supported by a *D*-statistic over 0.2. 
+* **Question 12:** The *D*-statistic should again support the introgression signals that were before detected with the mapping-based VCF file `NC_031969.f5.sub1.vcf.gz`, in other tutorials, and in [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). In particular, introgression between *N. marunguensis* ("neomar") and *N. olivaceous* (neooli) should be supported with a highly significant *D*-statistic around 0.1, and introgression between *N. brichardi* ("neobri") and *N. pulcher* ("neopul") should be supported by a *D*-statistic over 0.2. 
