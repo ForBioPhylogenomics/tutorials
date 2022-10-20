@@ -5,7 +5,7 @@ By [Michael Matschiner](https://evoinformatics.group/team.html#michaelmatschiner
 
 ## Summary
 
-Particularly when investigating groups of rapidly diverging species, incomplete lineage sorting (ILS) may not be the only biological process leading to variation among gene trees. Hybridization between species can lead to transfer of genetic material – so-called "introgression" between these, and thus produce gene trees that differ from the species tree. Introgression can therefore add "reticulation edges" to species trees, meaning that these are no longer bi-furcating and become a "network" instead of a tree. The identification of species networks from genomic data is still a challenging task that sees a lot of active method development. The more applicable of the currently available methods infer species networks from sets of alignments or gene trees; while a few SNP-based methods have been developed, these are so far too computationally demanding to be practical. In this tutorial, we will apply one of the earliest methods for the inference of species networks from gene trees, the "[InferNetwork\_ML](https://wiki.rice.edu/confluence/display/PHYLONET/InferNetwork_ML)" method implemented in the program [PhyloNet](https://bioinfocs.rice.edu/phylonet).
+Particularly when investigating groups of rapidly diverging species, incomplete lineage sorting (ILS) may not be the only biological process leading to variation among gene trees. Hybridization between species can lead to transfer of genetic material – so-called "introgression" between these – and thus produce gene trees that differ from the species tree. Introgression can therefore add "reticulation edges" to species trees, meaning that these are no longer bi-furcating and become a "network" instead of a tree. The identification of species networks from genomic data is still a challenging task that sees a lot of active method development. The more applicable of the currently available methods infer species networks from sets of alignments or gene trees; while a few SNP-based methods have been developed, these are so far too computationally demanding to be practical. In this tutorial, we will apply one of the earliest methods for the inference of species networks from gene trees, the "[InferNetwork\_ML](https://wiki.rice.edu/confluence/display/PHYLONET/InferNetwork_ML)" method implemented in the program [PhyloNet](https://bioinfocs.rice.edu/phylonet). This method was recently highlighted as being particularly reliable despite its speed ([Hibbins and Hahn 2022](https://doi.org/10.1093/genetics/iyab173)).
 
 
 ## Table of contents
@@ -58,7 +58,7 @@ The following tools are required additionally:
 
 * **PhyloNet:** The [PhyloNet](https://bioinfocs.rice.edu/phylonet) program ([Than et al. 2008](https://doi.org/10.1186/1471-2105-9-322)) implements a range of methods for the inference of species trees and networks in a maximum-likelihood, Bayesian, or parsimony framework. PhyloNet is not available as a module on Saga, but as it is written in Java, it also does not need to be compiled and can thus simply be downloaded and placed in the current directory on Saga. This can be done with the following commands:
 
-		wget https://bioinfocs.rice.edu/sites/g/files/bxs266/f/kcfinder/files/PhyloNet_3.8.2.jar
+		wget https://phylogenomics.rice.edu/media/PhyloNet.jar
 	
 	To run PhyloNet, Java is required. To load Java, use these commands:
 	
@@ -67,7 +67,7 @@ The following tools are required additionally:
 
 * **babette:** [babette](https://github.com/ropensci/babette) ([Bilderbeek and Etienne (2018)](https://doi.org/10.1111/2041-210X.13032)) is an R package that allows the generation of basic XML input files for BEAST2 through scripting instead of the BEAUti GUI. Installation of this R package is required on Saga. To install it there, use the following commands:
 
-		module load R/4.0.0-foss-2020a
+		module load R/4.1.0-foss-2021a
 		R
 		install.packages("babette", repos='http://cran.us.r-project.org')
 		quit(save="no")
@@ -78,6 +78,10 @@ The following tools are required additionally:
 ## Extraction of alignment blocks
 
 As the whole-genome alignment produced in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md) is stored in MAF format, and this format can not be read by programs for phylogenetic inference, we will need to first extract sets of alignment blocks in a format such as Nexus before these can used for the analyses in this tutorial. We are going to combine this alignment extraction with some basic filtering to extract alignment blocks only from the most reliably aligned regions of the whole-genome alignment.
+
+* Make sure that you have file `cichlids_chr5.maf` in your current working directory on Saga. If that is not the case, copy it from the directory in which you performed the Cactus analysis in tutorial [Whole-Genome Alignment](../whole_genome_alignment/README.md), or copy it from `/cluster/projects/nn9458k/phylogenomics/week2/res`:
+
+		cp /cluster/projects/nn9458k/phylogenomics/week2/res/cichlids_chr5.maf .
 
 * Add the script `make_alignments_from_maf.py` to your current directory on Saga, by copying it from `/cluster/projects/nn9458k/phylogenomics/week2/src` or by downloading it from GitHub, using one of the following two commands:
 
@@ -154,18 +158,15 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		#
 		# Accounting:
 		#SBATCH --account=nn9458k
-		#
-		# Output:
-		#SBATCH --output=prepare_phylonet.out
 
 		# Set up job environment.
 		set -o errexit  # Exit the script on any error
 		set -o nounset  # Treat any unset variables as an error
 		module --quiet purge  # Reset the modules to the system default
 
-		# Load modules
-		module load R/4.0.0-foss-2020a
-		module load Beast/2.6.4-GCC-9.3.0
+		# Load module.
+		module load R/4.1.0-foss-2021a
+		module load Beast/2.6.7-GCC-10.3.0-CUDA-11.3.1
 
 		# Set a variable for the directory.
 		dir=alignments
@@ -179,7 +180,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 			xml=${fasta%.fasta}.xml
 			Rscript make_xml.r ${fasta} ${xml}
 		done
-
+	
 		# Analyze every xml file with beast.
 		cd ${dir} # Go into the alignment directory to run beast there. 
 		for xml in *${last_char}.xml
@@ -202,18 +203,27 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 			Rscript convert_to_newick.r ${tre} ${nwk}
 		done
 
-	This script uses a quick-and-dirty way allowing parallelization: The line with `last_char=${1}` stores a variable that can be specified outside of this script, when calling it with `sbatch`. When we then call this script for example with `sbatch prepare_phylonet.slurm 0`, the variable "0" is passed into it and used to process only a subset of files. The line `for fasta in ${dir}/*${last_char}.fasta` for example then loops over all Fasta file in the alignment directory that end in `0.fasta`. We can therefore submit this script ten times with `sbatch prepare_phylonet.slurm 0` to `sbatch prepare_phylonet.slurm 9` to process all alignment files with ten parallel analyses. This will allow us to reduce the run time from over 2 hours to about 20 minutes.
+	This script uses a quick-and-dirty way allowing parallelization: The line with `last_char=${1}` stores a variable that can be specified outside of this script, when calling it with `sbatch`. When we then call this script for example with `sbatch prepare_phylonet.slurm 0`, the variable "0" is passed into it and used to process only a subset of files. The line `for fasta in ${dir}/*${last_char}.fasta` for example then loops over all Fasta file in the alignment directory that end in `0.fasta`. We can therefore submit this script ten times with `sbatch prepare_phylonet.slurm 0` to `sbatch prepare_phylonet.slurm 9` to process all alignment files with ten parallel analyses. This will allow us to reduce the run time from over 2 hours to about 20 minutes. If you noticed that we here used an older BEAST2 module: This was necessary because babette is not yet made compatible with the latest version of BEAST2, v.2.7.
 
 * Submit this new Slurm script ten times with `sbatch` using the following loop:
 
-		for i in {0..9}; do sbatch prepare_phylonet.slurm ${i}; done
+		for i in {0..9}
+		do
+			sbatch -o prepare_phylonet.${i}.out prepare_phylonet.slurm ${i}
+		done
 
-	As the script runs, it should first add XML files to the alignment directory, then BEAST2's output files, then the MCC summary trees, and finally files with the MCC trees converted to Newick format. You could occasionally monitor the progress of it by checking of how many files with the endings `.xml`, `.trees`, `.tre`, and `.nwk` have already been written:
+	As the script runs, it should first add XML files to the alignment directory, then BEAST2's output files, then the MCC summary trees, and finally files with the MCC trees converted to Newick format.
+	
+* Occasionally monitor the progress of the script `prepare_phylonet.slurm` by checking how many files with the endings `.xml`, `.trees`, `.tre`, and `.nwk` have already been written:
 
 		ls alignments/*.xml | wc -l
 		ls alignments/*.trees | wc -l
 		ls alignments/*.tre | wc -l
 		ls alignments/*.nwk | wc -l
+
+	Compare these numbers to the number of alignment files in Fasta format:
+	
+		ls alignments/*.fasta | wc -l
 
 * When the Slurm script has finished, make sure that the expected number of files with the ending `.nwk` has been written:
 
@@ -307,7 +317,7 @@ However, we obviously don't want to set up XML files with BEAUti for hundreds or
 		module load Java/11.0.2
 
 		# Run phylonet.
-		java -jar PhyloNet_3.8.2.jar phylonet.nex
+		java -jar PhyloNet.jar phylonet.nex
 
 * Then, submit the script `run_phylonet.slurm` with `sbatch`:
 
@@ -494,7 +504,7 @@ If there is time left, you could repeat the PhyloNet analysis with gene trees wi
 		module load Java/11.0.2
 
 		# Run phylonet.
-		java -jar PhyloNet_3.8.2.jar phylonet_nobl.nex
+		java -jar PhyloNet.jar phylonet_nobl.nex
 
 * Then, submit this Slurm script with `sbatch`:
 
@@ -517,9 +527,9 @@ If we had *a priori* hypotheses for how the species within the dataset could be 
 
 We'll use the `CalGTProb` command to assess the relative support of two hypotheses: The null hypothesis that assumes no introgression, and the alternative hypothesis in which introgression occurred between *Neolamprologus brichardi* ("neobri") and *Neolamprologus pulcher* ("neopul"). In both cases, the species relationship is assumed to be according to the most strongly supported phylogeny found for these species by [Bouckaert et al. (2019)](https://doi.org/10.1371/journal.pcbi.1006650). The corresponding strings in extended Newick format are the listed below.
 
-null_hypothesis: "(orenil,((neomar,neogra),(neobri,(neooli,neopul))));"
+Null hypothesis: "(orenil,((neomar,neogra),(neobri,(neooli,neopul))));"
 		
-alt_hypothesis: "(orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1))));"
+Alternative hypothesis: "(orenil,((neomar,neogra),((neobri,X#H1),(neooli,(neopul)X#H1))));"
 
 * To visualize both hypotheses, write a new file on your local computer with the following two lines:
 
@@ -593,7 +603,7 @@ alt_hypothesis: "(orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1)))
 		module load Java/11.0.2
 
 		# Run phylonet.
-		java -jar PhyloNet_3.8.2.jar phylonet_null.nex
+		java -jar PhyloNet.jar phylonet_null.nex
 
 * Do the same for file `run_phylonet_alt.slurm`, except that you replace the three occurrences of `phylonet` with `phylonet_alt`.
 
@@ -628,12 +638,11 @@ alt_hypothesis: "(orenil,(((neomar,X#H1),neogra),(neobri,(neooli,(neopul)X#H1)))
 
 <a name="q2"></a>
 
-* **Question 2:** The result might be quite different from the one obtained in the first PhyloNet analysis. In my case, the first analysis with PhyloNet that included branch lengths did not find support for a reticulation edge, while the second analysis without branch lengths in the gene trees produced a species network in which *Neolamprologus brichardi* ("neopul") appeared - rather unconventionally – as the sister to *Neolamprologus gracilis* ("neogra") and was connected to *Neolamprologus pulcher* ("neopul") with a reticulation edge.<p align="center"><img src="img/safari6.png" alt="Safari" width="700"></p>
-
+* **Question 2:** The result might be quite different from the one obtained in the first PhyloNet analysis. In my case, the first analysis with PhyloNet that included branch lengths did not find support for a reticulation edge, while the second analysis without branch lengths in the gene trees produced a species network in which the ancestor of *Neolamprologus marunguensis* ("neomar") and *Neolamprologus gracilis* ("neogra") were connected with the ancestor of *Neolamprologus pulcher* ("neopul")  and *Neolamprologus olivaceus* ("neooli").<p align="center"><img src="img/safari6.png" alt="Safari" width="700"></p>
 
 	In my view, these differences illustrate how the likelihood surface can be highly complex when species networks are inferred, and that maximum-likelihood approaches can therefore often produce results that are not particularly robust to minor changes in the model, or even to re-analyses with the same model. Species networks obtained with maximum-likelihood approaches should therefore be corroborated with other approaches, such as Bayesian inference (see tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)) or tests of introgression based on tree-topology comparisons (see tutorial [Analyses of Introgression with Tree Topologies](../analysis_of_introgression_with_tree_topologies/README.md)) or SNPs (see tutorial [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)), before drawing conclusions about introgression.
 
 
 <a name="q3"></a>
 
-* **Question 3:** This seems to be the case. In my analysis, the log-likelihood of the null hypothesis no introgression was -2154.4, while the log-likelihood of the alternative hypothesis, with introgression between *Neolamprologus brichardi* ("neobri") and *Neolamprologus pulcher* ("neopul"), was -2134.3. The likelihood difference was thus over 20 log units, which translates to a *p*-value below 0.0001, allowing us to reject the null hypothesis without introgression. Note, however, that this comparison was made under the assumption that the true tree topology is the one that we specified, and if that should have been incorrect, the support for introgression from the likelihood comparison could be misleading.
+* **Question 3:** This may be the case. In my analysis, the log-likelihood of the null hypothesis no introgression was -2137.9, while the log-likelihood of the alternative hypothesis, with introgression between *Neolamprologus brichardi* ("neobri") and *Neolamprologus pulcher* ("neopul"), was -2132.1. The likelihood difference was thus over 5.4 log units, which translates to a *p*-value below 0.001, allowing us to reject the null hypothesis without introgression. Note, however, that this comparison was made under the assumption that the true tree topology is the one that we specified, and if that should have been incorrect, the support for introgression from the likelihood comparison could be misleading.
