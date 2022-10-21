@@ -43,4 +43,5 @@ LB_scores_perTaxon_woSupermatrix <- LB_scores_perTaxon_woSupermatrix[,-(101)]
 require(gplots)
 library(gplots)
 #generate a heat map with hierarchical clustering and key legend
+dev.off()
 LB_scores_perTaxon_woSupermatrix_matrix <- heatmap.2(as.matrix(LB_scores_perTaxon_woSupermatrix), Rowv=TRUE,Colv=TRUE, col=rainbow(256,s=1,v=1,start=0.1,end=0,alpha=1),scale="none",margins=c(20,20),hclustfun=hclust,dendrogram="both",symm=FALSE,key=TRUE,trace="none",tracecol="black",density.info="density")
