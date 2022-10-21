@@ -18,12 +18,12 @@ All methods used for phylogenomic inference have assumptions, and these are ofte
 	* [Preparing alignments from simulated SNP data](#alignments)
 * [Inference from simulated data](#inference)
 	* [Inference with ASTRAL](#astral)
-	* [Inference with StarBEAST2](#starbeast2)
+	* [Inference with StarBeast3](#starbeast3)
 	* [Inference with SVDQuartets](#svdquartets)
 	* [Inference with SNAPP](#snapp)
 	* [Inference with SNAPPER](#snapper)
 	* [Inference with PhyloNet](#phylonet)
-	* [Inference with SpeciesNetwork](#speciesnetwork)
+	<!--* [Inference with SpeciesNetwork](#speciesnetwork)-->
 	* [Inference with Dsuite](#dsuite)
 
 
@@ -50,7 +50,7 @@ This tutorial requires **BEAST2**, **bModelTest**, **Tracer**, **FigTree**, **AS
 <a name="msprime"></a>
 ## Coalescent simulations with Msprime
 
-All of the inference methods used in other tutorials of this course (e.g. [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)) are based on assumptions that may in fact rarely be met by empirical datasets. For example, ASTRAL, StarBEAST2, and SpeciesNetwork assume the absence of recombination within a locus, ASTRAL, SVDQuartets, StarBEAST2, SNAPP, and SNAPPER assume the absence of gene flow, and StarBEAST2, SNAPP, and SNAPPER assume constant population sizes (this assumption can be relaxed for StarBEAST2, but it was used in the [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) tutorial). And while Dsuite does not implement a model but only report the *D*-statistic for a set of quartets, the interpretation of the *D*-statistic as support for introgression between two species is based on the assumption (among others) that only this pair of species is affected by introgression and that introgression was direct and not flowing through unsampled species.
+All of the inference methods used in other tutorials of this course (e.g. [Maximum-Likelihood Species-Tree Inference](../ml_species_tree_inference/README.md), [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md), [Species-Tree Inference with SNP Data](../species_tree_inference_with_snp_data/README.md), [Divergence-Time Estimation with SNP Data](../divergence_time_estimation_with_snp_data/README.md), [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), and [Analysis of Introgression with SNP Data](../analysis_of_introgression_with_snp_data/README.md)) are based on assumptions that may in fact rarely be met by empirical datasets. For example, ASTRAL, StarBeast3, and SpeciesNetwork assume the absence of recombination within a locus, ASTRAL, SVDQuartets, StarBeast3, SNAPP, and SNAPPER assume the absence of gene flow, and StarBeast3, SNAPP, and SNAPPER assume constant population sizes (this assumption can be relaxed for StarBeast3, but it was used in the [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) tutorial). And while Dsuite does not implement a model but only report the *D*-statistic for a set of quartets, the interpretation of the *D*-statistic as support for introgression between two species is based on the assumption (among others) that only this pair of species is affected by introgression and that introgression was direct and not flowing through unsampled species.
 
 To test how the reliability of the inference methods can be affected by model violations, we can deliberately simulate data with such violations and compare results inferred from these data to results inferred from data simulated without model violations.
 
@@ -81,7 +81,7 @@ To perform simulations with Msprime, we are going to write a script in Python, a
 
 		print(ts)
 		
-	Close the script again, and then execute it again with Python. This should produce two output tables that jointly provide information about a "TreeSequence" object. These TreeSequence objects are the primary products of Msprime simulations, and as the name indicates, they represent a sequence of trees along a simulated chromosome. Each of these trees applies to a certain region of the chromosome, and is separated from the trees on adjacent regions by a recombination event. These recombination events always cause slight changes in the topologies or branch lengths between two adjacent trees; therefore any two adjacent trees are never completely independent of each other but instead highly similar. This property is cleverly exploited by Msprime to store TreeSequence objects in a highly compressed format.
+	Close the script again, and then execute it again as before. This should produce two output tables that jointly provide information about a "TreeSequence" object. These TreeSequence objects are the primary products of Msprime simulations, and as the name indicates, they represent a sequence of trees along a simulated chromosome. Each of these trees applies to a certain region of the chromosome, and is separated from the trees on adjacent regions by a recombination event. These recombination events always cause slight changes in the topologies or branch lengths between two adjacent trees; therefore any two adjacent trees are never completely independent of each other but instead highly similar. This property is cleverly exploited by Msprime to store TreeSequence objects in a highly compressed format.
 	
 	In the current case, the first output table informs us that there is a single tree stored in the simulated TreeSequence object, that the sequence (=chromosome) length is 1 bp, and that there are four sampled nodes. The first two of these characteristics are owed to implemented default values for parameters that we did not change yet. There is so far only a single tree in the tree sequence, because the default value for the recombination rate is 0 and we did not change it (and because the sequence length is 1 bp); and the length of the simulated sequence is 1 bp because this is the default, and we did not specify one. The third characteristic, the presence of four sampled nodes, however, is due to our specification of "2" in the parentheses that followed the `msprime.sim_ancestry` command. This number specified the number of diploid samples that should be drawn from the simulated population; which is the first parameter used by the `msprime.sim_ancestry` command. The two diploid individuals have a total of four chromosomes which are represented by what Msprime calls "sampled nodes".
 	
@@ -203,7 +203,7 @@ To perform simulations with Msprime, we are going to write a script in Python, a
 		
 * Execute once again the script, and download and open the new file `mts.svg`. The figure for the tree sequence with mutations should like like this:<p align="center"><img src="img/msprime3.png" alt="Msprime" width="700"></p>As you can see there are now three trees included in the tree sequence, for the regions from position 0 to 2442, from position 2442 to 7204, and from position 7205 to 10000 of the simulated chromsomes. Mutations have occurred on each of the tree, with the times and positions at which the mutations occurred marked in red on the tree and the x-axis, respectively. As mutations are labelled with numbers from 0 to 25, we know that a total of 26 mutations have occurred.
 
-In order to use the simulated genomic data for inference, we will need to export it in a format that is accepted by the inference methods. Thus, we will need to generate sequence alignments for tools like ASTRAL, StarBEAST2, SpeciesNetwork, and VCF files for SVDQuartets, SNAPP, SNAPPER, and Dsuite. Fortunately, Msprime has a very convenient funtion for export in VCF format, named `write_vcf`, but in order to generate sequence alignments, we will need a separate script.
+In order to use the simulated genomic data for inference, we will need to export it in a format that is accepted by the inference methods. Thus, we will need to generate sequence alignments for tools like ASTRAL, StarBeast3, SpeciesNetwork, and VCF files for SVDQuartets, SNAPP, SNAPPER, and Dsuite. Fortunately, Msprime has a very convenient funtion for export in VCF format, named `write_vcf`, but in order to generate sequence alignments, we will need a separate script.
 
 * To test data export in VCF format, try the following script:
 	
@@ -244,7 +244,7 @@ The default model for the simulation of mutations is the Jukes-Cantor model, acc
 
 	When you execute the script with these settings, however, you may not notice a large difference in the VCF, as the kappa value of 2 only doubles the rate of transitions relative to that of transversions.
 
-* To see how a substantially larger value kappa would affect the result, execute the script once again with `kappa=1000` and have a look again at the output file `simulation.vcf`. This time you should notice that nearly all substitutions that occurred were transitions: The sites in the VCF that have an "A" as the reference allele (column "REF") have an "T" as the alternate allele (column "ALT") and vice versa, and all those that have a "C" as the reference have a "G" as the alternate allele and vice versa.
+* To see how a substantially larger value of kappa would affect the result, execute the script once again with `kappa=1000` and have a look again at the output file `simulation.vcf`. This time you should notice that nearly all substitutions that occurred were transitions: The sites in the VCF that have an "A" as the reference allele (column "REF") have an "T" as the alternate allele (column "ALT") and vice versa, and all those that have a "C" as the reference have a "G" as the alternate allele and vice versa.
 
 So far, all the simulations performed were for a single panmictic population from which between one and four diploid individuals were sampled. But since the goal of the simulations in this tutorial is to allow tests of the reliability of methods for the inference of species trees and introgression, we will need to simulate genomic data for multiple species (note that Msprime does not distinguish between species and populations). To do so, we need to set up a demographic model that describes the relationships among the simulated species, and we then need to pass that demographic model to the `msprime.sim_ancestry` command with the keyword `demography`, as in `msprime.sim_ancestry(samples=1,demography=demography)`.
 
@@ -267,7 +267,7 @@ This should specify a demographic model in which two species named "A" and "B" h
 
 	<!-- Run time: 4 s -->
 
-	Executing this script should output three tables that describe settings for two "epochs", two for an epoch that lasted from 0 to 1000 generations in the past, and one table for a second epoch that lasted from 1000 to infinite generations in the past (this view according to which more recent events are considered before more ancestral ones is common in the context of the coalescent, even though it is admittedly confusing at first). The first of the three tables tells us that between the present and 10 generations in the past, two populations (recall that Msprime does not distinguish between species and populations) existed that were named "A" and "B" and both had a population size of 100, at both the beginng and the end of their existence; therefore the population growth rate is zero. In the last two columns of this table, pairwise migration rates are reported, which are currently all zero because we did not simulate any migration between the populations. The second table reports that there was a population split event at 1000 generations ago, where an ancestral population named "pop2" (the name is chosen by Msprime) split into the descending populations "A" and "B". And finally, the third table reports that between 1000 and infinite generations in the past (or put more simply: prior to 1000 generations ago), a single population existed that was named "pop2" and had an unchanged population size of 100. So all of this information from the `DemographyDebugger` confirms that the model has been set up as we intended.
+	Executing this script should output three tables that describe settings for two "epochs", two for an epoch that lasted from 0 to 1,000 generations in the past, and one table for a second epoch that lasted from 1,000 to infinite generations in the past (this view according to which more recent events are considered before more ancestral ones is common in the context of the coalescent, even though it is admittedly confusing at first). The first of the three tables tells us that between the present and ten generations in the past, two populations (recall that Msprime does not distinguish between species and populations) existed that were named "A" and "B" and both had a population size of 100, at both the beginng and the end of their existence; therefore the population growth rate is zero. In the last two columns of this table, pairwise migration rates are reported, which are currently all zero because we did not simulate any migration between the populations. The second table reports that there was a population split event at 1,000 generations ago, where an ancestral population named "pop_2" (the name is chosen by Msprime) split into the descending populations "A" and "B". And finally, the third table reports that between 1000 and infinite generations in the past (or put more simply: prior to 1,000 generations ago), a single population existed that was named "pop_2" and had an unchanged population size of 100. So all of this information from the `DemographyDebugger` confirms that the model has been set up as we intended.
 	
 * Next, try to simulate genomic data with this demographic model, using the following script (as you will see, this will produce an error message when you execute it):
 	
@@ -370,7 +370,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		with open("simulation.vcf", "w") as vcf:
 			mts.write_vcf(vcf)
 
-	Executing this script should take about 20 to 30 minutes, which means that instead of executing it with `srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data.py`, we now have to write a Slurm script for it, and to submit the Slurm script with `sbatch` (see next point).
+	Executing this script should take around 30 minutes, which means that instead of executing it with `srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty python simulate_data.py`, we now have to write a Slurm script for it, and to submit the Slurm script with `sbatch` (see next point).
 
 * Write a Slurm script with the following content, and name it `simulate_data.slurm`:
 
@@ -380,7 +380,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		#SBATCH --job-name=simdat
 		#
 		# Wall clock limit:
-		#SBATCH --time=2:00:00
+		#SBATCH --time=3:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
@@ -501,7 +501,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		#SBATCH --job-name=simin1
 		#
 		# Wall clock limit:
-		#SBATCH --time=2:00:00
+		#SBATCH --time=3:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
@@ -550,7 +550,7 @@ Reasonable parameters for our simulations may be a generation time of 3 years ([
 		#SBATCH --job-name=simin2
 		#
 		# Wall clock limit:
-		#SBATCH --time=2:00:00
+		#SBATCH --time=3:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
@@ -606,8 +606,8 @@ There are a number of options to simulate changes in population sizes with Mspri
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
 		population_size = 1.1E5
-		sequence_length = 1E7
-		recombination_rate = 1E-7
+		sequence_length = 5E6
+		recombination_rate = 3E-8
 		mutation_rate = 3.5E-9
 	
 		# Set up a demographic model.
@@ -639,8 +639,8 @@ There are a number of options to simulate changes in population sizes with Mspri
 		species_tree = "(((neomar:1.6,neogra:1.6):0.3,(neobri:1.2,(neooli:0.5,neopul:0.5):0.7):0.7):7.6,metzeb:9.5)"
 		generation_time = 3
 		population_size = 1.1E5
-		sequence_length = 1E7
-		recombination_rate = 1E-7
+		sequence_length = 5E6
+		recombination_rate = 3E-8
 		mutation_rate = 3.5E-9
 	
 		# Set up a demographic model.
@@ -677,7 +677,7 @@ There are a number of options to simulate changes in population sizes with Mspri
 		#SBATCH --job-name=simbot
 		#
 		# Wall clock limit:
-		#SBATCH --time=2:00:00
+		#SBATCH --time=3:00:00
 		#
 		# Processor and memory usage:
 		#SBATCH --ntasks=1
@@ -714,7 +714,7 @@ There are a number of options to simulate changes in population sizes with Mspri
 <a name="alignments"></a>
 ### Preparing alignments from simulated SNP data
 
-As some of the inference methods require sequence alignments rather than variant data in VCF format as input, we still need to prepare sequence alignments from the simulated genomic data. This can be done with the Python script `make_alignments_from_vcf.py`, which extracts all variants from a VCF file for a set of regions evenly sampled across the chromosome and adds randomly selected nucleotides for all invariant sites. The script assumes that all variants are phased and thus writes two sequences per sample to each alignment.
+As some of the inference methods require sequence alignments rather than variant data in VCF format as input, we still need to prepare sequence alignments from the simulated genomic data. This can be done with the Python script `make_alignments_from_vcf.py`, which extracts all variants from a VCF file for a set of regions evenly sampled across the chromosome and adds randomly selected nucleotides for all invariant sites. This random addition may not be suitable when the data in the VCF file is empirical, but is acceptable here because we're only dealing with simulated data. The script assumes that all variants are phased and thus writes two sequences per sample to each alignment.
 
 * Download the script `make_alignments_from_vcf.py`:
 
@@ -722,6 +722,7 @@ As some of the inference methods require sequence alignments rather than variant
 
 * Have a look at the help text of the script:
 
+		module load Python/3.8.2-GCCcore-9.3.0
 		python make_alignments_from_vcf.py -h
 		
 	You'll see that you can specify the number of alignments to extract from the VCF with option `-n` and the length of these alignments with option `-l`. Additionally, you can specify a path to which all alignments should be written with `-p`. The first and second arguments need to be the input file in VCF format and a prefix for all output files, respectively. The length of the chromosome should also be specified with option `-c`, because this information can not always be read from the VCF file. Note that in its current version, this script assumes that the VCF file contains data only for a single chromosome, which is the case in the VCF files generated with Msprime.
@@ -764,9 +765,9 @@ The IDs used in the alignment files are similar to those used in the VCF files, 
 
 You should now have simulated genomic data in the form of four files in VCF format (`simulation.vcf`, `simulation_introgression1.vcf`, `simulation_introgression2.vcf`, and `simulation_bottleneck.vcf`) as well as four sets of files with alignments in Phylip format (in directories `simulation_alignments`, `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, and `simulation_bottleneck_alignments`).
 
-These files can now be used for inference with ASTRAL, StarBEAST2, SVDQuartets, SNAPP, SNAPPER, PhyloNet, SpeciesNetwork, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials, either using the files in VCF format or the sets of alignments as input, depending on the type of input that is required for the inference methods.
+These files can now be used for inference with ASTRAL, StarBeast3, SVDQuartets, SNAPP, SNAPPER, PhyloNet<!--, SpeciesNetwork-->, and Dsuite, to find out how these methods are affected by model violations like within-locus recombination, introgression, and population-size variation. The inference should largely follow the instructions given in other tutorials, either using the files in VCF format or the sets of alignments as input, depending on the type of input that is required for the inference methods.
 
-If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBEAST2, SNAPP, SNAPPER, PhyloNet, SpeciesNetwork) before setting up the faster ones (ASTRAL, SVDQuartets). For each inference method, you could focus on one or two of the simulated datasets (either with or without introgression, and with or without bottleneck) – as long as different course participants select different datasets to analyze, a comparison of the results will allow us to assess the impact of the model violations on each inference method.
+If you should not have enough time to test all of these inference methods, I suggest that phylogenetic inference should be tested with at least one method, in addition to testing inference of introgression with Dsuite. On the other hand, if there is enough time to test different methods for phylogenetic inference, it would make sense to start with the computationally more demanding ones (StarBeast3, SNAPP, SNAPPER, PhyloNet<!--, SpeciesNetwork-->) before setting up the faster ones (ASTRAL, SVDQuartets). For each inference method, you could focus on one or two of the simulated datasets (either with or without introgression, and with or without bottleneck) – as long as different course participants select different datasets to analyze, a comparison of the results will allow us to assess the impact of the model violations on each inference method.
 
 
 <a name="astral"></a>
@@ -794,10 +795,10 @@ If you should not have enough time to test all of these inference methods, I sug
 			srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty java -jar Astral/astral.5.7.7.jar -i XXX.trees -a astral_table.txt -o simulation_astral.tre
 
 
-<a name="starbeast2"></a>
-### Inference with StarBEAST2
+<a name="starbeast3"></a>
+### Inference with StarBeast3
 
-As an analysis of a complete set of 1,000 alignments would be too computationally demanding, I suggest that you only use a subset of around 50 alignments. These will need to be converted from Phylip to Nexus format because the StarBEAST2 input file will be written with BEAUti, and BEAUti only accepts alignments in Nexus format.
+As an analysis of a complete set of 1,000 alignments would be too computationally demanding, I suggest that you only use a subset of around 50 alignments. These will need to be converted from Phylip to Nexus format because the StarBeast3 input file will be written with BEAUti, and BEAUti only accepts alignments in Nexus format.
 
 * To convert a set of 50 alignments into Nexus format, you could write a script named `convert_to_nexus.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`):
 
@@ -821,23 +822,21 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 	This should have produced 50 files in Nexus format in directory `simulation_alignments`, which you can verify with `ls simulation_alignments/*.nex | wc -l`.
 
-* Download these alignment files in Nexus format to your local computer, e.g. using `scp`. To download only the files in Nexus format from `simulation_alignments`, you could use a command similar to this one (on your local computer; replace "XXX" with your username and "YYY" with the path to your alignment directory on Saga):
+* Download these alignment files in Nexus format to your own computer, e.g. using `scp`. To download only the files in Nexus format from `simulation_alignments`, you could use a command similar to this one (on your own computer; replace "XXX" with your username and "YYY" with the path to your alignment directory on Saga):
 
 		scp XXX@saga.sigma2.no:YYY/simulation_alignments/*_red.nex .
 
-* Follow the instructions given in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) to set up an XML file for StarBEAST2, with the following modifications:
+* Follow the instructions given in tutorial [Bayesian Species-Tree Inference](../bayesian_species_tree_inference/README.md) to set up an XML file for StarBeast3, with the following modifications:
 
 	* Ignore the step in which the script `filter_genes_by_missing_data.rb` is used.
 
 	* Assign the sequences with IDs "tsk\_0\_1", "tsk\_0\_2", "tsk\_1\_1", etc. to the species IDs "neomar", "neogra", etc. according to the table given above (BEAUti tab "Taxon sets").
 
-	* Use 0.279 as the population size, because this value will correspond to the true population size used in the simulations (9.3 &times; 10<sup>4</sup>) when scaled by the number of generations per time unit (333,333). But since we now have two sequences per species, we can attempt to estimate the population size, rather than fixing it; thus you could keep the tick in the checkbox to estimate the population size (BEAUti tab "Population Model").
+	* Center the prior for the population size at 0.279, because this value will correspond to the true population size used in the simulations (9.3 &times; 10<sup>4</sup>) when scaled by the number of generations per time unit (333,333).
 
 	* As the substitution model, specify the HKY model without among-site rate heterogeneity (simply leave the Gamma category count at "0") to match the model used for the simulations (BEAUti tab "Site Model").
 
-	* To simplify the StarBEAST2 analysis, you could also specify equal site frequencies (select "All Equal" from the drop-down menu next to "Frequencies"; BEAUti tab "Site Model").
-
-	* Instead of the birth-death model, you could select the Yule model, given that extinction was not included in the simulations (BEAUti tab "Priors").
+	* To simplify the StarBeast3 analysis, you could also specify equal site frequencies (select "All Equal" from the drop-down menu next to "Frequencies"; BEAUti tab "Site Model").
 
 	* To time-calibrate the species tree, use a lognormal age constraint with a mean age of 9.5 Ma (the true age used in the simulations) and a standard deviation of 0.1 (make sure to set the tick for "Mean in Real Space"; BEAUti tab "Priors").
 
@@ -845,7 +844,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 	* Save the XML file as `simulation_starbeast.xml`, `simulation_introgression1_starbeast.xml`, `simulation_introgression2_starbeast.xml`, or `simulation_bottleneck_starbeast.xml`, depending on the set of alignments that was used.
 
-	* To run StarBEAST2, the following Slurm script could be used:
+	* To run StarBeast3, the following Slurm script could be used:
 
 			#!/bin/bash
 
@@ -871,9 +870,9 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 			module --quiet purge  # Reset the modules to the system default
 
 			# Load the python module.
-			module load Beast/2.6.4-GCC-9.3.0 
+			module load Beast/2.7.0-GCC-11.3.0-CUDA-11.7.0
 
-			# Run starbeast2.
+			# Run starbeast3.
 			beast simulation_starbeast.xml
 
 	<!-- Run time: 50 minutes -->
@@ -918,7 +917,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 
 	* To generate an input file for SNAPP with `snapp_prep.rb`, use commands like the following:
 
-			module load
+			module load Ruby/2.7.2-GCCcore-10.2.0
 			srun --ntasks=1 --mem-per-cpu=1G --time=00:01:00 --account=nn9458k --pty ruby snapp_prep.rb -v simulation.vcf -t individuals.txt -c constraint.txt -q 1000 -m 1000 -l 500000 -o simulation_snapp -x simulation_snapp.xml
 
 	* Adjust the job name, the name of the output file, and the name of the input file for SNAPP in the Slurm script.
@@ -933,7 +932,7 @@ As an analysis of a complete set of 1,000 alignments would be too computationall
 <a name="phylonet"></a>
 ### Inference with PhyloNet
 
-As in the [Inference with StarBEAST2](#starbeast2), the use of a full set of 1,000 alignments, with two sequences per species in each alignment, would be too computationally demanding for an analysis with PhyloNet. Additionally, the format of the input files needs to be converted. Thus, a first step is again to write a script for the conversion of a set of alignment files that also removes the outgroup ("metzeb") and one sequence for each ingroup species. This time, 100 alignment files should be converted to Fasta format.
+As in the [Inference with StarBeast3](#starbeast3), the use of a full set of 1,000 alignments, with two sequences per species in each alignment, would be too computationally demanding for an analysis with PhyloNet. Additionally, the format of the input files needs to be converted. Thus, a first step is again to write a script for the conversion of a set of alignment files that also removes the outgroup ("metzeb") and one sequence for each ingroup species. This time, 100 alignment files should be converted to Fasta format.
 
 * To convert a set of 100 alignments into Fasta format, and to include only one sequence from each ingroup species, you could write a script named `convert_to_fasta.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`). For convenience, the commands below include a step to replace the individual IDs ("tsk\_0\_1", "tsk\_1\_1", etc.) with the corresponding species IDs ("neomar", "neogra", etc.):
 
@@ -967,10 +966,10 @@ As in the [Inference with StarBEAST2](#starbeast2), the use of a full set of 1,0
 
 
 
-<a name="speciesnetwork"></a>
+<!--<a name="speciesnetwork"></a>
 ### Inference with SpeciesNetwork
 
-As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subset of the alignments produced through simulation. However, we now not only need to reduce the set of alignments and convert them to Nexus format, but we should also remove the outgroup species "metzeb" and we should also only use a single sequence per species (recall that we simulated one diploid individual with two sequences for each species), to shorten the run time of SpeciesNetwork as much as possible.
+As for the [Inference with StarBeast3](#starbeast3), we will need to use a subset of the alignments produced through simulation. However, we now not only need to reduce the set of alignments and convert them to Nexus format, but we should also remove the outgroup species "metzeb" and we should also only use a single sequence per species (recall that we simulated one diploid individual with two sequences for each species), to shorten the run time of SpeciesNetwork as much as possible.
 
 * To convert a set of 50 alignments into Nexus format, and remove both the outgroup and one sequence per species, you could write a script named `convert_to_nexus_and_reduce.sh` with the following commands (if you want to use another alignment set, simply replace `simulation_alignments` with `simulation_introgression1_alignments`, `simulation_introgression2_alignments`, or `simulation_bottleneck`):
 
@@ -1008,7 +1007,7 @@ As for the [Inference with StarBEAST2](#starbeast2), we will need to use a subse
 	* Use the population size that was used in the simulations, 9.3 &times; 10<sup>4</sup>, as the population-size parameter for SpeciesNetwork. As in in tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md), this population size must be divided again by the number of generations per million years, so the value to specify for SpeciesNetwork is 9.3 &times; 10<sup>4</sup> &div; 333,333 = 0.279. It does not seem to be possible to completely fix the population size in BEAUti's "Priors" tab, but we can instead do so in two steps: First, set the initial value of the parameter to "0.279", by clicking on the button saying "initial = [0.01][0.0,&infin;]" to the right of "popMean.t:Species" in the "Priors" tab, as shown in the next screenshot:<p align="center"><img src="img/beauti4.png" alt="BEAUti"  width="700"></p> This should open a small pop-up window. In that pop-up window, specify "0.279" in the field below "Value".<p align="center"><img src="img/beauti5.png" alt="BEAUti"  width="700"></p> Second, disable the operator for this parameter, after making the "Operators" tab visible (see tutorial [Bayesian Inference of Species Networks](../bayesian_inference_of_species_networks/README.md)). To do this, set the weight of the operator "Scale: popMean.t:Species" to 0, as shown in the next screenshot.<p align="center"><img src="img/beauti6.png" alt="BEAUti"  width="700"></p>
 
 	* The length of the MCMC can be reduced to 5 million iterations (BEAUti tab "MCMC").
-
+-->
 
 <a name="dsuite"></a>
 ### Inference with Dsuite
