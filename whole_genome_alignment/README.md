@@ -552,7 +552,7 @@ Nevertheless, if all course participants would run Cactus in their working direc
 
 	This Cactus run should not take more than 30 minutes, but unfortunately, this will not yet produce the output files that we need, and we will need to submit another more computationally demanding job to obtain the whole-genome alignment in a usable format.
 	
-* Once the Cactus job has finished, wee which output files have been returned to the working directory:
+* Once the Cactus job has finished, see which output files have been returned to the working directory:
 
 		ls cichlids_chr5.hal*
 		
