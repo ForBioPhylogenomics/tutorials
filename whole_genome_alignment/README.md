@@ -572,6 +572,10 @@ Nevertheless, if all course participants would run Cactus in their working direc
 
 		cp run_cactus.slurm convert_hal_to_maf.slurm
 
+
+* **NOT TESTED:**<br>
+	Instead of the steps below, you could try the script `hal2mafMP.py`, which may do the file conversion much faster because it is parallelizable. The script can be obtained from [https://github.com/ComparativeGenomicsToolkit/hal](https://github.com/ComparativeGenomicsToolkit/hal) and can be run with a command such as `hal2mafMP.py cichlids_chr5.hal cichlids_chr5.maf --numProc 10`. This command should be integrated into a Slurm script like the one below.
+
 * Then, edit the script `convert_hal_to_maf.slurm` by changing the job name on line 4, the requested number of tasks per node on line 12, the name of the log file on line 18, and the last part of the script after line 34. It should then have the following content:
 
 		#!/bin/bash
