@@ -21,7 +21,7 @@ class Window(object):
         max_id_length = 0
         for idx in self.ids:
             if len(idx) > max_id_length:
-                max_id_length = len(self.ids)
+                max_id_length = len(idx)
 
         # Prepare the alignment string in Phylip format.
         if file_format == "phylip":
